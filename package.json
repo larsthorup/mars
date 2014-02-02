@@ -1,0 +1,25 @@
+{
+    "name": "mars",
+    "version": "0.0.1",
+    "description": "NodeJS, Mocha, Bookshelf, Restify",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/larsthorup/mars.git"
+    },
+    "dependencies": {
+        "sqlite3": "~2.2.0",
+        "bookshelf": "~0.6.2",
+        "restify": "~2.6.1"
+    },
+    "devDependencies": {
+        "grunt": "~0.4.2",
+        "mocha": "~1.17.1",
+        "istanbul": "~0.2.4"
+    },
+    "author": {
+        "name": "Lars Thorup",
+        "web": "https://github.com/larsthorup"
+    },
+    "license": "MIT",
+    "readmeFilename": "README.md"
+}
