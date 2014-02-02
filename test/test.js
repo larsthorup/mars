@@ -13,21 +13,47 @@ describe('Array', function(){
 });
 
 describe('Bookshelf', function () {
-    it('db access', function () {
-        var db = Bookshelf.initialize({
+    var db;
+    var schema;
+
+    beforeEach(function () {
+        db = Bookshelf.initialize({
             client: 'sqlite3',
             connection: {
                 filename: ':memory:'
             }
         });
 
-        var schema = db.knex.schema;
-        return schema.dropTableIfExists('user')
-        .then(function () {
-            return schema.createTable('user', function(table) {
-                table.increments('id');
-                table.string('name');
-            });
+        schema = db.knex.schema;
+    });
+
+    it('should drop the schema', function (ok) {
+        schema.dropTableIfExists('user')
+        .then(function () { ok(); })
+    })
+
+    it('should create the schema', function (ok) {
+        schema.createTable('user', function(table) {
+            table.increments('id');
+            table.string('name');
+        })
+        .then(function () { ok(); })
+    })
+
+    it('should insert rows', function (ok) {
+        db.knex('user').insert([
+            {name: 'Lars'},
+            {name: 'Rob'}
+        ])
+        .then(function () { ok(); })
+    })
+
+    it('should select rows', function (ok) {
+        db.knex('user').where({name: 'Lars'}).select()
+        .then(function (lars) {
+            assert.equal('Lars', lars.name);
+            assert.equal(1, lars.id);
+            ok();
         })
     })
 });
