@@ -1,3 +1,8 @@
+// ToDo: figure out why table is not created
+// ToDo: raw queries
+// ToDo: use knex directly?
+
+
 var assert = require('assert');
 var arrayIndexOf = require('../src/code');
 var sqlite3 = require('sqlite3').verbose();
