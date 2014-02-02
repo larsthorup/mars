@@ -1,5 +1,5 @@
 // ToDo: tests
-// ToDo: serve static contents with mime types
+// ToDo: authorization
 
 var restify = require('restify');
 
@@ -16,6 +16,9 @@ function hello(req, res, next) {
 var server = restify.createServer();
 server.get('/hello/:name', hello);
 server.head('/hello/:name', hello);
+server.get(/\/static\/?.*/, restify.serveStatic({
+    directory: './static'
+}))
 
 server.listen(1719, function() {
     console.log('%s listening at %s', server.name, server.url)
