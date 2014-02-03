@@ -1,28 +1,16 @@
-// ToDo: figure out why table is not created
-// ToDo: raw queries
 // ToDo: use knex directly?
 // ToDo: expect() instead of assert()
 // ToDo: make test async by returning promise
+// ToDo: raw queries
 
 var assert = require('assert');
-var arrayIndexOf = require('../src/util');
-var sqlite3 = require('sqlite3').verbose();
 var Bookshelf = require('Bookshelf');
-
-describe('Array', function(){
-    describe('#indexOf()', function(){
-        it('should return -1 when the value is not present', function(){
-            assert.equal(-1, arrayIndexOf([1,2,3], 5));
-            assert.equal(-1, [1,2,3].indexOf(0));
-        })
-    })
-});
 
 describe('Bookshelf', function () {
     var db;
     var schema;
 
-    beforeEach(function () {
+    it('should initialize', function () {
         db = Bookshelf.initialize({
             client: 'sqlite3',
             connection: {
@@ -34,29 +22,32 @@ describe('Bookshelf', function () {
     });
 
     it('should drop the schema', function (ok) {
-        schema.dropTableIfExists('user')
+        schema.dropTableIfExists('users')
         .then(function () { ok(); })
     })
 
     it('should create the schema', function (ok) {
-        schema.createTable('user', function(table) {
+        schema.createTable('users', function(table) {
             table.increments('id');
             table.string('name');
         })
         .then(function () { ok(); })
     })
 
-    xit('should insert rows', function (ok) {
-        db.knex('user').insert([
+    it('should insert rows', function (ok) {
+        db.knex('users').insert([
             {name: 'Lars'},
             {name: 'Rob'}
         ])
         .then(function () { ok(); })
     })
 
-    xit('should select rows', function (ok) {
-        db.knex('user').where({name: 'Lars'}).select()
-        .then(function (lars) {
+    it('should select rows', function (ok) {
+        db.knex('users').where({name: 'Lars'}).select()
+        .then(function (users) {
+            assert.equal(1, users.length);
+            var lars = users[0];
+            assert.equal('Lars', lars.name);
             assert.equal('Lars', lars.name);
             assert.equal(1, lars.id);
             ok();
@@ -66,6 +57,9 @@ describe('Bookshelf', function () {
 
 
 /*
+
+ var sqlite3 = require('sqlite3').verbose();
+
  describe('SQLite', function () {
  it('create schema', function (done) {
  var db = new sqlite3.Database('mars');
