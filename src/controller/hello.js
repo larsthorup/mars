@@ -2,8 +2,8 @@ var restify = require('restify');
 
 function hello(req, res, next) {
     var name = req.params.name;
-    if(name == 'putin') {
-        return next(new restify.InternalError('does not compute'))
+    if(name === 'putin') {
+        return next(new restify.InternalError('does not compute'));
     } else {
         res.send('hello ' + name);
         return next();
@@ -12,4 +12,4 @@ function hello(req, res, next) {
 
 module.exports = {
     hello: hello
-}
+};

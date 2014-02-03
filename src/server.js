@@ -9,8 +9,8 @@ server.get('/hello/:name', controller.hello);
 server.head('/hello/:name', controller.hello);
 server.get(/\/static\/?.*/, restify.serveStatic({
     directory: './static'
-}))
+}));
 
 server.listen(1719, function() {
-    console.log('%s listening at %s', server.name, server.url)
-})
+    console.log('%s listening at %s', server.name, server.url);
+});

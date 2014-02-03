@@ -12,6 +12,7 @@
         "restify": "~2.6.1"
     },
     "devDependencies": {
+        "jshint": "~2.4.3",
         "mocha": "~1.17.1",
         "chai": "~1.9.0",
         "sinon": "~1.8.1",
@@ -23,9 +24,11 @@
         "web": "https://github.com/larsthorup"
     },
     "scripts": {
+        "lint": "node node_modules/jshint/bin/jshint src test",
         "test": "node node_modules/mocha/bin/mocha -R spec --recursive",
         "cover": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec --recursive",
         "cover-report": "start coverage/lcov-report/index.html",
+        "all": "npm run lint && npm run cover",
         "run": ""
     },
     "license": "MIT",

@@ -24,24 +24,24 @@ describe('model', function () {
 
         it('should drop the schema', function (ok) {
             knex.schema.dropTableIfExists('users')
-            .then(function () { ok(); })
-        })
+            .then(function () { ok(); });
+        });
 
         it('should create the schema', function (ok) {
             knex.schema.createTable('users', function(table) {
                 table.increments('id');
                 table.string('name');
             })
-            .then(function () { ok(); })
-        })
+            .then(function () { ok(); });
+        });
 
         it('should insert rows', function (ok) {
             knex('users').insert([
                 {name: 'Lars'},
                 {name: 'Rob'}
             ])
-            .then(function () { ok(); })
-        })
+            .then(function () { ok(); });
+        });
 
         it('should select rows', function (ok) {
             knex('users').where({name: 'Lars'}).select()
@@ -51,7 +51,7 @@ describe('model', function () {
                 expect(lars.name).to.equal('Lars');
                 expect(lars.id).to.equal(1);
                 ok();
-            })
-        })
+            });
+        });
     });
 });
