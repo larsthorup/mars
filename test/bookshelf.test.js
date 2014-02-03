@@ -3,7 +3,6 @@
 // ToDo: use knex directly?
 // ToDo: expect() instead of assert()
 // ToDo: make test async by returning promise
-// ToDo: setup grunt
 
 var assert = require('assert');
 var arrayIndexOf = require('../src/util');

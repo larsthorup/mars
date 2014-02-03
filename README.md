@@ -2,7 +2,7 @@ mars
 ====
 
 Libs: NodeJS, Bookshelf, Restify
-Tools: Mocha, Istanbul
+Tools: Mocha, Sinon, Istanbul
 
 
 Install:
