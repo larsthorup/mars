@@ -1,9 +1,11 @@
+// ToDo: extract into UserRepository
+// ToDo: invoke from HelloController
 // ToDo: make test async by returning promise
-// ToDo: expect() instead of assert()
 // ToDo: raw queries
 // ToDo: migrations
 
-var assert = require('assert');
+var expect = require('chai').expect;
+
 var Knex = require('knex');
 
 describe('model', function () {
@@ -44,11 +46,10 @@ describe('model', function () {
         it('should select rows', function (ok) {
             knex('users').where({name: 'Lars'}).select()
             .then(function (users) {
-                assert.equal(1, users.length);
+                expect(users).to.have.length(1);
                 var lars = users[0];
-                assert.equal('Lars', lars.name);
-                assert.equal('Lars', lars.name);
-                assert.equal(1, lars.id);
+                expect(lars.name).to.equal('Lars');
+                expect(lars.id).to.equal(1);
                 ok();
             })
         })

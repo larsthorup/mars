@@ -1,8 +1,4 @@
-// ToDo: move test framework setup to a common file
-var chai = require('chai');
-var expect = chai.expect;
-var sinonChai = require("sinon-chai");
-chai.use(sinonChai);
+var expect = require('chai').expect;
 var sinon = require('sinon');
 
 var controller = require('../../src/controller/hello.js');
@@ -12,7 +8,7 @@ describe('controller', function () {
     describe('hello', function () {
         var res;
 
-        before(function () {
+        beforeEach(function () {
             res = { send: sinon.spy() };
         })
 
