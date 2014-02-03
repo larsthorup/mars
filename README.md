@@ -2,20 +2,18 @@ mars
 ====
 
 Libs: NodeJS, Bookshelf, Restify
-Tools: Mocha, Istanbul, Grunt
+Tools: Mocha, Istanbul
 
 
 Install:
 
-    npm install -g mocha
-    npm install -g istanbul
     npm install
 
 Run tests:
 
-    mocha --recursive
+    npm run test
 
 Report coverage:
 
-    istanbul cover node_modules/mocha/bin/_mocha -- --recursive
+    npm run cover
 

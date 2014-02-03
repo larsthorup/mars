@@ -20,6 +20,11 @@
         "name": "Lars Thorup",
         "web": "https://github.com/larsthorup"
     },
+    "scripts": {
+        "test": "node node_modules/mocha/bin/mocha -R spec --recursive",
+        "cover": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec --recursive",
+        "run": ""
+    },
     "license": "MIT",
     "readmeFilename": "README.md"
 }
