@@ -2,20 +2,11 @@
 // ToDo: authorization
 
 var restify = require('restify');
-
-function hello(req, res, next) {
-    var name = req.params.name;
-    if(name == 'putin') {
-        return next(new restify.InternalError('does not compute'))
-    } else {
-        res.send('hello ' + name);
-        return next();
-    }
-}
+var controller = require('./controller/hello');
 
 var server = restify.createServer();
-server.get('/hello/:name', hello);
-server.head('/hello/:name', hello);
+server.get('/hello/:name', controller.hello);
+server.head('/hello/:name', controller.hello);
 server.get(/\/static\/?.*/, restify.serveStatic({
     directory: './static'
 }))
