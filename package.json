@@ -8,7 +8,7 @@
     },
     "dependencies": {
         "sqlite3": "~2.2.0",
-        "bookshelf": "~0.6.2",
+        "knex": "~0.5.5",
         "restify": "~2.6.1"
     },
     "devDependencies": {
