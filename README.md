@@ -4,6 +4,9 @@ mars
 Libs: NodeJS, Bookshelf, Restify
 Tools: Mocha, Sinon, Istanbul, JSHint
 
+Quick start:
+
+    npm run dev
 
 Install:
 
