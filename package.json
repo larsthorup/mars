@@ -30,8 +30,11 @@
         "cover-report": "start coverage/lcov-report/index.html",
         "dev": "npm install && npm run lint && npm run cover",
         "start": "start node src/server.js",
-        "deploy": "vagrant up",
-        "deployToDo": "start vm, install or upgrade server, start server, run smoke test against server"
+        "remote-up": "vagrant up",
+        "remote-start": "vagrant ssh -c 'nohup node /vagrant/src/server.js' -- -n -T",
+        "remote-start-todo": "use forever, to be able to stop it again",
+        "deploy": "npm run remote-up && npm run remote-start",
+        "deploy-todo": "install or upgrade server, start server, run smoke test against server"
     },
     "license": "MIT",
     "readmeFilename": "README.md"
