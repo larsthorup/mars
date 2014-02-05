@@ -29,7 +29,8 @@
         "cover": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec --recursive",
         "cover-report": "start coverage/lcov-report/index.html",
         "dev": "npm install && npm run lint && npm run cover",
-        "run": ""
+        "start": "start node src/server.js",
+        "deploy": "ToDo: start vm, install or upgrade server, start server, run smoke test against server"
     },
     "license": "MIT",
     "readmeFilename": "README.md"
