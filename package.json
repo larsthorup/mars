@@ -30,7 +30,8 @@
         "cover-report": "start coverage/lcov-report/index.html",
         "dev": "npm install && npm run lint && npm run cover",
         "start": "start node src/server.js",
-        "deploy": "ToDo: start vm, install or upgrade server, start server, run smoke test against server"
+        "deploy": "vagrant up",
+        "deployToDo": "start vm, install or upgrade server, start server, run smoke test against server"
     },
     "license": "MIT",
     "readmeFilename": "README.md"
