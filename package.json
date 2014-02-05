@@ -34,8 +34,9 @@
         "remote-up": "vagrant up",
         "remote-start": "vagrant ssh -c 'node /vagrant/node_modules/forever/bin/forever start -a -l forever.log -o out.log -e err.log /vagrant/src/server.js' -- -n -T",
         "remote-stop": "vagrant ssh -c 'node /vagrant/node_modules/forever/bin/forever stop /vagrant/src/server.js' -- -n -T",
-        "deploy": "npm run remote-up && npm run remote-start",
-        "deploy-todo": "copy files to server, start server, run smoke test against server"
+        "remote-test": "sleep 2 && curl 192.168.50.4:1719/hello/lars",
+        "deploy": "npm run remote-up && npm run remote-start && npm run remote-test",
+        "deploy-todo": "copy files to server"
     },
     "license": "MIT",
     "readmeFilename": "README.md"
