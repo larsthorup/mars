@@ -1,7 +1,3 @@
-var repo = require('./repo');
-var server = require('./server');
+var booter = require('./booter');
 
-repo.connect();
-repo.sampleData().then(function () {
-    server.start();
-});
+booter.boot();
