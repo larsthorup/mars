@@ -39,8 +39,7 @@
         "deploy": "npm run remote-up && npm run remote-start && npm run remote-test",
         "deploy-todo": "npm shrinkwrap && package src as tgz && extract remote (gulp?) && npm install from shrinkwrap without devDependencies",
         "travis": "npm run lint && npm run coveralls",
-        "coveralls": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-        "todo": "david-dm.org for public dependency up2date check"
+        "coveralls": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
     },
     "license": "MIT",
     "readmeFilename": "README.md"
