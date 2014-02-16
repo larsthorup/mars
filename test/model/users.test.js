@@ -5,33 +5,33 @@
 
 var expect = require('chai').expect;
 
-var users = require('../../src/model/users');
+var repo = require('../../src/repo');
 
 describe('model', function () {
 
     describe('users', function () {
 
         it('should initialize', function () {
-            users.connect();
+            repo.connect();
         });
 
         it('should drop the schema', function (ok) {
-            users.droppingSchema()
+            repo.users.droppingSchema()
             .then(function () { ok(); });
         });
 
         it('should create the schema', function (ok) {
-            users.creatingSchema()
+            repo.users.creatingSchema()
             .then(function () { ok(); });
         });
 
         it('should insert rows', function (ok) {
-            users.creatingTestData()
+            repo.users.creatingTestData()
             .then(function () { ok(); });
         });
 
         it('should select rows', function (ok) {
-            users.findingByName('Lars')
+            repo.users.findingByName('Lars')
             .then(function (usersFound) {
                 expect(usersFound).to.have.length(1);
                 var lars = usersFound[0];

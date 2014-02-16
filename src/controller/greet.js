@@ -1,9 +1,9 @@
 var restify = require('restify');
-var userRepo = require('../model/users.js');
+var repo = require('../repo.js');
 
 function hello(req, res, next) {
     var name = req.params.name;
-    userRepo.findingByName(name)
+    repo.users.findingByName(name)
     .then(function (users) {
         if(users.length < 1) {
             return next(new restify.InternalError('does not compute'));

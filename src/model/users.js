@@ -1,14 +1,5 @@
 var Knex = require('knex');
 
-function connect() {
-    Knex.knex = Knex.initialize({
-        client: 'sqlite3',
-        connection: {
-            filename: ':memory:'
-        }
-    });
-}
-
 function droppingSchema() {
     return Knex.knex.schema.dropTableIfExists('users');
 }
@@ -32,7 +23,6 @@ function findingByName(name) {
 }
 
 module.exports = {
-    connect: connect,
     droppingSchema: droppingSchema,
     creatingSchema: creatingSchema,
     creatingTestData: creatingTestData,

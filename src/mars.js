@@ -1,3 +1,7 @@
+var repo = require('./repo');
 var server = require('./server');
 
-server.start();
+repo.connect();
+repo.sampleData().then(function () {
+    server.start();
+});
