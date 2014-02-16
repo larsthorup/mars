@@ -1,3 +1,5 @@
+// ToDo: modular routing
+
 var greet = require('./controller/greet');
 var restify = require('restify');
 

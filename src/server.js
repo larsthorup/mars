@@ -1,6 +1,4 @@
-// ToDo: tests
 // ToDo: authentication
-// ToDo: modular routing
 // ToDo: modular authorization
 
 var restify = require('restify');

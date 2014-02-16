@@ -1,16 +1,11 @@
-var expect = require('chai').expect;
-var sinon = require('sinon');
-
 var restify = require('restify');
 var server = require('../src/server');
 var router = require('../src/router');
 
 describe('server', function () {
-    var sandbox;
     var restifyServer;
 
     beforeEach(function () {
-        sandbox = sinon.sandbox.create();
         restifyServer = {
             name: 'serverName',
             url: 'serverUrl',
@@ -19,10 +14,6 @@ describe('server', function () {
         sandbox.stub(restify, 'createServer', function () { return restifyServer; });
         sandbox.stub(router, 'map');
         sandbox.stub(console, 'log');
-    });
-
-    afterEach(function () {
-        sandbox.restore();
     });
 
     describe('start', function () {

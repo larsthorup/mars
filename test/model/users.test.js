@@ -1,9 +1,6 @@
-// ToDo: invoke from HelloController
 // ToDo: raw queries
 // ToDo: migrations (sql files, maybe create own framework for this)
 // ToDo: make test async by returning promise
-
-var expect = require('chai').expect;
 
 var repo = require('../../src/repo');
 

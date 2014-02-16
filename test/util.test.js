@@ -1,5 +1,3 @@
-var expect = require('chai').expect;
-
 var arrayIndexOf = require('../src/util');
 
 describe('util', function(){
