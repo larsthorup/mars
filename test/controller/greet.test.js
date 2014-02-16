@@ -1,8 +1,8 @@
 // ToDo: use a promise library
-// ToDo: repoStub
 
-var greet = require('../../src/controller/greet.js');
-var users = require('../../src/model/users.js');
+var greet = require('../../src/controller/greet');
+
+var repo = require('../../stub/repo.stub.js');
 
 describe('greet', function () {
 
@@ -11,10 +11,10 @@ describe('greet', function () {
 
         beforeEach(function () {
             res = { send: sandbox.spy() };
-            sandbox.stub(users, 'findingByName', function (name) {
-                var users = [];
-                if(name == 'lars') users.push({id:4711, name: 'lars'});
-                return { then: function(callback) { callback(users); } };
+            repo.stub({
+                users: [
+                    {name: 'lars'}
+                ]
             });
         });
 
