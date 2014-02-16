@@ -18,14 +18,14 @@
         "chai": "~1.9.0",
         "sinon": "~1.8.1",
         "sinon-chai": "~2.5.0",
-        "istanbul": "~0.2.4"
+        "istanbul": "~0.2.4",
+        "coveralls": "~2.8.0"
     },
     "author": {
         "name": "Lars Thorup",
         "web": "https://github.com/larsthorup"
     },
     "scripts": {
-        "travis": "npm run lint && npm run cover",
         "lint": "node node_modules/jshint/bin/jshint src test",
         "test": "node node_modules/mocha/bin/mocha -R spec --recursive",
         "cover": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec --recursive",
@@ -38,7 +38,9 @@
         "remote-test": "sleep 2 && curl 192.168.50.4:1719/hello/lars",
         "deploy": "npm run remote-up && npm run remote-start && npm run remote-test",
         "deploy-todo": "npm shrinkwrap && package src as tgz && extract remote (gulp?) && npm install from shrinkwrap without devDependencies",
-        "todo": "coveralls.io for public code coverage, david-dm.org for public dependency up2date check"
+        "travis": "npm run lint && npm run coveralls",
+        "coveralls": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+        "todo": "david-dm.org for public dependency up2date check"
     },
     "license": "MIT",
     "readmeFilename": "README.md"
