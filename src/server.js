@@ -1,5 +1,7 @@
 // ToDo: tests
-// ToDo: authorization
+// ToDo: authentication
+// ToDo: modular routing
+// ToDo: modular authorization
 
 var restify = require('restify');
 var controller = require('./controller/hello');

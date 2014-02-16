@@ -36,7 +36,8 @@
         "remote-stop": "vagrant ssh -c 'node /vagrant/node_modules/forever/bin/forever stop /vagrant/src/server.js' -- -n -T",
         "remote-test": "sleep 2 && curl 192.168.50.4:1719/hello/lars",
         "deploy": "npm run remote-up && npm run remote-start && npm run remote-test",
-        "deploy-todo": "copy files to server"
+        "deploy-todo": "npm shrinkwrap && package src as tgz && extract remote (gulp?) && npm install from shrinkwrap without devDependencies",
+        "todo": "travis-ci or drone.io for public test results, coveralls.io for public code coverage, david-dm.org for public dependency up2date check"
     },
     "license": "MIT",
     "readmeFilename": "README.md"
