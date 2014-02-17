@@ -6,7 +6,7 @@ describe('booter', function () {
 
     beforeEach(function () {
         sandbox.stub(repo, 'connect');
-        sandbox.stub(repo, 'sampleData', function () { return { then: function (callback) { return callback();}};})
+        sandbox.stub(repo, 'sampleData', function () { return { then: function (callback) { return callback();}};});
         sandbox.stub(server, 'start');
     });
 

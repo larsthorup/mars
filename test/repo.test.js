@@ -8,7 +8,7 @@ describe('repo', function () {
         sandbox.stub(repo.users, 'droppingSchema', function () { return { then: function (callback) { return callback();}};});
         sandbox.stub(repo.users, 'creatingSchema', function () { return { then: function (callback) { return callback();}};});
         sandbox.stub(repo.users, 'creatingTestData');
-    })
+    });
 
     describe('sampleData', function () {
 
