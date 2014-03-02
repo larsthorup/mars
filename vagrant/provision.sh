@@ -7,4 +7,3 @@ add-apt-repository -y ppa:chris-lea/node.js >/dev/null 2>&1
 apt-get update >/dev/null 2>&1
 apt-get install -y nodejs >/dev/null 2>&1
 
-node /vagrant/
