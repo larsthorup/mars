@@ -7,11 +7,12 @@
 var restify = require('restify');
 var router = require('./router');
 var fs = require('fs');
+var path = require('path');
 
 function start(options) {
 
-    var certificate = fs.readFileSync('conf/certs/' + options.certName + '.cert');
-    var key = fs.readFileSync('conf/certs/' + options.certName + '.key');
+    var certificate = fs.readFileSync(path.resolve(__dirname, '../conf/certs/' + options.certName + '.cert'));
+    var key = fs.readFileSync(path.resolve(__dirname, '../conf/certs/' + options.certName + '.key'));
 
     var server = restify.createServer({
         name: 'mars',

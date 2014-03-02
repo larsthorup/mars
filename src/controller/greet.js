@@ -6,7 +6,7 @@ function hello(req, res, next) {
     repo.users.findingByName(name)
     .then(function (users) {
         if(users.length < 1) {
-            return next(new restify.InternalError('does not compute'));
+            return next(new restify.InternalError('does not compute: ' + name));
         } else {
             res.send('hello ' + users[0].name);
             return next();

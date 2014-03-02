@@ -8,6 +8,8 @@ function creatingSchema() {
     return Knex.knex.schema.createTable('users', function(table) {
         table.increments('id');
         table.string('name');
+    }).then(function () {
+        console.log('"users" table created');
     });
 }
 
@@ -15,7 +17,21 @@ function creatingTestData() {
     return Knex.knex('users').insert([
         {name: 'Lars'},
         {name: 'Rob'}
-    ]);
+    ]).then(function () {
+        return counting();
+    }).then(function (userCount) {
+        console.log('"users" table populated with ' + userCount + ' rows');
+    });
+}
+
+function counting() {
+    return Knex.knex('users').count('name as userCount').then(function (result) {
+        if(result.length < 1) {
+            return 0;
+        } else {
+            return result[0].userCount;
+        }
+    });
 }
 
 function findingByName(name) {
@@ -26,5 +42,6 @@ module.exports = {
     droppingSchema: droppingSchema,
     creatingSchema: creatingSchema,
     creatingTestData: creatingTestData,
-    findingByName: findingByName
+    findingByName: findingByName,
+    counting: counting
 };

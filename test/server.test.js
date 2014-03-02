@@ -2,6 +2,7 @@ var restify = require('restify');
 var server = require('../src/server');
 var router = require('../src/router');
 var fs = require('fs');
+var path = require('path');
 
 describe('server', function () {
     var restifyServer;
@@ -13,9 +14,10 @@ describe('server', function () {
             listen: sandbox.spy()
         };
         sandbox.stub(restify, 'createServer', function () { return restifyServer; });
-        sandbox.stub(fs, 'readFileSync')
-            .withArgs('conf/certs/someCertificate.cert').returns('theCert')
-            .withArgs('conf/certs/someCertificate.key').returns('theKey');
+        sandbox.stub(fs, 'readFileSync', function (filePath) {
+            if(path.resolve(__dirname, '../conf/certs/someCertificate.cert') === filePath) { return 'theCert'; }
+            if(path.resolve(__dirname, '../conf/certs/someCertificate.key') === filePath) { return 'theKey'; }
+        });
         sandbox.stub(router, 'map');
         sandbox.stub(console, 'log');
     });

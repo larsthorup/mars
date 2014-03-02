@@ -32,7 +32,7 @@ describe('controller', function () {
             it('should refuse to say hello to putin', function (ok) {
                 var req = { params: { name: 'putin' } };
                 greet.hello(req, res, function (err) {
-                    expect(err.message).to.equal('does not compute');
+                    expect(err.message).to.equal('does not compute: putin');
                     expect(res.send).not.to.have.been.calledWith('hello putin');
                     ok();
                 });

@@ -27,6 +27,14 @@ describe('model', function () {
             .then(function () { ok(); });
         });
 
+        it('should count rows', function (ok) {
+            repo.users.counting()
+            .then(function (userCount) {
+                expect(userCount).to.equal(2);
+                ok();
+            });
+        });
+
         it('should select rows', function (ok) {
             repo.users.findingByName('Lars')
             .then(function (usersFound) {
