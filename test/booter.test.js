@@ -13,7 +13,7 @@ describe('booter', function () {
     describe('boot', function () {
 
         beforeEach(function () {
-            booter.boot();
+            booter.boot({server: 'serverConfig'});
         });
 
         it('connects to the repo', function () {
@@ -25,7 +25,7 @@ describe('booter', function () {
         });
 
         it('starts the server', function () {
-            expect(server.start).to.have.been.calledWith();
+            expect(server.start).to.have.been.calledWith('serverConfig');
         });
     });
 

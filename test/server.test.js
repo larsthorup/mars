@@ -1,6 +1,7 @@
 var restify = require('restify');
 var server = require('../src/server');
 var router = require('../src/router');
+var fs = require('fs');
 
 describe('server', function () {
     var restifyServer;
@@ -12,6 +13,9 @@ describe('server', function () {
             listen: sandbox.spy()
         };
         sandbox.stub(restify, 'createServer', function () { return restifyServer; });
+        sandbox.stub(fs, 'readFileSync')
+            .withArgs('conf/certs/someCertificate.cert').returns('theCert')
+            .withArgs('conf/certs/someCertificate.key').returns('theKey');
         sandbox.stub(router, 'map');
         sandbox.stub(console, 'log');
     });
@@ -19,11 +23,15 @@ describe('server', function () {
     describe('start', function () {
 
         beforeEach(function () {
-            server.start();
+            server.start({certName: 'someCertificate'});
         });
 
         it('names the server', function () {
-            expect(restify.createServer).to.have.been.calledWith({ name: 'mars' });
+            expect(restify.createServer).to.have.been.calledWith({
+                name: 'mars',
+                certificate: 'theCert',
+                key: 'theKey'
+            });
         });
 
         it('maps the routes', function () {

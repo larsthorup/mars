@@ -1,13 +1,22 @@
-// ToDo: authentication
+// ToDo: encryption (https)
+// ToDo: authentication (basic auth over https)
+// ToDo: hosting (digial ocean)
 // ToDo: modular authorization
+// ToDo: zero downtime upgrades (http-proxy)
 
 var restify = require('restify');
 var router = require('./router');
+var fs = require('fs');
 
-function start() {
+function start(options) {
+
+    var certificate = fs.readFileSync('conf/certs/' + options.certName + '.cert');
+    var key = fs.readFileSync('conf/certs/' + options.certName + '.key');
 
     var server = restify.createServer({
-        name: 'mars'
+        name: 'mars',
+        certificate: certificate,
+        key: key
     });
     router.map(server);
     server.listen(1719, function() {
