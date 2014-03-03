@@ -1,8 +1,7 @@
-// ToDo: raw queries
-// ToDo: migrations (sql files, maybe create own framework for this)
 // ToDo: make test async by returning promise
 
 var repo = require('../../src/repo');
+var hasher = require('../../src/model/hasher');
 
 describe('model', function () {
 
@@ -42,7 +41,11 @@ describe('model', function () {
                 var lars = usersFound[0];
                 expect(lars.name).to.equal('Lars');
                 expect(lars.id).to.equal(1);
+                expect(lars.passwordHash).to.be.a('string').with.length.above(0);
+                expect(hasher.verify('lars123', lars.passwordHash)).to.equal(true);
                 ok();
+            }).catch(function (err) {
+                ok(err);
             });
         });
     });

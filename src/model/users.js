@@ -1,4 +1,5 @@
 var Knex = require('knex');
+var hasher = require('./hasher');
 
 function droppingSchema() {
     return Knex.knex.schema.dropTableIfExists('users');
@@ -8,6 +9,7 @@ function creatingSchema() {
     return Knex.knex.schema.createTable('users', function(table) {
         table.increments('id');
         table.string('name');
+        table.string('passwordHash');
     }).then(function () {
         console.log('"users" table created');
     });
@@ -15,8 +17,8 @@ function creatingSchema() {
 
 function creatingTestData() {
     return Knex.knex('users').insert([
-        {name: 'Lars'},
-        {name: 'Rob'}
+        {name: 'Lars', passwordHash: hasher.generate('lars123')},
+        {name: 'Rob', passwordHash: hasher.generate('p')}
     ]).then(function () {
         return counting();
     }).then(function (userCount) {

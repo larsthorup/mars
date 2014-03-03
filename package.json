@@ -10,7 +10,8 @@
         "sqlite3": "~2.2.0",
         "knex": "~0.5.5",
         "restify": "~2.6.1",
-        "forever": "0.10.11"
+        "forever": "~0.10.11",
+        "password-hash": "~1.2.1"
     },
     "devDependencies": {
         "jshint": "~2.4.3",
