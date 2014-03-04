@@ -37,17 +37,17 @@ describe('server', function () {
         });
 
         it('maps the routes', function () {
-            router.map.calledWith(restifyServer).should.equal(true);
+            router.map.should.have.been.calledWith(restifyServer);
         });
 
         it('listens on the right port', function () {
-            restifyServer.listen.calledWith(1719).should.equal(true);
+            restifyServer.listen.should.have.been.calledWith(1719);
         });
 
         it('tells how it listens', function () {
             var listenCallback = restifyServer.listen.getCall(0).args[1];
             listenCallback();
-            console.log.calledWith('%s listening at %s', 'serverName', 'serverUrl').should.equal(true);
+            console.log.should.have.been.calledWith('%s listening at %s', 'serverName', 'serverUrl');
         });
     });
 });

@@ -17,15 +17,15 @@ describe('booter', function () {
         });
 
         it('connects to the repo', function () {
-            repo.connect.calledWith().should.equal(true);
+            repo.connect.should.have.been.calledWith();
         });
 
         it('creates sample data', function () {
-            repo.sampleData.calledWith().should.equal(true);
+            repo.sampleData.should.have.been.calledWith();
         });
 
         it('starts the server', function () {
-            server.start.calledWith('serverConfig').should.equal(true);
+            server.start.should.have.been.calledWith('serverConfig');
         });
     });
 

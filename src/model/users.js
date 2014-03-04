@@ -11,7 +11,7 @@ function creatingSchema() {
         table.string('name');
         table.string('passwordHash');
     }).then(function () {
-        console.log('"users" table created');
+        // console.log('"users" table created');
     });
 }
 
@@ -22,7 +22,7 @@ function creatingTestData() {
     ]).then(function () {
         return counting();
     }).then(function (userCount) {
-        console.log('"users" table populated with ' + userCount + ' rows');
+        // console.log('"users" table populated with ' + userCount + ' rows');
     });
 }
 

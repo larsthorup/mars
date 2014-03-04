@@ -32,11 +32,11 @@
     "scripts": {
         "-- fast feedback ": "--",
         "lint": "node node_modules/jshint/bin/jshint src test",
-        "test": "node node_modules/mocha/bin/mocha -R spec --require test/setup --recursive",
-        "cover": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec --require test/setup --recursive",
+        "test": "node node_modules/mocha/bin/mocha -R dot --require test/setup --recursive",
+        "cover": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R dot --require test/setup --recursive",
         "cover-report": "start coverage/lcov-report/index.html",
         "package": "npm shrinkwrap && rm -rf dist && mkdir dist && cp --recursive --target-directory=dist src conf static package.json npm-shrinkwrap.json && rm -rf npm-shrinkwrap.json",
-        "dev": "npm install && npm run lint && npm run cover && npm run package",
+        "dev": "npm install && npm run lint && npm run cover",
         "-- run locally ": "--",
         "start-local": "start node src/mars.js",
         "test-local": "curl --insecure https://localhost:1719/hello/Lars",
@@ -48,10 +48,10 @@
         "list-remote": "vagrant ssh -c 'node ~/node_modules/mars/node_modules/forever/bin/forever list' -- -n -T",
         "stop-remote": "vagrant ssh -c 'node ~/node_modules/mars/node_modules/forever/bin/forever stop ~/node_modules/mars/src/mars.js' -- -n -T",
         "test-remote": "sleep 2 && curl --insecure https://192.168.50.4:1719/hello/Lars",
-        "deploy": "npm run up && npm run install-remote && npm run start-remote && npm run test-remote",
+        "deploy": "npm run package && npm run up && npm run install-remote && npm run start-remote && npm run test-remote",
         "-- continuous integration ": "--",
         "travis": "npm run lint && npm run coveralls && npm run package",
-        "coveralls": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --require test/setup --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+        "coveralls": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --report lcovonly -- -R dot --require test/setup --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
     },
     "license": "MIT",
     "readmeFilename": "README.md"

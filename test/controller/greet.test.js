@@ -24,7 +24,7 @@ describe('controller', function () {
                 var req = { params: { name: 'lars' } };
                 greet.hello(req, res, function (err) {
                     should.not.exist(err);
-                    res.send.calledWith('hello lars').should.equal(true);
+                    res.send.should.have.been.calledWith('hello lars');
                     ok();
                 });
             });
@@ -33,7 +33,7 @@ describe('controller', function () {
                 var req = { params: { name: 'putin' } };
                 greet.hello(req, res, function (err) {
                     err.message.should.equal('does not compute: putin');
-                    res.send.calledWith('hello putin').should.equal(false);
+                    res.send.should.not.have.been.calledWith('hello putin');
                     ok();
                 });
             });
