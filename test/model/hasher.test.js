@@ -1,6 +1,6 @@
 var hasher = require('../../src/model/hasher');
 
-describe('mode', function () {
+describe('model', function () {
     describe('hasher', function () {
         var hash;
 
@@ -9,7 +9,7 @@ describe('mode', function () {
         });
 
         it('should verify the password', function () {
-            expect(hasher.verify('abc123', hash)).to.equal(true);
+            hasher.verify('abc123', hash).should.equal(true);
         });
     });
 });

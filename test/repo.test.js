@@ -17,9 +17,9 @@ describe('repo', function () {
         });
 
         it('intializes schema and test data', function () {
-            expect(repo.users.droppingSchema).to.have.been.calledWith();
-            expect(repo.users.creatingSchema).to.have.been.calledWith();
-            expect(repo.users.creatingTestData).to.have.been.calledWith();
+            repo.users.droppingSchema.calledWith().should.equal(true);
+            repo.users.creatingSchema.calledWith().should.equal(true);
+            repo.users.creatingTestData.calledWith().should.equal(true);
         });
     });
 });

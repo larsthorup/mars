@@ -20,12 +20,12 @@ describe('router', function () {
         });
 
         it('maps hello', function () {
-            expect(server.get).to.have.been.calledWith('/hello/:name', greet.hello);
+            server.get.calledWith('/hello/:name', greet.hello).should.equal(true);
         });
 
         it('maps static files', function () {
-            expect(restify.serveStatic).to.have.been.calledWith({ directory: './static' });
-            expect(server.get).to.have.been.calledWith(/\/static\/?.*/);
+            restify.serveStatic.calledWith({ directory: './static' }).should.equal(true);
+            server.get.calledWith(/\/static\/?.*/).should.equal(true);
         });
 
     });

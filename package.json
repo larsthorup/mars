@@ -11,12 +11,15 @@
         "knex": "~0.5.5",
         "restify": "~2.6.1",
         "forever": "~0.10.11",
-        "password-hash": "~1.2.1"
+        "password-hash": "~1.2.1",
+        "bluebird": "~1.0.8"
     },
     "devDependencies": {
         "jshint": "~2.4.3",
         "mocha": "~1.17.1",
+        "mocha-as-promised": "~2.0.0",
         "chai": "~1.9.0",
+        "chai-as-promised": "~4.1.1",
         "sinon": "~1.8.1",
         "sinon-chai": "~2.5.0",
         "istanbul": "~0.2.4",
@@ -29,8 +32,8 @@
     "scripts": {
         "-- fast feedback ": "--",
         "lint": "node node_modules/jshint/bin/jshint src test",
-        "test": "node node_modules/mocha/bin/mocha -R spec --recursive",
-        "cover": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec --recursive",
+        "test": "node node_modules/mocha/bin/mocha -R spec --require test/setup --recursive",
+        "cover": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec --require test/setup --recursive",
         "cover-report": "start coverage/lcov-report/index.html",
         "package": "npm shrinkwrap && rm -rf dist && mkdir dist && cp --recursive --target-directory=dist src conf static package.json npm-shrinkwrap.json && rm -rf npm-shrinkwrap.json",
         "dev": "npm install && npm run lint && npm run cover && npm run package",
@@ -48,7 +51,7 @@
         "deploy": "npm run up && npm run install-remote && npm run start-remote && npm run test-remote",
         "-- continuous integration ": "--",
         "travis": "npm run lint && npm run coveralls && npm run package",
-        "coveralls": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+        "coveralls": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --require test/setup --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
     },
     "license": "MIT",
     "readmeFilename": "README.md"

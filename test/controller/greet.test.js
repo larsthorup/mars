@@ -1,7 +1,7 @@
 // ToDo: use a promise library
+// ToDo: promisify greet.hello
 
 var greet = require('../../src/controller/greet');
-
 var repo = require('../../stub/repo.stub.js');
 
 describe('controller', function () {
@@ -23,8 +23,8 @@ describe('controller', function () {
             it('should say hello', function (ok) {
                 var req = { params: { name: 'lars' } };
                 greet.hello(req, res, function (err) {
-                    expect(err).to.equal(undefined);
-                    expect(res.send).to.have.been.calledWith('hello lars');
+                    should.not.exist(err);
+                    res.send.calledWith('hello lars').should.equal(true);
                     ok();
                 });
             });
@@ -32,8 +32,8 @@ describe('controller', function () {
             it('should refuse to say hello to putin', function (ok) {
                 var req = { params: { name: 'putin' } };
                 greet.hello(req, res, function (err) {
-                    expect(err.message).to.equal('does not compute: putin');
-                    expect(res.send).not.to.have.been.calledWith('hello putin');
+                    err.message.should.equal('does not compute: putin');
+                    res.send.calledWith('hello putin').should.equal(false);
                     ok();
                 });
             });
