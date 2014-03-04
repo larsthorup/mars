@@ -1,5 +1,5 @@
 var repo = require('../../src/repo');
-// var hasher = require('../../src/model/hasher');
+var hasher = require('../../src/model/hasher');
 
 describe('model', function () {
 
@@ -26,16 +26,28 @@ describe('model', function () {
             return userCount.should.become(2);
         });
 
-        it('should select rows', function () {
-            var finding = repo.users.findingByName('Lars');
-            // finding.then(function (result) { debugger; });
-            return finding.should.eventually.have.length(1);
-//            return finding.should.eventually.satisfy(function (usersFound) {
-//                return usersFound.length === 1 &&
-//                usersFound[0].name === 'Lars' &&
-//                usersFound[0].id === 1 &&
-//                hasher.verify('lars123x', usersFound[0].passwordHash);
-//            });
+        describe('findingByName', function () {
+            var finding;
+
+            beforeEach(function () {
+                finding = repo.users.findingByName('Lars');
+                // finding.then(function (result) { debugger; });
+            });
+
+            it('should return the correct number of rows', function () {
+                return finding.should.eventually.have.length(1);
+            });
+
+            it('should return the correct row', function () {
+                return finding.should.eventually.have.deep.property('[0].name', 'Lars');
+            });
+
+            it('should include a verifiable password hash', function () {
+                return finding.should.eventually.satisfy(function (usersFound) {
+                    return hasher.verify('lars123', usersFound[0].passwordHash);
+                });
+            });
+
         });
     });
 });
