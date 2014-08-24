@@ -7,22 +7,22 @@
         "url": "https://github.com/larsthorup/mars.git"
     },
     "dependencies": {
-        "sqlite3": "~2.2.0",
-        "knex": "~0.6.22",
-        "restify": "~2.6.1",
-        "forever": "~0.10.11",
-        "password-hash": "~1.2.1",
+        "sqlite3": "^2.2.0",
+        "knex": "^0.6.22",
+        "restify": "^2.8.2",
+        "forever": "^0.10.11",
+        "password-hash": "^1.2.1",
         "bluebird": "~1.0.8"
     },
     "devDependencies": {
-        "jshint": "~2.5.5",
-        "mocha": "~1.21.0",
-        "chai": "~1.9.0",
-        "chai-as-promised": "~4.1.1",
-        "sinon": "~1.10.3",
-        "sinon-chai": "~2.5.0",
-        "istanbul": "~0.3.0",
-        "coveralls": "~2.11.1"
+        "jshint": "^2.5.5",
+        "mocha": "^1.21.0",
+        "chai": "^1.9.0",
+        "chai-as-promised": "^4.1.1",
+        "sinon": "^1.10.3",
+        "sinon-chai": "^2.5.0",
+        "istanbul": "^0.3.0",
+        "coveralls": "^2.11.1"
     },
     "author": {
         "name": "Lars Thorup",
