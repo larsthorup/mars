@@ -1,6 +1,5 @@
 // Mocha setup
 var mocha = require('mocha');
-require('mocha-as-promised')(); // Note: allow tests to return a promise
 
 // Chai setup
 var chai = require('chai');
