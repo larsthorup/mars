@@ -1,19 +1,18 @@
-// ToDo: simplify promising stubs
-
 var repo = require('../src/repo');
+var P = require('bluebird');
 
 describe('repo', function () {
 
     beforeEach(function () {
-        sandbox.stub(repo.users, 'droppingSchema', function () { return { then: function (callback) { return callback();}};});
-        sandbox.stub(repo.users, 'creatingSchema', function () { return { then: function (callback) { return callback();}};});
+        sandbox.stub(repo.users, 'droppingSchema', function () { return P.resolve();});
+        sandbox.stub(repo.users, 'creatingSchema', function () { return P.resolve();});
         sandbox.stub(repo.users, 'creatingTestData');
     });
 
     describe('sampleData', function () {
 
         beforeEach(function () {
-            repo.sampleData();
+            return repo.sampleData();
         });
 
         it('intializes schema and test data', function () {
