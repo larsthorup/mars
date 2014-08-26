@@ -1,19 +1,33 @@
 var restify = require('restify');
 var repo = require('../repo.js');
 
-function hello(req, res, next) {
+
+function greeting(req) {
     var name = req.params.name;
-    repo.users.findingByName(name)
+    return repo.users.findingByName(name)
     .then(function (users) {
         if(users.length < 1) {
-            return next(new restify.InternalError('does not compute: ' + name));
+            throw new Error('does not compute: ' + name);
         } else {
-            res.send('hello ' + users[0].name);
-            return next();
+            return 'hello ' + users[0].name;
         }
     });
 }
 
+var processRequest = function (controller) {
+    return function (req, res, next) {
+        controller(req)
+        .then(function (result) {
+            res.send(result);
+            return next();
+        })
+        .catch(function (err) {
+            return next(new restify.InternalError(err.message));
+        })
+        .done();
+    };
+};
+
 module.exports = {
-    hello: hello
+    hello: processRequest(greeting)
 };
