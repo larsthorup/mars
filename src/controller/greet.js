@@ -1,6 +1,5 @@
-var restify = require('restify');
 var repo = require('../repo.js');
-
+var request = require('../request.js');
 
 function greeting(req) {
     var name = req.params.name;
@@ -14,20 +13,6 @@ function greeting(req) {
     });
 }
 
-var processRequest = function (controller) {
-    return function (req, res, next) {
-        controller(req)
-        .then(function (result) {
-            res.send(result);
-            return next();
-        })
-        .catch(function (err) {
-            return next(new restify.InternalError(err.message));
-        })
-        .done();
-    };
-};
-
 module.exports = {
-    hello: processRequest(greeting)
+    hello: request.process(greeting)
 };
