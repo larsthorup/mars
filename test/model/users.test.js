@@ -6,7 +6,13 @@ describe('model', function () {
     describe('users', function () {
 
         it('should initialize', function () {
-            repo.connect();
+            repo.connect({
+                "client": "sqlite3",
+                "connection": {
+                    "filename": ":memory:"
+                }
+                // ,"debug": true
+            });
         });
 
         it('should drop the schema', function () {

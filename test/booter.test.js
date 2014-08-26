@@ -13,11 +13,15 @@ describe('booter', function () {
     describe('boot', function () {
 
         beforeEach(function () {
-            booter.boot({server: 'serverConfig'});
+            var config = {
+                server: 'serverConfig',
+                database: 'dbConfig'
+            };
+            booter.boot(config);
         });
 
         it('connects to the repo', function () {
-            repo.connect.should.have.been.calledWith();
+            repo.connect.should.have.been.calledWith('dbConfig');
         });
 
         it('creates sample data', function () {

@@ -12,7 +12,8 @@
         "restify": "^2.8.2",
         "forever": "^0.10.11",
         "password-hash": "^1.2.1",
-        "bluebird": "^2.3.1"
+        "bluebird": "^2.3.1",
+        "lodash": "^2.4.1"
     },
     "devDependencies": {
         "jshint": "^2.5.5",

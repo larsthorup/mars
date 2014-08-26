@@ -1,13 +1,8 @@
 var Knex = require('knex');
 var users = require('./model/users');
 
-function connect() {
-    Knex.knex = Knex.initialize({
-        client: 'sqlite3',
-        connection: {
-            filename: ':memory:'
-        }
-    });
+function connect(options) {
+    Knex.knex = Knex.initialize(options);
 }
 
 function sampleData() {
