@@ -1,9 +1,4 @@
 var booter = require('./booter');
 
-// ToDo: var options = require('../conf/mars.config.json')
-var options = {
-    server: {
-        certName: '28125098_localhost'
-    }
-};
+var options = require('../conf/mars.json');
 booter.boot(options);

@@ -1,4 +1,3 @@
-// ToDo: encryption (https)
 // ToDo: authentication (basic auth over https)
 // ToDo: hosting (digial ocean)
 // ToDo: modular authorization
