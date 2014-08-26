@@ -1,5 +1,4 @@
 var repo = require('../repo.js');
-var request = require('../request.js');
 
 function greeting(req) {
     var name = req.params.name;
@@ -14,5 +13,5 @@ function greeting(req) {
 }
 
 module.exports = {
-    hello: request.process(greeting)
+    greeting: greeting
 };

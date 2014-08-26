@@ -1,6 +1,5 @@
 var router = require('../src/router');
 var restify = require('restify');
-var greet = require('../src/controller/greet');
 
 describe('router', function () {
     var server;
@@ -20,7 +19,7 @@ describe('router', function () {
         });
 
         it('maps hello', function () {
-            server.get.should.have.been.calledWith('/hello/:name', greet.hello);
+            server.get.should.have.been.calledWith('/hello/:name', router.hello);
         });
 
         it('maps static files', function () {
