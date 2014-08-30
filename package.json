@@ -16,14 +16,20 @@
         "lodash": "^2.4.1"
     },
     "devDependencies": {
-        "jshint": "^2.5.5",
         "mocha": "^1.21.0",
         "chai": "^1.9.0",
         "chai-as-promised": "^4.1.1",
         "sinon": "^1.10.3",
         "sinon-chai": "^2.5.0",
         "istanbul": "^0.3.0",
-        "coveralls": "^2.11.1"
+        "coveralls": "^2.11.1",
+        "jsdoc": "^3.3.0",
+        "gulp": "^3.8.7",
+        "gulp-changed": "^1.0.0",
+        "gulp-jshint": "^1.8.4",
+        "jshint-stylish": "^0.4.0",
+        "gulp-mocha": "^1.0.0",
+        "gulp-istanbul": "^0.2.2"
     },
     "author": {
         "name": "Lars Thorup",
@@ -31,9 +37,9 @@
     },
     "scripts": {
         "-- fast feedback ": "--",
-        "lint": "node node_modules/jshint/bin/jshint src test",
-        "test": "node node_modules/mocha/bin/mocha -R dot --require test/setup --recursive",
-        "cover": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R dot --require test/setup --recursive",
+        "lint": "node node_modules/.bin/gulp lint",
+        "test": "node node_modules/.bin/gulp test",
+        "cover": "node node_modules/.bin/gulp cover",
         "cover-report": "start coverage/lcov-report/index.html",
         "package": "npm shrinkwrap && rm -rf dist && mkdir dist && cp --recursive --target-directory=dist src conf static package.json npm-shrinkwrap.json && rm -rf npm-shrinkwrap.json",
         "dev": "npm install && npm run lint && npm run cover",
