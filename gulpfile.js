@@ -2,10 +2,13 @@ var gulp = require('gulp');
 
 var paths = {
     src: 'src/**/*.js',
-    test: 'test/**/*.js',
+    test: {
+        unit: 'test/unit/**/*.js',
+        end2end: 'test/end2end/**/*.js'
+    },
     tool: '*.js'
 };
-paths.code = [paths.src, paths.test, paths.tool];
+paths.code = [paths.src, paths.test.unit, paths.test.end2end, paths.tool];
 
 // lint
 var jshint = require('gulp-jshint');
@@ -21,7 +24,7 @@ gulp.task('lint', function () {
 var mocha = require('gulp-mocha');
 gulp.task('test', function () {
     return gulp
-    .src(paths.test)
+    .src(paths.test.unit)
     .pipe(mocha({reporter: 'dot'}));
 });
 
@@ -33,7 +36,7 @@ gulp.task('cover', function (cb) {
     .pipe(istanbul())
     .on('finish', function () {
         gulp
-        .src(paths.test)
+        .src(paths.test.unit)
         .pipe(mocha({reporter: 'dot'}))
         .pipe(istanbul.writeReports({
             dir: './coverage',
@@ -41,6 +44,12 @@ gulp.task('cover', function (cb) {
         }))
         .on('end', cb);
     });
+});
+var open = require('gulp-open');
+gulp.task('cover-report', function () {
+    return gulp
+    .src('coverage/lcov-report/index.html')
+    .pipe(open());
 });
 
 // watch

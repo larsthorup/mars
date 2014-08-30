@@ -1,4 +1,4 @@
-var router = require('../src/router');
+var router = require('../../src/router');
 var restify = require('restify');
 
 describe('router', function () {

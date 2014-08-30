@@ -1,5 +1,5 @@
-var greet = require('../../src/controller/greet');
-var repo = require('../../stub/repo.stub.js');
+var greet = require('../../../src/controller/greet');
+var repo = require('../../../stub/repo.stub.js');
 
 describe('controller', function () {
 

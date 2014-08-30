@@ -1,4 +1,4 @@
-var repo = require('../src/repo');
+var repo = require('../../src/repo');
 var P = require('bluebird');
 
 describe('repo', function () {

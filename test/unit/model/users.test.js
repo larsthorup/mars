@@ -1,5 +1,5 @@
-var repo = require('../../src/repo');
-var hasher = require('../../src/model/hasher');
+var repo = require('../../../src/repo');
+var hasher = require('../../../src/model/hasher');
 
 describe('model', function () {
 

@@ -1,6 +1,6 @@
-var booter = require('../src/booter');
-var repo = require('../src/repo');
-var server = require('../src/server');
+var booter = require('../../src/booter');
+var repo = require('../../src/repo');
+var server = require('../../src/server');
 
 describe('booter', function () {
 

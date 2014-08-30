@@ -1,4 +1,4 @@
-var arrayIndexOf = require('../src/util');
+var arrayIndexOf = require('../../src/util');
 
 describe('util', function(){
     describe('arrayIndexOf', function(){

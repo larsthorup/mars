@@ -1,4 +1,4 @@
-var request = require('../src/request');
+var request = require('../../src/request');
 var P = require('bluebird');
 
 describe('request', function () {

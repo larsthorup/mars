@@ -1,6 +1,6 @@
 var restify = require('restify');
-var server = require('../src/server');
-var router = require('../src/router');
+var server = require('../../src/server');
+var router = require('../../src/router');
 var fs = require('fs');
 var path = require('path');
 
@@ -15,8 +15,8 @@ describe('server', function () {
         };
         sandbox.stub(restify, 'createServer', function () { return restifyServer; });
         sandbox.stub(fs, 'readFileSync', function (filePath) {
-            if(path.resolve(__dirname, '../conf/certs/someCertificate.cert') === filePath) { return 'theCert'; }
-            if(path.resolve(__dirname, '../conf/certs/someCertificate.key') === filePath) { return 'theKey'; }
+            if(path.resolve(__dirname, '../../conf/certs/someCertificate.cert') === filePath) { return 'theCert'; }
+            if(path.resolve(__dirname, '../../conf/certs/someCertificate.key') === filePath) { return 'theKey'; }
         });
         sandbox.stub(router, 'map');
         sandbox.stub(console, 'log');
@@ -29,11 +29,11 @@ describe('server', function () {
         });
 
         it('names the server', function () {
-            restify.createServer.calledWith({
+            restify.createServer.should.have.been.calledWith({
                 name: 'mars',
                 certificate: 'theCert',
                 key: 'theKey'
-            }).should.equal(true);
+            });
         });
 
         it('maps the routes', function () {

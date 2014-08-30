@@ -29,7 +29,8 @@
         "gulp-jshint": "^1.8.4",
         "jshint-stylish": "^0.4.0",
         "gulp-mocha": "^1.0.0",
-        "gulp-istanbul": "^0.2.2"
+        "gulp-istanbul": "^0.2.2",
+        "gulp-open": "^0.2.8"
     },
     "author": {
         "name": "Lars Thorup",
@@ -40,7 +41,6 @@
         "lint": "node node_modules/gulp/bin/gulp lint",
         "test": "node node_modules/gulp/bin/gulp test",
         "cover": "node node_modules/gulp/bin/gulp cover",
-        "cover-report": "start coverage/lcov-report/index.html",
         "package": "npm shrinkwrap && rm -rf dist && mkdir dist && cp --recursive --target-directory=dist src conf static package.json npm-shrinkwrap.json && rm -rf npm-shrinkwrap.json",
         "dev": "npm install && npm run lint && npm run cover",
         "-- run locally ": "--",
@@ -57,8 +57,8 @@
         "test-remote": "sleep 2 && curl --insecure https://192.168.50.4:1719/hello/Lars",
         "deploy": "npm run package && npm run up && npm run install-remote && npm run start-remote && npm run test-remote",
         "-- continuous integration ": "--",
-        "travis": "npm run lint && npm run cover && npm run coveralls && npm run package",
-        "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+        "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+        "travis": "npm run lint && npm run cover && npm run coveralls && npm run package"
     },
     "license": "MIT",
     "readmeFilename": "README.md"
