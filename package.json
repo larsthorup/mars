@@ -57,8 +57,8 @@
         "test-remote": "sleep 2 && curl --insecure https://192.168.50.4:1719/hello/Lars",
         "deploy": "npm run package && npm run up && npm run install-remote && npm run start-remote && npm run test-remote",
         "-- continuous integration ": "--",
-        "travis": "npm run lint && npm run coveralls && npm run package",
-        "coveralls": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha --report lcovonly -- -R dot --require test/setup --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+        "travis": "npm run lint && npm run cover && npm run coveralls && npm run package",
+        "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
     },
     "license": "MIT",
     "readmeFilename": "README.md"
