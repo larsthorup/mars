@@ -37,9 +37,9 @@
     },
     "scripts": {
         "-- fast feedback ": "--",
-        "lint": "node node_modules/.bin/gulp lint",
-        "test": "node node_modules/.bin/gulp test",
-        "cover": "node node_modules/.bin/gulp cover",
+        "lint": "node node_modules/gulp/bin/gulp lint",
+        "test": "node node_modules/gulp/bin/gulp test",
+        "cover": "node node_modules/gulp/bin/gulp cover",
         "cover-report": "start coverage/lcov-report/index.html",
         "package": "npm shrinkwrap && rm -rf dist && mkdir dist && cp --recursive --target-directory=dist src conf static package.json npm-shrinkwrap.json && rm -rf npm-shrinkwrap.json",
         "dev": "npm install && npm run lint && npm run cover",

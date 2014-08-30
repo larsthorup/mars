@@ -5,6 +5,10 @@ function connect(options) {
     Knex.knex = Knex.initialize(options);
 }
 
+function disconnecting() {
+    return Knex.knex.destroy();
+}
+
 function sampleData() {
     return users.droppingSchema().then(function () {
         return users.creatingSchema();
@@ -15,6 +19,7 @@ function sampleData() {
 
 module.exports = {
     connect: connect,
+    disconnecting: disconnecting,
     sampleData: sampleData,
     users: users
 };
