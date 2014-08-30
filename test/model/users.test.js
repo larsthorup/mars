@@ -26,7 +26,7 @@ describe('model', function () {
 
         it('should count rows', function () {
             var userCount = repo.users.counting();
-            return userCount.should.become(2);
+            return userCount.should.become(3);
         });
 
         describe('findingByName', function () {
