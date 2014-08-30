@@ -1,11 +1,5 @@
 {
     "server": {
         "certName": "28125098_localhost"
-    },
-    "database": {
-        "client": "sqlite3",
-        "connection": {
-            "filename": ":memory:"
-        }
     }
 }
