@@ -13,7 +13,7 @@ describe('scenario', function () {
     });
 
     it('authenticates existing user', function () {
-        return mars.posting('/auth/authenticate/Lars', {pass: 'lars123'}).should.become({ token: 'secret'});
+        return mars.posting('/auth/authenticate/Lars', {pass: 'lars123'}).should.become({ token: '{\"user\":\"Lars\",\"hashed\":true}'});
     });
 
     it('fails authenticating existing user with wrong password', function () {
