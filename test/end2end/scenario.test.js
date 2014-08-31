@@ -1,19 +1,26 @@
 var https = require('https');
-
-
+var process = require('child_process');
+var P = require('bluebird');
 
 
 
 describe('scenario', function () {
+    var server;
 
     before(function () {
-        // recreate database
-        // start server
-        // wait until started
+        // ToDo: recreate database
+
+        // Note: start the server
+        server = process.fork('src/mars.js', {
+        });
+
+        // Note: give the server time to finish startup
+        return P.delay(1000);
     });
 
     after(function () {
-        // stop server
+        // Note: stop the server
+        server.kill();
     });
 
     it('greets', function (done) {
