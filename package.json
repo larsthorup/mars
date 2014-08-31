@@ -30,7 +30,8 @@
         "jshint-stylish": "^0.4.0",
         "gulp-mocha": "^1.0.0",
         "gulp-istanbul": "^0.2.2",
-        "gulp-open": "^0.2.8"
+        "gulp-open": "^0.2.8",
+        "request-promise": "^0.1.2"
     },
     "author": {
         "name": "Lars Thorup",

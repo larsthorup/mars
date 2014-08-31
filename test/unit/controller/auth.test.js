@@ -15,7 +15,7 @@ describe('controller', function () {
                 });
             });
 
-            it('should authenticate valid user', function () {
+            it('should authenticate valid user with valid password', function () {
                 return auth.authenticating({ params: { user: 'lars' } }).should.become({token: 'secret'});
             });
 

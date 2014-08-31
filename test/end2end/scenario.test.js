@@ -1,8 +1,10 @@
+var marsDb = require('../util/mars-db');
 var mars = require('../util/mars-api');
+// mars.trace = true;
 
 describe('scenario', function () {
     before(function () {
-        mars.database.recreate();
+        marsDb.recreate();
         return mars.starting();
     });
 
@@ -15,7 +17,7 @@ describe('scenario', function () {
     });
 
     it('fails authenticating non-existing user', function () {
-        return mars.posting('/auth/authenticate/unknown').should.be.rejectedWith('invalid user name or password');
+        return mars.posting('/auth/authenticate/unknown').should.be.rejectedWith({code: 'InternalError', message: 'invalid user name or password'});
     });
 
     it('greets friends', function () {
@@ -25,7 +27,7 @@ describe('scenario', function () {
 
     it('fails on foes', function () {
         var bearerToken = 'larsSecret';
-        return mars.getting('/hello/Putin', bearerToken).should.be.rejectedWith('does not compute: Putin');
+        return mars.getting('/hello/Putin', bearerToken).should.be.rejectedWith({code: 'InternalError', message: 'does not compute: Putin'});
     });
 
 });
