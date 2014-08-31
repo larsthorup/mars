@@ -13,11 +13,15 @@ describe('scenario', function () {
     });
 
     it('authenticates existing user', function () {
-        return mars.posting('/auth/authenticate/Lars').should.become({ token: 'secret'});
+        return mars.posting('/auth/authenticate/Lars', {pass: 'lars123'}).should.become({ token: 'secret'});
+    });
+
+    it('fails authenticating existing user with wrong password', function () {
+        return mars.posting('/auth/authenticate/Lars', {pass: 'qwerty'}).should.become({ token: 'secret'});
     });
 
     it('fails authenticating non-existing user', function () {
-        return mars.posting('/auth/authenticate/unknown').should.be.rejectedWith({code: 'InternalError', message: 'invalid user name or password'});
+        return mars.posting('/auth/authenticate/unknown', {}).should.be.rejectedWith({code: 'InternalError', message: 'invalid user name or password'});
     });
 
     it('greets friends', function () {

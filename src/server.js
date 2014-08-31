@@ -18,6 +18,7 @@ function start(options) {
         certificate: certificate,
         key: key
     });
+    server.use(restify.bodyParser());
     router.map(server);
     server.listen(1719, function() {
         console.log('%s listening at %s', server.name, server.url);

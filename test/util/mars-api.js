@@ -13,16 +13,16 @@ function stop() {
     server.kill();
 }
 
-function requesting(method, path, bearerToken) {
+function requesting(method, path, form, bearerToken) {
     var options = {
         uri: 'https://localhost:1719' + path,
         method: method,
         json: true,
         strictSSL: false,
+        form: form,
         headers: {
         }
     };
-    // ToDo: set .form
     if(bearerToken) {
         options.headers.authorization = 'Bearer ' + bearerToken;
     }
@@ -40,11 +40,11 @@ function requesting(method, path, bearerToken) {
 }
 
 function getting(path, bearerToken) {
-    return requesting('GET', path, bearerToken);
+    return requesting('GET', path, null, bearerToken);
 }
 
-function posting(path, bearerToken) {
-    return requesting('POST', path, bearerToken);
+function posting(path, form, bearerToken) {
+    return requesting('POST', path, form, bearerToken);
 }
 
 var mars = module.exports = {

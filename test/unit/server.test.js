@@ -11,9 +11,11 @@ describe('server', function () {
         restifyServer = {
             name: 'serverName',
             url: 'serverUrl',
-            listen: sandbox.spy()
+            listen: sandbox.spy(),
+            use: sandbox.spy()
         };
         sandbox.stub(restify, 'createServer', function () { return restifyServer; });
+        sandbox.stub(restify, 'bodyParser', function () { return 'theBodyParser'; });
         sandbox.stub(fs, 'readFileSync', function (filePath) {
             if(path.resolve(__dirname, '../../conf/certs/someCertificate.cert') === filePath) { return 'theCert'; }
             if(path.resolve(__dirname, '../../conf/certs/someCertificate.key') === filePath) { return 'theKey'; }
@@ -34,6 +36,10 @@ describe('server', function () {
                 certificate: 'theCert',
                 key: 'theKey'
             });
+        });
+
+        it('parses the body', function () {
+            restifyServer.use.should.have.been.calledWith('theBodyParser');
         });
 
         it('maps the routes', function () {
