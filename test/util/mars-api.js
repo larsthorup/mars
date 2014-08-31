@@ -24,12 +24,13 @@ function stop() {
     server.kill();
 }
 
-function getting(path, bearerToken) {
+function requesting(method, path, bearerToken) {
     return new P(function (resolve, reject) {
         var options = {
             host: 'localhost',
             port: 1719,
             path: path,
+            method: method,
             rejectUnauthorized: false,
             headers: {
             }
@@ -37,7 +38,7 @@ function getting(path, bearerToken) {
         if(bearerToken) {
             options.headers.authorization = 'Bearer ' + bearerToken;
         }
-        https.getting(options).then(function (response) {
+        https.requesting(options).then(function (response) {
             var result = JSON.parse(response.body);
             if(result.message) {
                 reject(result.message);
@@ -51,11 +52,20 @@ function getting(path, bearerToken) {
     });
 }
 
+function getting(path, bearerToken) {
+    return requesting('GET', path, bearerToken);
+}
+
+function posting(path, bearerToken) {
+    return requesting('POST', path, bearerToken);
+}
+
 module.exports = {
     database: {
         recreate: recreateDatabase
     },
     starting: starting,
     stop: stop,
-    getting: getting
+    getting: getting,
+    posting: posting
 };

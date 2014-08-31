@@ -8,7 +8,8 @@ describe('router', function () {
         sandbox.stub(restify, 'serveStatic');
         server = {
             get: sandbox.spy(),
-            head: sandbox.spy()
+            head: sandbox.spy(),
+            post: sandbox.spy()
         };
     });
 
@@ -20,6 +21,10 @@ describe('router', function () {
 
         it('maps hello', function () {
             server.get.should.have.been.calledWith('/hello/:name', router.hello);
+        });
+
+        it('maps authenticate', function () {
+            server.post.should.have.been.calledWith('/auth/authenticate/:user', router.authenticate);
         });
 
         it('maps static files', function () {

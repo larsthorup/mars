@@ -1,9 +1,9 @@
 var P = require('bluebird');
 var https = require('https');
 
-function getting(options) {
+function requesting(options) {
     return new P(function (resolve, reject) {
-        https.get(options, function (response) {
+        var req = https.request(options, function (response) {
             // Bundle the result
             var result = {
                 'statusCode': response.statusCode,
@@ -21,14 +21,16 @@ function getting(options) {
                 // console.log(result);
                 resolve(result);
             });
-        })
-        .on('error', function (e) {
+        });
+        req.end();
+
+        req.on('error', function (e) {
             reject(e);
         });
     });
 }
 
 module.exports = {
-    getting: getting
+    requesting: requesting
 };
 
