@@ -6,13 +6,7 @@ function droppingSchema() {
 }
 
 function creatingSchema() {
-    return Knex.knex.schema.createTable('users', function(table) {
-        table.increments('id');
-        table.string('name');
-        table.string('passwordHash');
-    }).then(function () {
-        // console.log('"users" table created');
-    });
+    return Knex.knex.migrate.latest();
 }
 
 function creatingTestData() {

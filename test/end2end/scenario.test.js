@@ -2,7 +2,7 @@ var mars = require('../util/mars-api');
 
 describe('scenario', function () {
     before(function () {
-        // ToDo: recreate database
+        mars.database.recreate();
         return mars.starting();
     });
 

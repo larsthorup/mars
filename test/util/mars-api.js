@@ -1,8 +1,16 @@
+var fs = require('fs');
 var process = require('child_process');
+var assert = require('assert');
 var P = require('bluebird');
 var https = require('../util/https-promise');
+var knexfile = require('../../knexfile');
 
 var server; // Note: only one instance is supported
+
+function recreate() {
+    assert.equal(knexfile.development.client, 'sqlite3'); // ToDo: extend to other providers
+    fs.unlink(knexfile.development.connection.filename);
+}
 
 function starting() {
     server = process.fork('src/mars.js');
@@ -36,6 +44,9 @@ function getting(path) {
 }
 
 module.exports = {
+    database: {
+        recreate: recreate
+    },
     starting: starting,
     stop: stop,
     getting: getting
