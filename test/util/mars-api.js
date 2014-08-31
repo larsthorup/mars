@@ -7,9 +7,12 @@ var knexfile = require('../../knexfile');
 
 var server; // Note: only one instance is supported
 
-function recreate() {
+function recreateDatabase() {
     assert.equal(knexfile.development.client, 'sqlite3'); // ToDo: extend to other providers
-    fs.unlink(knexfile.development.connection.filename);
+    var dbfile = knexfile.development.connection.filename;
+    if(fs.existsSync(dbfile)) {
+        fs.unlinkSync(dbfile);
+    }
 }
 
 function starting() {
@@ -45,7 +48,7 @@ function getting(path) {
 
 module.exports = {
     database: {
-        recreate: recreate
+        recreate: recreateDatabase
     },
     starting: starting,
     stop: stop,

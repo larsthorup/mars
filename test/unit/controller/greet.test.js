@@ -16,17 +16,11 @@ describe('controller', function () {
             });
 
             it('should say hello', function () {
-                return greet.greeting({ params: { name: 'lars' } })
-                .then(function (result) {
-                    result.should.equal('hello lars');
-                });
+                return greet.greeting({ params: { name: 'lars' } }).should.become('hello lars');
             });
 
             it('should refuse to say hello to putin', function () {
-                return greet.greeting({ params: { name: 'putin' } })
-                .catch(function (err) {
-                    err.message.should.equal('does not compute: putin');
-                });
+                return greet.greeting({ params: { name: 'putin' } }).should.be.rejectedWith('does not compute: putin');
             });
         });
     });

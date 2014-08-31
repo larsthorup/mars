@@ -1,3 +1,4 @@
+var P = require('bluebird');
 var booter = require('../../src/booter');
 var repo = require('../../src/repo');
 var server = require('../../src/server');
@@ -5,8 +6,7 @@ var server = require('../../src/server');
 describe('booter', function () {
 
     beforeEach(function () {
-        sandbox.stub(repo, 'connect');
-        sandbox.stub(repo, 'sampleData', function () { return { then: function (callback) { return callback();}};});
+        sandbox.stub(repo, 'connecting', P.method(function () {}));
         sandbox.stub(server, 'start');
     });
 
@@ -21,15 +21,13 @@ describe('booter', function () {
         });
 
         it('connects to the repo', function () {
-            repo.connect.should.have.been.calledWith('dbConfig');
+            repo.connecting.should.have.been.calledWith('dbConfig');
         });
 
-        it('creates sample data', function () {
-            repo.sampleData.should.have.been.calledWith();
-        });
-
-        it('starts the server', function () {
-            server.start.should.have.been.calledWith('serverConfig');
+        it('starts the server after successfully connecting to the repo', function () {
+            return repo.connecting.getCall(0).returnValue.then(function () {
+                server.start.should.have.been.calledWith('serverConfig');
+            });
         });
     });
 

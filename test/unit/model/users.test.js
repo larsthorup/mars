@@ -3,25 +3,6 @@ var hasher = require('../../../src/model/hasher');
 
 describe('model', function () {
 
-    before(function () {
-        repo.connect({
-            "client": "sqlite3",
-            "connection": {
-                "filename": ":memory:"
-            }
-            // ,"debug": true
-        });
-        return repo.users.droppingSchema().then(function () {
-            return repo.users.creatingSchema();
-        }).then(function () {
-            return repo.users.creatingTestData();
-        });
-    });
-
-    after(function () {
-        return repo.disconnecting();
-    });
-
     describe('users', function () {
 
         it('should count rows', function () {

@@ -11,7 +11,7 @@ describe('scenario', function () {
     });
 
     it('greets friends', function () {
-        return mars.getting('/hello/Lars').should.eventually.equal('hello Lars');
+        return mars.getting('/hello/Lars').should.become('hello Lars');
     });
 
     it('fails on foes', function () {

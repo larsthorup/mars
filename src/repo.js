@@ -1,25 +1,26 @@
 var Knex = require('knex');
+var testdata = require('./model/testdata');
 var users = require('./model/users');
 
-function connect(options) {
+function connecting(options) {
     Knex.knex = Knex.initialize(options);
+    return migrateLatest().then(function () {
+        if(options.testdata.create) {
+            return testdata.creating();
+        }
+    });
 }
 
 function disconnecting() {
     return Knex.knex.destroy();
 }
 
-function sampleData() {
-    return users.droppingSchema().then(function () {
-        return users.creatingSchema();
-    }).then(function () {
-        return users.creatingTestData();
-    });
+function migrateLatest() {
+    return Knex.knex.migrate.latest();
 }
 
 module.exports = {
-    connect: connect,
+    connecting: connecting,
     disconnecting: disconnecting,
-    sampleData: sampleData,
     users: users
 };

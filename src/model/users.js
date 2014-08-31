@@ -1,14 +1,6 @@
 var Knex = require('knex');
 var hasher = require('./hasher');
 
-function droppingSchema() {
-    return Knex.knex.schema.dropTableIfExists('users');
-}
-
-function creatingSchema() {
-    return Knex.knex.migrate.latest();
-}
-
 function creatingTestData() {
     return Knex.knex('users').insert([
         {name: 'Lars', passwordHash: hasher.generate('lars123')},
@@ -35,8 +27,6 @@ function findingByName(name) {
 }
 
 module.exports = {
-    droppingSchema: droppingSchema,
-    creatingSchema: creatingSchema,
     creatingTestData: creatingTestData,
     findingByName: findingByName,
     counting: counting

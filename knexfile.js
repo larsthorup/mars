@@ -4,6 +4,9 @@ module.exports = {
         client: 'sqlite3',
         connection: {
             filename: 'mars.sqlite'
+        },
+        testdata: {
+            create: true
         }
     }
 
