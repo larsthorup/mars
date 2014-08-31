@@ -1,6 +1,7 @@
 var repo = require('../repo.js');
 
 function greeting(req) {
+    // console.log(req.headers.authorization);
     var name = req.params.name;
     return repo.users.findingByName(name)
     .then(function (users) {

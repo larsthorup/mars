@@ -24,15 +24,20 @@ function stop() {
     server.kill();
 }
 
-function getting(path) {
+function getting(path, bearerToken) {
     return new P(function (resolve, reject) {
-        https.getting({
+        var options = {
             host: 'localhost',
             port: 1719,
             path: path,
-            rejectUnauthorized: false
-        })
-        .then(function (response) {
+            rejectUnauthorized: false,
+            headers: {
+            }
+        };
+        if(bearerToken) {
+            options.headers.authorization = 'Bearer ' + bearerToken;
+        }
+        https.getting(options).then(function (response) {
             var result = JSON.parse(response.body);
             if(result.message) {
                 reject(result.message);
@@ -54,4 +59,3 @@ module.exports = {
     stop: stop,
     getting: getting
 };
-
