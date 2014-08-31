@@ -30,7 +30,7 @@ gulp.task('test', function () {
 
 // cover
 var istanbul = require('gulp-istanbul');
-gulp.task('cover', function (cb) {
+gulp.task('cover', function (done) {
     gulp
     .src(paths.src)
     .pipe(istanbul())
@@ -42,7 +42,7 @@ gulp.task('cover', function (cb) {
             dir: './coverage',
             reporters: ['text-summary', 'lcov', 'json']
         }))
-        .on('end', cb);
+        .on('end', done);
     });
 });
 var open = require('gulp-open');
@@ -50,6 +50,13 @@ gulp.task('cover-report', function () {
     return gulp
     .src('coverage/lcov-report/index.html')
     .pipe(open());
+});
+
+// end2end
+gulp.task('end2end', function () {
+    return gulp
+    .src(paths.test.end2end)
+    .pipe(mocha({reporter: 'dot'}));
 });
 
 // watch
