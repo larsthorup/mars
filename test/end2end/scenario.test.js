@@ -16,7 +16,7 @@ describe('scenario', function () {
         return mars.posting('/auth/authenticate/Lars', {pass: 'lars123'}).should.become({ token: 'secret'});
     });
 
-    xit('fails authenticating existing user with wrong password', function () {
+    it('fails authenticating existing user with wrong password', function () {
         return mars.posting('/auth/authenticate/Lars', {pass: 'qwerty'}).should.be.rejectedWith('invalid user name or password');
     });
 

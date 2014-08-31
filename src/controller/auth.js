@@ -1,19 +1,27 @@
-var repo = require('../repo.js');
+var repo = require('../repo');
+var hasher = require('../model/hasher');
 
 function authenticating(req) {
     // console.log(req.headers.authorization);
     // console.log(req.params);
-    // console.log(req.body);
     var userName = req.params.user;
+    var password = req.params.pass;
     return repo.users.findingByName(userName)
     .then(function (users) {
-        if(users.length < 1) {
-            throw new Error('invalid user name or password');
-        } else {
-            return {
-                token: 'secret'
-            };
+        var passwordValid = false;
+        var userFound = users.length === 1;
+        if(userFound) {
+            var user = users[0];
+            passwordValid = hasher.verify(password, user.passwordHash);
         }
+        if(!userFound || !passwordValid) {
+            throw new Error('invalid user name or password');
+        }
+
+        // ToDo: generate unique token
+        return {
+            token: 'secret'
+        };
     });
 }
 
