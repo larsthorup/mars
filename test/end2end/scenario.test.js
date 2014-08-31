@@ -1,8 +1,6 @@
-var https = require('https');
 var process = require('child_process');
 var P = require('bluebird');
-
-
+var https = require('../util/https-promise');
 
 describe('scenario', function () {
     var server;
@@ -23,37 +21,31 @@ describe('scenario', function () {
         server.kill();
     });
 
-    it('greets', function (done) {
-        // ToDo: use promises
+    it('greets', function () {
         // ToDo: marsApi that converts messages to rejections
-        https.get({
+        return https.getting({
             host: 'localhost',
             port: 1719,
             path: '/hello/Lars',
             rejectUnauthorized: false
-        }, function (response) {
-            response.on('data', function (data) {
-                var result = JSON.parse(data.toString());
-                should.not.exist(result.message);
-                result.should.equal('hello Lars');
-                done();
-            });
+        })
+        .then(function (response) {
+            var result = JSON.parse(response.body);
+            should.not.exist(result.message);
+            result.should.equal('hello Lars');
         });
     });
 
-    it('returns errors', function (done) {
-        // ToDo: use promises
-        https.get({
+    it('returns errors', function () {
+        return https.getting({
             host: 'localhost',
             port: 1719,
             path: '/hello/Putin',
             rejectUnauthorized: false
-        }, function (response) {
-            response.on('data', function (data) {
-                var result = JSON.parse(data.toString());
-                result.message.should.equal('does not compute: Putin');
-                done();
-            });
+        })
+        .then(function (response) {
+            var result = JSON.parse(response.body);
+            result.message.should.equal('does not compute: Putin');
         });
     });
 
