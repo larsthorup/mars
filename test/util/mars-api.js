@@ -26,17 +26,19 @@ function requesting(method, path, form, bearerToken) {
     if(bearerToken) {
         options.headers.authorization = 'Bearer ' + bearerToken;
     }
-    var promise = request(options);
-    if(mars.trace) {
-        promise.then(function (data) {
+    return request(options).then(function (data) {
+        if(mars.trace) {
             console.dir(data);
-            return data;
-        }).catch(function (error) {
-            console.dir(error);
-            throw error;
-        });
-    }
-    return promise;
+        }
+        return data;
+    }).catch(function (result) {
+        if(mars.trace) {
+            console.dir(result.error);
+        }
+        var error = new Error(result.error.message);
+        error.code = result.error.code;
+        throw error;
+    });
 }
 
 function getting(path, bearerToken) {
