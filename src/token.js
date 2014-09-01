@@ -3,6 +3,29 @@ function create(user) {
     return JSON.stringify({user: user.name, hashed: true});
 }
 
+function authenticate(authorization) {
+    var match = /^Bearer (.*)$/.exec(authorization);
+    if (!match) {
+        return null; // Invalid syntax of authorization http header
+    }
+    var hashedToken = match[1];
+    var token;
+
+    try {
+        token = JSON.parse(hashedToken);
+    }
+    catch(ex) {
+        return null; // Invalid JSON
+    }
+
+    if(!token.hashed) {
+        return null; // Not properly hashed
+    }
+
+    return token.user;
+}
+
 module.exports = {
-    create: create
+    create: create,
+    authenticate: authenticate
 };

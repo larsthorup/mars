@@ -1,7 +1,14 @@
-var repo = require('../repo.js');
+var repo = require('../repo');
+var token = require('../token');
 
 function greeting(req) {
-    // console.log(req.headers.authorization);
+
+    // ToDo: extract
+    var userName = token.authenticate(req.headers.authorization);
+    if(!userName) {
+        throw new Error('not authorized');
+    }
+
     var name = req.params.name;
     return repo.users.findingByName(name)
     .then(function (users) {

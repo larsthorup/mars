@@ -11,8 +11,24 @@ describe('token', function () {
         it('should uniquely identify the user', function () {
             sonnyToken.user.should.equal('Sonny');
         });
-        it('should be securly hashed (ha!)', function () {
+
+        it('should be securely hashed (ha!)', function () {
             sonnyToken.hashed.should.equal(true);
+        });
+    });
+
+    describe('authenticate', function () {
+
+        it('should return the user name from a valid token', function () {
+            token.authenticate('Bearer ' + JSON.stringify({user: 'Sonny', hashed: true})).should.equal('Sonny');
+        });
+
+        it('should return null from an insecure token', function () {
+            should.not.exist(token.authenticate('Bearer ' + JSON.stringify({user: 'Sonny', hashed: false})));
+        });
+
+        it('should return null from an invalid token', function () {
+            should.not.exist(token.authenticate('invalid token'));
         });
     });
 });
