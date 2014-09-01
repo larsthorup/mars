@@ -1,14 +1,7 @@
 var repo = require('../repo');
-var token = require('../token');
+var auth = require('../auth');
 
 function greeting(req) {
-
-    // ToDo: extract
-    var userName = token.authenticate(req.headers.authorization);
-    if(!userName) {
-        throw new Error('not authorized');
-    }
-
     var name = req.params.name;
     return repo.users.findingByName(name)
     .then(function (users) {
@@ -19,6 +12,7 @@ function greeting(req) {
         }
     });
 }
+greeting.authorize = auth.user;
 
 module.exports = {
     greeting: greeting

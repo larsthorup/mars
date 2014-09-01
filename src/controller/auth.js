@@ -1,6 +1,7 @@
 var repo = require('../repo');
 var hasher = require('../model/hasher');
 var token = require('../token');
+var auth = require('../auth');
 
 function authenticating(req) {
     // console.log(req.headers.authorization);
@@ -25,6 +26,7 @@ function authenticating(req) {
         };
     });
 }
+authenticating.authorize = auth.anyone;
 
 module.exports = {
     authenticating: authenticating
