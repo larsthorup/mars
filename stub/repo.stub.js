@@ -13,4 +13,4 @@ function stub(options) {
 
 module.exports = {
     stub: stub
-}
+};

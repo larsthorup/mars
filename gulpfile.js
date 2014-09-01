@@ -45,11 +45,11 @@ gulp.task('cover', function (done) {
         .on('end', done);
     });
 });
-var open = require('gulp-open');
+var gulpOpen = require('gulp-open');
 gulp.task('cover-report', function () {
     return gulp
     .src('coverage/lcov-report/index.html')
-    .pipe(open());
+    .pipe(gulpOpen());
 });
 
 // end2end

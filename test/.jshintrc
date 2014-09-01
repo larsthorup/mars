@@ -1,0 +1,13 @@
+{
+    "nonew": true,
+    "curly": true,
+    "noarg": true,
+    "forin": true,
+    "noempty": true,
+    "eqeqeq": true,
+    "undef": true,
+    "bitwise": true,
+    "browser": true,
+    "predef": ["__dirname", "module", "require", "describe", "beforeEach", "afterEach", "it", "before", "after", "sandbox", "should", "global", "console"]
+}
+

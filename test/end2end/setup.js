@@ -1,5 +1,5 @@
 // Mocha setup
-var mocha = require('mocha');
+require('mocha');
 
 // Chai setup
 var chai = require('chai');
