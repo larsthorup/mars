@@ -5,8 +5,7 @@ function anyone() {
 }
 
 function user(req) {
-    // console.dir(req.authorization);
-    return token.authenticate(req.headers.authorization); // ToDo: extract to a handler to set req.userName
+    return !!req.userName;
 }
 
 module.exports = {

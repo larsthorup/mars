@@ -27,8 +27,36 @@ describe('token', function () {
             should.not.exist(token.authenticate('Bearer ' + JSON.stringify({user: 'Sonny', hashed: false})));
         });
 
+        it('should return null from a misformatted token', function () {
+            should.not.exist(token.authenticate('Bearer {user: Sonny, hashed: false}'));
+        });
+
         it('should return null from an invalid token', function () {
             should.not.exist(token.authenticate('invalid token'));
         });
+    });
+
+    describe('requestParser', function () {
+        var req;
+        var next;
+
+        beforeEach(function () {
+            next = sandbox.spy();
+            req = {
+                headers: {
+                    authorization: 'Bearer ' + JSON.stringify({user: 'Sonny', hashed: true})
+                }
+            };
+            token.requestParser()(req, undefined, next);
+        });
+
+        it('should store the user in the request', function () {
+            req.userName.should.equal('Sonny');
+        });
+
+        it('should chain to the next handler', function () {
+            next.should.have.been.calledWith();
+        });
+
     });
 });

@@ -25,7 +25,16 @@ function authenticate(authorization) {
     return token.user;
 }
 
+function requestParser() {
+    return function (req, res, next) {
+        // console.dir(req.authorization);
+        req.userName = authenticate(req.headers.authorization);
+        return next();
+    };
+}
+
 module.exports = {
     create: create,
-    authenticate: authenticate
+    authenticate: authenticate,
+    requestParser: requestParser
 };
