@@ -59,6 +59,23 @@ gulp.task('end2end', function () {
     .pipe(mocha({reporter: 'dot'}));
 });
 
+// run
+var shell = require('gulp-shell');
+gulp.task('run', shell.task(['node src/mars.js']));
+
+// static
+var webserver = require('gulp-webserver');
+gulp.task('serve-static', function () {
+    gulp
+    .src('static')
+    .pipe(webserver({
+        port: 1718,
+        https: true,
+        fallback: 'index.html',
+        open: true
+    }));
+});
+
 // watch
 gulp.task('watch', function () {
     gulp.watch(paths.code, ['lint', 'cover']);
@@ -67,3 +84,4 @@ gulp.task('watch', function () {
 gulp.task('default', ['lint', 'cover']);
 gulp.task('all', ['lint', 'test', 'cover']);
 gulp.task('live', ['watch']);
+gulp.task('demo', ['serve-static', 'run']);

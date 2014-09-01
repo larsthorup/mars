@@ -31,7 +31,9 @@
         "gulp-mocha": "^1.0.0",
         "gulp-istanbul": "^0.2.2",
         "gulp-open": "^0.2.8",
-        "request-promise": "^0.1.2"
+        "request-promise": "^0.1.2",
+        "gulp-shell": "^0.2.9",
+        "gulp-webserver": "^0.7.1"
     },
     "author": {
         "name": "Lars Thorup",

@@ -31,11 +31,17 @@ describe('server', function () {
         });
 
         it('names the server', function () {
-            restify.createServer.should.have.been.calledWith({
+            restify.createServer.getCall(0).args[0].should.deep.equal({
                 name: 'mars',
                 certificate: 'theCert',
                 key: 'theKey'
             });
+            // Hmm... this suddenly started failing, replacing with code above...
+//            restify.createServer.should.have.been.calledWith({
+//                name: 'mars',
+//                certificate: 'theCert',
+//                key: 'theKey'
+//            });
         });
 
         it('parses the body', function () {
