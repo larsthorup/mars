@@ -2,5 +2,28 @@
 <head>
     <title>Mars</title>
     <link rel="stylesheet" href="mars.css" />
+    <script src="mars.js"></script>
 </head>
+<body>
+    <h1>Mars</h1>
+    <div id="authPage" class="page">
+        <label>
+            User name:
+            <input id="user" type="text">
+        </label>
+        <label>
+            Password:
+            <input id="pass" type="password">
+        </label>
+        <button id="authButton">Authenticate</button>
+    </div>
+    <div id="greetingPage" class="page">
+        <label>
+            Who do you want to greet?
+            <input id="name" type="text">
+        </label>
+        <button id="helloButton">Hello</button>
+        <p id="greeting"></p>
+    </div>
+</body>
 </html>

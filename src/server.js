@@ -21,6 +21,9 @@ function start(options) {
     });
     server.use(restify.bodyParser());
     server.use(token.requestParser());
+    server.use(restify.CORS({
+        origins: ['https://localhost:1718']
+    }));
     router.map(server);
     server.listen(1719, function() {
         console.log('%s listening at %s', server.name, server.url);

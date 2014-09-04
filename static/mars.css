@@ -1,3 +1,7 @@
 body {
     background-color: grey;
 }
+
+div.page {
+    display: none;
+}

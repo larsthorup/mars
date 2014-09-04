@@ -1,10 +1,8 @@
-var marsDb = require('../util/mars-db');
 var mars = require('../util/mars-api');
 // mars.trace = true;
 
 describe('scenario', function () {
     before(function () {
-        marsDb.recreate();
         return mars.starting();
     });
 
