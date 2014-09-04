@@ -13,32 +13,48 @@ function gotoAuth() {
 function authenticate() {
     var user = document.getElementById('user').value;
     var pass = document.getElementById('pass').value;
-    posting('/auth/authenticate/' + user, {pass: pass})
+    requesting('POST', '/auth/authenticate/' + user, {pass: pass})
     .then(function (result) {
         window.mars.token = result.token;
+        document.getElementById('authPage').style.display = 'none';
         gotoGreeting();
     })
     .catch(function (err) {
-        window.alert(err.message);
+        window.alert('Failed to login: ' + err.message);
     });
 }
 
 function gotoGreeting() {
+    document.getElementById('greetingPage').style.display = 'block';
+    document.getElementById('helloButton').addEventListener('click', hello);
 }
 
-function posting(path, args) {
+function hello() {
+    var name = document.getElementById('name').value;
+    requesting('GET', '/hello/' + name)
+    .then(function (result) {
+        window.alert('Greeting: ' + result);
+    })
+    .catch(function (err) {
+        window.alert('Failed to greet: ' + err.message);
+    });
+}
+
+function requesting(method, path, args) {
     return new Promise(function (resolve, reject) {
         var data = new FormData();
-        data.append('pass', args.pass); // ToDo: iterate
-        // data.append('user', args.user); // ToDo: iterate
 
-        // ToDo: https non-strict
-        // ToDo: authorization header
-        // ToDo: CORS
-        // ToDo: not multipart/form-data
+        if(args) {
+            // ToDo: not multipart/form-data
+            // ToDo: iterate over args
+            data.append('pass', args.pass);
+        }
 
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'https://localhost:1719' + path, true);
+        xhr.open(method, 'https://localhost:1719' + path, true);
+        if(window.mars.token) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + window.mars.token);
+        }
         xhr.onload = function () {
             var response = JSON.parse(this.responseText);
             console.dir(response);

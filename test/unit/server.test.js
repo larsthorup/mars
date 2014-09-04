@@ -12,7 +12,8 @@ describe('server', function () {
             name: 'serverName',
             url: 'serverUrl',
             listen: sandbox.spy(),
-            use: sandbox.spy()
+            use: sandbox.spy(),
+            on: sandbox.spy()
         };
         sandbox.stub(restify, 'createServer', function () { return restifyServer; });
         sandbox.stub(restify, 'bodyParser', function () { return 'theBodyParser'; });
