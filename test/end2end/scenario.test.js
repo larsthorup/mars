@@ -13,6 +13,7 @@ describe('scenario', function () {
     describe('authentication', function () {
 
         it('authenticates existing user', function () {
+            this.timeout(4000);
             return mars.posting('/auth/authenticate/Lars', {pass: 'lars123'}).should.become({ token: '{\"user\":\"Lars\",\"hashed\":true}'});
         });
 

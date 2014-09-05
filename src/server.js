@@ -27,12 +27,9 @@ function start(options) {
     server.use(token.requestParser());
 
     // Note: Handle CORS
-    server.use(restify.CORS({
-        origins: ['https://localhost:1718']
-    }));
+    server.use(restify.CORS(options.cors));
     server.on('MethodNotAllowed', function unknownMethodHandler(req, res) {
         if (req.method.toLowerCase() === 'options') {
-            console.log('received an options method request');
             var allowHeaders = ['Accept', 'Accept-Version', 'Content-Type', 'Api-Version', 'Origin', 'X-Requested-With', 'Authorization']; // added Origin & X-Requested-With & **Authorization**
 
             if (res.methods.indexOf('OPTIONS') === -1) {

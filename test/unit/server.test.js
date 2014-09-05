@@ -17,6 +17,7 @@ describe('server', function () {
         };
         sandbox.stub(restify, 'createServer', function () { return restifyServer; });
         sandbox.stub(restify, 'bodyParser', function () { return 'theBodyParser'; });
+        sandbox.stub(restify, 'CORS', function () { return 'theCorsHandler'; });
         sandbox.stub(fs, 'readFileSync', function (filePath) {
             if(path.resolve(__dirname, '../../conf/certs/someCertificate.cert') === filePath) { return 'theCert'; }
             if(path.resolve(__dirname, '../../conf/certs/someCertificate.key') === filePath) { return 'theKey'; }
@@ -28,7 +29,10 @@ describe('server', function () {
     describe('start', function () {
 
         beforeEach(function () {
-            server.start({certName: 'someCertificate'});
+            server.start({
+                certName: 'someCertificate',
+                cors: 'someCorsConfig'
+            });
         });
 
         it('names the server', function () {
@@ -61,6 +65,44 @@ describe('server', function () {
             var listenCallback = restifyServer.listen.getCall(0).args[1];
             listenCallback();
             console.log.should.have.been.calledWith('%s listening at %s', 'serverName', 'serverUrl');
+        });
+
+        describe('CORS', function () {
+
+            it('handles CORS', function () {
+                restify.CORS.getCall(0).args[0].should.equal('someCorsConfig');
+            });
+
+            it('handles OPTIONS requests', function () {
+                restifyServer.on.getCall(0).args[0].should.equal('MethodNotAllowed');
+            });
+
+            it('responds correctly to OPTIONS requests', function () {
+                // given
+                var unknownMethodHandler = restifyServer.on.getCall(0).args[1];
+                var req = {
+                    method: 'OPTIONS',
+                    headers: {
+                        origin: 'someOrigin'
+                    }
+                };
+                var res = {
+                    methods: [],
+                    header: sandbox.spy(),
+                    send: sandbox.spy()
+                };
+
+                // when
+                unknownMethodHandler(req, res);
+
+                // then
+                res.header.getCall(2).args.should.deep.equal(['Access-Control-Allow-Methods', 'OPTIONS']);
+                res.header.getCall(3).args.should.deep.equal(['Access-Control-Allow-Origin', 'someOrigin']);
+                res.send.should.have.been.calledWith(200);
+            });
+
+
+
         });
     });
 });
