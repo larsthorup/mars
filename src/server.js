@@ -11,8 +11,9 @@ var token = require('./token');
 
 function start(options) {
 
-    var certificate = fs.readFileSync(path.resolve(__dirname, '../conf/certs/' + options.certName + '.cert'));
-    var key = fs.readFileSync(path.resolve(__dirname, '../conf/certs/' + options.certName + '.key'));
+    var certPath = path.resolve(__dirname, '../conf/certs');
+    var certificate = fs.readFileSync(path.resolve(certPath, options.certName + '.cert'));
+    var key = fs.readFileSync(path.resolve(certPath, options.certName + '.key'));
 
     var server = restify.createServer({
         name: 'mars',
@@ -30,7 +31,15 @@ function start(options) {
     server.use(restify.CORS(options.cors));
     server.on('MethodNotAllowed', function unknownMethodHandler(req, res) {
         if (req.method.toLowerCase() === 'options') {
-            var allowHeaders = ['Accept', 'Accept-Version', 'Content-Type', 'Api-Version', 'Origin', 'X-Requested-With', 'Authorization']; // added Origin & X-Requested-With & **Authorization**
+            var allowHeaders = [
+                'Accept',
+                'Accept-Version',
+                'Content-Type',
+                'Api-Version',
+                'Origin',
+                'X-Requested-With',
+                'Authorization'
+            ];
 
             if (res.methods.indexOf('OPTIONS') === -1) {
                 res.methods.push('OPTIONS');

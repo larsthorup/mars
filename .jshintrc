@@ -1,4 +1,9 @@
 {
+    "maxparams": 4,
+    "maxdepth": 4,
+    "maxstatements": 20,
+    "maxlen": 100,
+    "maxcomplexity": 7,
     "nonew": true,
     "curly": true,
     "noarg": true,
