@@ -15,13 +15,15 @@ describe('request', function () {
             err = null;
             result = null;
             isAuthorized = false;
-            controller = P.method(function () {
-                if (err) {
-                    throw err;
-                } else {
-                    return result;
-                }
-            });
+            controller = {
+                processing: P.method(function () {
+                    if (err) {
+                        throw err;
+                    } else {
+                        return result;
+                    }
+                })
+            };
             controller.authorize = function () {
                 return isAuthorized;
             };
