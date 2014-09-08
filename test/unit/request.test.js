@@ -10,11 +10,13 @@ describe('request', function () {
         var handler;
         var res;
         var isAuthorized;
+        var exception;
 
         beforeEach(function () {
             err = null;
             result = null;
             isAuthorized = false;
+            exception = null;
             controller = {
                 processing: P.method(function () {
                     if (err) {
@@ -25,6 +27,9 @@ describe('request', function () {
                 })
             };
             controller.authorize = function () {
+                if(exception) {
+                    throw exception;
+                }
                 return isAuthorized;
             };
             handler = request.process(controller);
@@ -77,5 +82,21 @@ describe('request', function () {
             });
 
         });
+
+        describe('when an unexpected exception is thrown', function () {
+
+            beforeEach(function () {
+                exception = new Error('someError');
+            });
+
+            it('should fail', function (done) {
+                handler(null, null, function (err) {
+                    err.message.should.equal('someError');
+                    done();
+                });
+            });
+
+        });
+
     });
 });

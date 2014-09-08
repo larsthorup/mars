@@ -17,7 +17,6 @@ var process = function (controller) {
                 .done();
             }
         } catch(ex) {
-            console.log('Internal error: ', ex, ex.stack);
             next(new restify.InternalError(ex.message));
         }
     };

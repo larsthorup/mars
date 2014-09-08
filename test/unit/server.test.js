@@ -101,7 +101,21 @@ describe('server', function () {
                 res.send.should.have.been.calledWith(200);
             });
 
+            it('fails on unrecognized verbs', function () {
+                var unknownMethodHandler = restifyServer.on.getCall(0).args[1];
+                var req = {
+                    method: 'unrecognized'
+                };
+                var res = {
+                    send: sandbox.spy()
+                };
 
+                // when
+                unknownMethodHandler(req, res);
+
+                // then
+                res.send.getCall(0).args[0].name.should.equal('MethodNotAllowedError');
+            });
 
         });
     });
