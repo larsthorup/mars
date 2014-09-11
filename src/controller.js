@@ -19,7 +19,13 @@ module.exports = function Controller(options) {
             Object.keys(versions).forEach(function (version) {
                 var verbs = versions[version];
                 Object.keys(verbs).forEach(function (verb) {
-                    server[verb](path, request.process(verbs[verb]));
+                    var pathAndVersion = {
+                        path: path,
+                        version: version
+                    };
+                    var handler = verbs[verb];
+                    var register = server[verb];
+                    register.call(server, pathAndVersion, request.process(handler));
                 });
             });
         });

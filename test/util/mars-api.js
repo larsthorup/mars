@@ -14,7 +14,7 @@ function stop() {
     server.kill();
 }
 
-function requesting(method, path, form, bearerToken) {
+function requesting(path, versionRange, method, form, bearerToken) {
     var options = {
         uri: 'https://localhost:1719' + path,
         method: method,
@@ -24,6 +24,9 @@ function requesting(method, path, form, bearerToken) {
         headers: {
         }
     };
+    if(versionRange) {
+        options.headers['accept-version'] = versionRange;
+    }
     if(bearerToken) {
         options.headers.authorization = 'Bearer ' + bearerToken;
     }
@@ -42,12 +45,12 @@ function requesting(method, path, form, bearerToken) {
     });
 }
 
-function getting(path, bearerToken) {
-    return requesting('GET', path, null, bearerToken);
+function getting(path, versionRange, bearerToken) {
+    return requesting(path, versionRange, 'GET', null, bearerToken);
 }
 
-function posting(path, form, bearerToken) {
-    return requesting('POST', path, form, bearerToken);
+function posting(path, versionRange, form, bearerToken) {
+    return requesting(path, versionRange, 'POST', form, bearerToken);
 }
 
 var mars = module.exports = {

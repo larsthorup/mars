@@ -13,7 +13,7 @@ function gotoAuth() {
 function authenticate() {
     var user = document.getElementById('user').value;
     var pass = document.getElementById('pass').value;
-    requesting('POST', '/auth/authenticate/' + user, {pass: pass})
+    requesting('POST', '/auth/authenticate/' + user, null, {pass: pass})
     .then(function (result) {
         window.mars.token = result.token;
         document.getElementById('authPage').style.display = 'none';
@@ -31,7 +31,7 @@ function gotoGreeting() {
 
 function hello() {
     var name = document.getElementById('name').value;
-    requesting('GET', '/hello/' + name)
+    requesting('GET', '/hello/' + name, '0.1.0')
     .then(function (result) {
         window.alert('Greeting: ' + result);
     })
@@ -40,7 +40,7 @@ function hello() {
     });
 }
 
-function requesting(method, path, args) {
+function requesting(method, path, versionRange, args) {
     return new Promise(function (resolve, reject) {
         var data = new FormData();
 
@@ -52,6 +52,9 @@ function requesting(method, path, args) {
 
         var xhr = new XMLHttpRequest();
         xhr.open(method, 'https://localhost:1719' + path, true);
+        if(versionRange) {
+            xhr.setRequestHeader('Accept-Version', versionRange);
+        }
         if(window.mars.token) {
             xhr.setRequestHeader('Authorization', 'Bearer ' + window.mars.token);
         }

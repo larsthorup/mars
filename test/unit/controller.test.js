@@ -37,7 +37,7 @@ describe('Controller', function () {
 
         it('map all methods', function () {
             request.process.should.have.been.calledWith('someMethod');
-            server.get.should.have.been.calledWith('/some/path', 'theProcessFunction');
+            server.get.should.have.been.calledWith({path: '/some/path', version: '2.4.1'}, 'theProcessFunction');
         });
     });
 

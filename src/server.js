@@ -58,7 +58,7 @@ function start(options) {
             return res.send(200);
         }
         else {
-            return res.send(new restify.MethodNotAllowedError());
+            return res.send(new restify.MethodNotAllowedError(req.method));
         }
     });
 
