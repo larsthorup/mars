@@ -11,7 +11,7 @@ describe('controller', function () {
             var hello;
 
             beforeEach(function () {
-                hello = greetController.getMethod('/hello/:name', 'get');
+                hello = greetController.getMethod('/hello/:name', '=0.1.0', 'get');
                 repo.stub({
                     users: [
                         {name: 'lars'}

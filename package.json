@@ -1,6 +1,6 @@
 {
     "name": "mars",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "NodeJS, Mocha, Bookshelf, Restify",
     "repository": {
         "type": "git",
@@ -15,7 +15,8 @@
         "bluebird": "^2.3.1",
         "lodash": "^2.4.1",
         "require-all": "^0.0.8",
-        "bunyan": "^1.0.1"
+        "bunyan": "^1.0.1",
+        "semver": "^3.0.1"
     },
     "devDependencies": {
         "mocha": "^1.21.0",

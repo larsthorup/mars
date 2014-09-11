@@ -1,22 +1,28 @@
 var request = require('./request');
+var semver = require('semver');
 
 module.exports = function Controller(options) {
 
-    this.getMethod = function (path, verb) {
-        return options[path][verb];
+    this.getMethod = function (path, versionRange, verb) {
+        var versions = options[path];
+        for(var version in versions) {
+            if(semver.satisfies(version, versionRange)) {
+                return versions[version][verb];
+            }
+        }
+        throw new Error('No match for version ' + versionRange + ' of method ' + path);
     };
 
     this.map = function (server) {
-        for (var path in options) {
-            if(options.hasOwnProperty(path)) {
-                var verbs = options[path];
-                for (var verb in verbs) {
-                    if(verbs.hasOwnProperty(verb)) {
-                        server[verb](path, request.process(verbs[verb]));
-                    }
-                }
-            }
-        }
+        Object.keys(options).forEach(function (path) {
+            var versions = options[path];
+            Object.keys(versions).forEach(function (version) {
+                var verbs = versions[version];
+                Object.keys(verbs).forEach(function (verb) {
+                    server[verb](path, request.process(verbs[verb]));
+                });
+            });
+        });
     };
 
 };

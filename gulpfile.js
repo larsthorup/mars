@@ -82,7 +82,7 @@ gulp.task('watch', function () {
     gulp.watch(paths.code, ['lint', 'cover']);
 });
 
-gulp.task('default', ['lint', 'cover']);
-gulp.task('all', ['lint', 'test', 'cover']);
+gulp.task('default', ['lint', 'cover', 'end2end']);
+gulp.task('all', ['lint', 'test', 'cover', 'end2end']);
 gulp.task('live', ['watch']);
 gulp.task('demo', ['serve-static', 'run']);

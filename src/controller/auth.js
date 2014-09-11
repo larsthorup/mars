@@ -6,28 +6,30 @@ var auth = require('../auth');
 
 module.exports = new Controller({
     '/auth/authenticate/:user': {
-        post: {
-            authorize: auth.anyone,
-            processing: function authenticating(req) {
-                var userName = req.params.user;
-                var password = req.params.pass;
-                return repo.users.findingByName(userName)
-                .then(function (users) {
-                    var passwordValid = false;
-                    var user;
-                    var userFound = users.length === 1;
-                    if(userFound) {
-                        user = users[0];
-                        passwordValid = hasher.verify(password, user.passwordHash);
-                    }
-                    if(!userFound || !passwordValid) {
-                        throw new Error('invalid user name or password');
-                    }
+        '0.1.0': {
+            post: {
+                authorize: auth.anyone,
+                processing: function authenticating (req) {
+                    var userName = req.params.user;
+                    var password = req.params.pass;
+                    return repo.users.findingByName(userName)
+                    .then(function (users) {
+                        var passwordValid = false;
+                        var user;
+                        var userFound = users.length === 1;
+                        if (userFound) {
+                            user = users[0];
+                            passwordValid = hasher.verify(password, user.passwordHash);
+                        }
+                        if (!userFound || !passwordValid) {
+                            throw new Error('invalid user name or password');
+                        }
 
-                    return {
-                        token: token.create(user)
-                    };
-                });
+                        return {
+                            token: token.create(user)
+                        };
+                    });
+                }
             }
         }
     }

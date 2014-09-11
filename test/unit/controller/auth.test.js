@@ -12,7 +12,7 @@ describe('controller', function () {
             var authenticate;
 
             beforeEach(function () {
-                authenticate = authController.getMethod('/auth/authenticate/:user', 'post');
+                authenticate = authController.getMethod('/auth/authenticate/:user', '0.1.0', 'post');
                 repo.stub({
                     users: [
                         {name: 'lars'}

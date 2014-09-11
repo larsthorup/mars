@@ -1,5 +1,6 @@
 var Controller = require('../../src/controller');
 var request = require('../../src/request');
+var semver = require('semver');
 
 describe('Controller', function () {
     var controller;
@@ -7,14 +8,20 @@ describe('Controller', function () {
     beforeEach(function () {
         controller = new Controller({
             '/some/path': {
-                get: 'someMethod'
+                '2.4.1': {
+                    get: 'someMethod'
+                }
             }
         });
 
     });
 
     it('getMethod', function () {
-        controller.getMethod('/some/path', 'get').should.equal('someMethod');
+        controller.getMethod('/some/path', '^2.3.0', 'get').should.equal('someMethod');
+    });
+
+    it('getMethod, fails because no version available', function () {
+        should.throw(function () { controller.getMethod('/some/path', '^1.0.0', 'get'); }, 'No match for version ^1.0.0 of method /some/path');
     });
 
     describe('map', function () {
