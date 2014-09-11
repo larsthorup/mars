@@ -1,6 +1,4 @@
-// ToDo: authentication (basic auth over https)
 // ToDo: hosting (digial ocean)
-// ToDo: modular authorization
 // ToDo: zero downtime upgrades (http-proxy)
 
 var restify = require('restify');
@@ -8,6 +6,7 @@ var router = require('./router');
 var fs = require('fs');
 var path = require('path');
 var token = require('./token');
+var bunyan = require('bunyan');
 
 function start(options) {
 
@@ -18,8 +17,14 @@ function start(options) {
     var server = restify.createServer({
         name: 'mars',
         certificate: certificate,
-        key: key
+        key: key,
+        log: bunyan.createLogger(options.bunyan)
     });
+
+    // Note: Log requests
+    server.on('after', restify.auditLogger({
+        log: server.log
+    }));
 
     // Note: Parse body of POST requests
     server.use(restify.bodyParser());

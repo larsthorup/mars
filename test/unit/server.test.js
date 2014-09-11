@@ -3,6 +3,7 @@ var server = require('../../src/server');
 var router = require('../../src/router');
 var fs = require('fs');
 var path = require('path');
+var bunyan = require('bunyan');
 
 describe('server', function () {
     var restifyServer;
@@ -15,15 +16,17 @@ describe('server', function () {
             use: sandbox.spy(),
             on: sandbox.spy()
         };
-        sandbox.stub(restify, 'createServer', function () { return restifyServer; });
+        sandbox.stub(restify, 'createServer', function (options) { restifyServer.log = options.log; return restifyServer; });
         sandbox.stub(restify, 'bodyParser', function () { return 'theBodyParser'; });
         sandbox.stub(restify, 'CORS', function () { return 'theCorsHandler'; });
+        sandbox.stub(restify, 'auditLogger', function () { return 'theAuditLogger'; });
         sandbox.stub(fs, 'readFileSync', function (filePath) {
             if(path.resolve(__dirname, '../../conf/certs/someCertificate.cert') === filePath) { return 'theCert'; }
             if(path.resolve(__dirname, '../../conf/certs/someCertificate.key') === filePath) { return 'theKey'; }
         });
         sandbox.stub(router, 'map');
         sandbox.stub(console, 'log');
+        sandbox.stub(bunyan, 'createLogger', function () { return 'theBunyanLogger'; });
     });
 
     describe('start', function () {
@@ -31,7 +34,8 @@ describe('server', function () {
         beforeEach(function () {
             server.start({
                 certName: 'someCertificate',
-                cors: 'someCorsConfig'
+                cors: 'someCorsConfig',
+                bunyan: 'someBunyanConfig'
             });
         });
 
@@ -39,7 +43,8 @@ describe('server', function () {
             restify.createServer.getCall(0).args[0].should.deep.equal({
                 name: 'mars',
                 certificate: 'theCert',
-                key: 'theKey'
+                key: 'theKey',
+                log: 'theBunyanLogger'
             });
             // Hmm... this suddenly started failing, replacing with code above...
 //            restify.createServer.should.have.been.calledWith({
@@ -47,6 +52,10 @@ describe('server', function () {
 //                certificate: 'theCert',
 //                key: 'theKey'
 //            });
+        });
+
+        it('does audit logging', function () {
+            restifyServer.on.should.have.been.calledWith('after', 'theAuditLogger');
         });
 
         it('parses the body', function () {
@@ -74,12 +83,12 @@ describe('server', function () {
             });
 
             it('handles OPTIONS requests', function () {
-                restifyServer.on.getCall(0).args[0].should.equal('MethodNotAllowed');
+                restifyServer.on.getCall(1).args[0].should.equal('MethodNotAllowed');
             });
 
             it('responds correctly to OPTIONS requests', function () {
                 // given
-                var unknownMethodHandler = restifyServer.on.getCall(0).args[1];
+                var unknownMethodHandler = restifyServer.on.getCall(1).args[1];
                 var req = {
                     method: 'OPTIONS',
                     headers: {
@@ -102,7 +111,7 @@ describe('server', function () {
             });
 
             it('fails on unrecognized verbs', function () {
-                var unknownMethodHandler = restifyServer.on.getCall(0).args[1];
+                var unknownMethodHandler = restifyServer.on.getCall(1).args[1];
                 var req = {
                     method: 'unrecognized'
                 };

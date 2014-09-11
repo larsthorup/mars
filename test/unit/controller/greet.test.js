@@ -20,7 +20,7 @@ describe('controller', function () {
                 sandbox.stub(token, 'authenticate', function () { return 'Lars'; });
             });
 
-            it('should allow user accers', function () {
+            it('should allow user access', function () {
                 hello.authorize.should.equal(auth.user);
             });
 

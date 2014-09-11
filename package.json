@@ -14,7 +14,8 @@
         "password-hash": "^1.2.1",
         "bluebird": "^2.3.1",
         "lodash": "^2.4.1",
-        "require-all": "^0.0.8"
+        "require-all": "^0.0.8",
+        "bunyan": "^1.0.1"
     },
     "devDependencies": {
         "mocha": "^1.21.0",
