@@ -3,12 +3,13 @@ var gulp = require('gulp');
 var paths = {
     src: 'src/**/*.js',
     test: {
+        all: 'test/**/*.js',
         unit: 'test/unit/**/*.js',
         end2end: 'test/end2end/**/*.js'
     },
     tool: '*.js'
 };
-paths.code = [paths.src, paths.test.unit, paths.test.end2end, paths.tool];
+paths.code = [paths.src, paths.test.all, paths.tool];
 
 // lint
 var jshint = require('gulp-jshint');

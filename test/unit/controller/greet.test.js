@@ -1,5 +1,5 @@
 var greetController = require('../../../src/controller/greet');
-var repo = require('../../../stub/repo.stub.js');
+var repo = require('../../stub/repo.stub.js');
 var token = require('../../../src/token');
 var auth = require('../../../src/auth');
 

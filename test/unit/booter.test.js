@@ -1,4 +1,5 @@
-var P = require('bluebird');
+/* global -Promise */
+var Promise = require('bluebird');
 var booter = require('../../src/booter');
 var repo = require('../../src/repo');
 var server = require('../../src/server');
@@ -6,7 +7,7 @@ var server = require('../../src/server');
 describe('booter', function () {
 
     beforeEach(function () {
-        sandbox.stub(repo, 'connecting', P.method(function () {}));
+        sandbox.stub(repo, 'connecting', Promise.method(function () {}));
         sandbox.stub(server, 'start');
     });
 

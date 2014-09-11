@@ -1,12 +1,13 @@
 var process = require('child_process');
-var P = require('bluebird');
+/* global -Promise */
+var Promise = require('bluebird');
 var request = require('request-promise');
 
 var server; // Note: only one instance is supported
 
 function starting() {
     server = process.fork('src/mars.js');
-    return P.delay(1000); // Note: give the server time to finish startup
+    return Promise.delay(1000); // Note: give the server time to finish startup
 }
 
 function stop() {

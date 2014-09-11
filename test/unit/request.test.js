@@ -1,5 +1,6 @@
 var request = require('../../src/request');
-var P = require('bluebird');
+/* global -Promise */
+var Promise = require('bluebird');
 
 describe('request', function () {
 
@@ -18,7 +19,7 @@ describe('request', function () {
             isAuthorized = false;
             exception = null;
             controller = {
-                processing: P.method(function () {
+                processing: Promise.method(function () {
                     if (err) {
                         throw err;
                     } else {
