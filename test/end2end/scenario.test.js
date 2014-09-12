@@ -60,8 +60,18 @@ describe('scenario', function () {
             return mars.posting('/auth/authenticate/Lars', '0.0.5', {pass: 'lars123'}).should.be.rejectedWith('0.0.5 is not supported by POST /auth/authenticate/Lars');
         });
 
-        it('defaults to latest version if version range not specified', function () {
-            return mars.posting('/auth/authenticate/Lars', null, {pass: 'lars123'}).should.become({ token: '{\"user\":\"Lars\",\"hashed\":true}'});
+        describe('when version range not specified', function () {
+            var token;
+
+            beforeEach(function () {
+                return mars.posting('/auth/authenticate/Lars', null, {pass: 'lars123'}).then(function (result) {
+                    token = result.token;
+                });
+            });
+
+            it('defaults to latest version', function () {
+                return mars.getting('/hello/Rob', null, token).should.become({greeting: 'hello Rob'});
+            });
         });
     });
 });
