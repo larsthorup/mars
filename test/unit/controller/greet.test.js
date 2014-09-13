@@ -13,7 +13,7 @@ describe('controller', function () {
             beforeEach(function () {
                 hello = greetController.getMethod('/hello/:name', '=0.1.0', 'get');
                 repo.stub({
-                    users: [
+                    user: [
                         {name: 'lars'}
                     ]
                 });
@@ -39,7 +39,7 @@ describe('controller', function () {
             beforeEach(function () {
                 hello = greetController.getMethod('/hello/:name', '=0.1.5', 'get');
                 repo.stub({
-                    users: [
+                    user: [
                         {name: 'lars'}
                     ]
                 });

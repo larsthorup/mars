@@ -6,7 +6,7 @@ var auth = require('../auth');
 var greeting = function (formatter) {
     return function greeting (req) {
         var name = req.params.name;
-        return repo.users.findingByName(name).then(function (users) {
+        return repo.user.findingByName(name).then(function (users) {
             return formatter(name, users);
         });
     };

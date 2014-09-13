@@ -2,7 +2,6 @@ var Knex = require('knex');
 var fs = require('fs');
 var assert = require('assert');
 var testdata = require('./model/testdata');
-var users = require('./model/users');
 
 function connecting(options) {
     if(options.testdata.create) {
@@ -35,5 +34,7 @@ function migrateLatest() {
 module.exports = {
     connecting: connecting,
     disconnecting: disconnecting,
-    users: users
+    // ToDo: use requireAll
+    user: require('./model/user'),
+    entry: require('./model/entry')
 };

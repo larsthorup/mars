@@ -1,12 +1,12 @@
-var repo = require('../../../src/repo');
+var user = require('../../../src/model/user');
 var hasher = require('../../../src/model/hasher');
 
 describe('model', function () {
 
-    describe('users', function () {
+    describe('user', function () {
 
         it('should count rows', function () {
-            var userCount = repo.users.counting();
+            var userCount = user.counting();
             return userCount.should.become(2);
         });
 
@@ -14,7 +14,7 @@ describe('model', function () {
             var finding;
 
             beforeEach(function () {
-                finding = repo.users.findingByName('Lars');
+                finding = user.findingByName('Lars');
                 // finding.then(function (result) { debugger; });
             });
 
@@ -27,11 +27,21 @@ describe('model', function () {
             });
 
             it('should include a verifiable password hash', function () {
-                return finding.should.eventually.satisfy(function (usersFound) {
-                    return hasher.verify('lars123', usersFound[0].passwordHash);
+                return finding.should.eventually.satisfy(function (users) {
+                    return hasher.verify('lars123', users[0].passwordHash);
                 });
             });
 
+        });
+
+
+        describe('mappingByName', function () {
+            it('should return a map from name to id', function () {
+                return user.mappingByName(['Lars', 'Rob']).should.become({
+                    'Lars': { id: 1 },
+                    'Rob': { id: 2 }
+                });
+            });
         });
     });
 });

@@ -3,10 +3,10 @@ var repo = require('../../src/repo');
 var Promise = require('bluebird');
 
 function stub(options) {
-    sandbox.stub(repo.users, 'findingByName', function (name) {
+    sandbox.stub(repo.user, 'findingByName', function (name) {
         var users = [];
-        if(name === options.users[0].name) {
-            users.push({id:4711, name: options.users[0].name});
+        if(name === options.user[0].name) {
+            users.push({id:4711, name: options.user[0].name});
         }
         return Promise.resolve(users);
     });
