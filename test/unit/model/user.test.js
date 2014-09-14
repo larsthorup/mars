@@ -1,5 +1,5 @@
 var user = require('../../../src/model/user');
-var hasher = require('../../../src/model/hasher');
+var hasher = require('../../../src/hasher');
 
 describe('model', function () {
 
@@ -15,7 +15,6 @@ describe('model', function () {
 
             beforeEach(function () {
                 finding = user.findingByName('Lars');
-                // finding.then(function (result) { debugger; });
             });
 
             it('should return the correct number of rows', function () {

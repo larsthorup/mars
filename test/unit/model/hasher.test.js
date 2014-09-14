@@ -1,4 +1,4 @@
-var hasher = require('../../../src/model/hasher');
+var hasher = require('../../../src/hasher');
 
 describe('model', function () {
     describe('hasher', function () {

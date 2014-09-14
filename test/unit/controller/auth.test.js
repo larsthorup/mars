@@ -1,6 +1,6 @@
 var authController = require('../../../src/controller/auth');
 var repo = require('../../stub/repo.stub');
-var hasher = require('../../../src/model/hasher');
+var hasher = require('../../../src/hasher');
 var token = require('../../../src/token');
 var auth = require('../../../src/auth');
 

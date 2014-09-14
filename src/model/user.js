@@ -1,15 +1,11 @@
 var Knex = require('knex');
-var hasher = require('./hasher');
+var hasher = require('./../hasher');
 
 function creatingTestData() {
     return Knex.knex('user').insert([
         {name: 'Lars', passwordHash: hasher.generate('lars123')},
         {name: 'Rob', passwordHash: hasher.generate('p')}
-    ]).then(function () {
-        return counting();
-    }).then(function (userCount) {
-        // console.log('"user" table populated with ' + userCount + ' rows');
-    });
+    ]);
 }
 
 function counting() {

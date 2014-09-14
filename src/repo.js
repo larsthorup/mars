@@ -1,7 +1,10 @@
 var Knex = require('knex');
 var fs = require('fs');
 var assert = require('assert');
-var testdata = require('./model/testdata');
+var _ = require('lodash');
+var testdata = require('./testdata');
+var path = require('path');
+var models = require('require-all')(path.resolve(__dirname, 'model/'));
 
 function connecting(options) {
     if(options.testdata.create) {
@@ -31,10 +34,7 @@ function migrateLatest() {
     return Knex.knex.migrate.latest();
 }
 
-module.exports = {
+module.exports = _.merge(models, {
     connecting: connecting,
     disconnecting: disconnecting,
-    // ToDo: use requireAll
-    user: require('./model/user'),
-    entry: require('./model/entry')
-};
+});
