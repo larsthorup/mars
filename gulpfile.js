@@ -26,7 +26,7 @@ var mocha = require('gulp-mocha');
 gulp.task('test', function () {
     return gulp
     .src(paths.test.unit)
-    .pipe(mocha({reporter: 'dot'}));
+    .pipe(mocha({reporter: 'spec'}));
 });
 
 // cover
