@@ -1,4 +1,4 @@
-'use strict';
+/* global exports */
 
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('entry', function(table) {

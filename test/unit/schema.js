@@ -1,3 +1,4 @@
+var path = require('path');
 var repo = require('../../src/repo');
 
 before(function () {
@@ -5,6 +6,9 @@ before(function () {
         client: 'sqlite3',
         connection: {
             filename: ':memory:'
+        },
+        migrations: {
+            directory: path.resolve(__dirname, '../../src', 'migrations')
         },
         testdata: {
             create: true
