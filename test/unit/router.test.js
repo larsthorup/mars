@@ -1,12 +1,13 @@
 var router = require('../../src/router');
-var authController = require('../../src/controller/auth');
-var greetController = require('../../src/controller/greet');
+var path = require('path');
+var controllers = require('require-all')(path.resolve(__dirname, '../../src', 'controller'));
 
 describe('router', function () {
 
     beforeEach(function () {
-        sandbox.stub(authController, 'map');
-        sandbox.stub(greetController, 'map');
+        Object.keys(controllers).forEach(function (name) {
+            sandbox.stub(controllers[name], 'map');
+        });
     });
 
     describe('map', function () {
@@ -18,8 +19,9 @@ describe('router', function () {
         });
 
         it('maps controllers', function () {
-            authController.map.should.have.been.calledWith('theServer');
-            greetController.map.should.have.been.calledWith('theServer');
+            Object.keys(controllers).forEach(function (name) {
+                controllers[name].map.should.have.been.calledWith('theServer');
+            });
         });
 
     });

@@ -1,5 +1,4 @@
 var path = require('path');
-
 var controllers = require('require-all')(path.resolve(__dirname, 'controller/'));
 
 function map(server) {

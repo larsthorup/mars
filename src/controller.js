@@ -25,6 +25,9 @@ module.exports = function Controller(options) {
                     };
                     var handler = verbs[verb];
                     var register = server[verb];
+                    if(!register) {
+                        throw new Error('Cannot register verb ' + verb);
+                    }
                     register.call(server, pathAndVersion, request.process(handler));
                 });
             });
