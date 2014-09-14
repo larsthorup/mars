@@ -10,7 +10,7 @@ var bunyan = require('bunyan');
 
 function start(options) {
 
-    var certPath = path.resolve(__dirname, '../conf/certs');
+    var certPath = path.resolve(__dirname, './config/certs');
     var certificate = fs.readFileSync(path.resolve(certPath, options.certName + '.cert'));
     var key = fs.readFileSync(path.resolve(certPath, options.certName + '.key'));
 

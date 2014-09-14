@@ -21,8 +21,8 @@ describe('server', function () {
         sandbox.stub(restify, 'CORS', function () { return 'theCorsHandler'; });
         sandbox.stub(restify, 'auditLogger', function () { return 'theAuditLogger'; });
         sandbox.stub(fs, 'readFileSync', function (filePath) {
-            if(path.resolve(__dirname, '../../conf/certs/someCertificate.cert') === filePath) { return 'theCert'; }
-            if(path.resolve(__dirname, '../../conf/certs/someCertificate.key') === filePath) { return 'theKey'; }
+            if(path.resolve(__dirname, '../../src/config/certs/someCertificate.cert') === filePath) { return 'theCert'; }
+            if(path.resolve(__dirname, '../../src/config/certs/someCertificate.key') === filePath) { return 'theKey'; }
         });
         sandbox.stub(router, 'map');
         sandbox.stub(console, 'log');
