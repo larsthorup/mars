@@ -64,11 +64,11 @@ gulp.task('end2end', function () {
 var shell = require('gulp-shell');
 gulp.task('run', shell.task(['node src/mars.js']));
 
-// static
+// demo
 var webserver = require('gulp-webserver');
-gulp.task('serve-static', function () {
+gulp.task('serve-demo', function () {
     gulp
-    .src('static')
+    .src('demo')
     .pipe(webserver({
         port: 1718,
         https: true,
@@ -85,4 +85,4 @@ gulp.task('watch', function () {
 gulp.task('default', ['lint', 'cover', 'end2end']);
 gulp.task('all', ['lint', 'test', 'cover', 'end2end']);
 gulp.task('live', ['watch']);
-gulp.task('demo', ['serve-static', 'run']);
+gulp.task('demo', ['serve-demo', 'run']);
