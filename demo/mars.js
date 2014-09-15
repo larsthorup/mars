@@ -17,14 +17,21 @@ function authenticate() {
     .then(function (result) {
         window.mars.token = result.token;
         document.getElementById('authPage').style.display = 'none';
-        gotoGreeting();
+        gotoMenu();
     })
     .catch(function (err) {
         window.alert('Failed to login: ' + err.message);
     });
 }
 
+function gotoMenu() {
+    document.getElementById('menuPage').style.display = 'block';
+    document.getElementById('gotoGreetingButton').addEventListener('click', gotoGreeting);
+    document.getElementById('gotoEntryButton').addEventListener('click', gotoEntry);
+}
+
 function gotoGreeting() {
+    document.getElementById('entryPage').style.display = 'none';
     document.getElementById('greetingPage').style.display = 'block';
     document.getElementById('helloButton').addEventListener('click', hello);
 }
@@ -37,6 +44,40 @@ function hello() {
     })
     .catch(function (err) {
         window.alert('Failed to greet: ' + err.message);
+    });
+}
+
+function gotoEntry() {
+    document.getElementById('greetingPage').style.display = 'none';
+    document.getElementById('entryPage').style.display = 'block';
+    requesting('GET', '/entry/latest', '0.1.0')
+    .then(function (result) {
+        renderEntryList(result.entry);
+    })
+    .catch(function (err) {
+        window.alert('Failed to load entries: ' + err.message);
+    });
+}
+
+function renderEntryList(entries) {
+    var entryListItemTemplate = document.getElementById('entryListItemTemplate').innerHTML;
+    var entryListDiv = document.getElementById('entryList');
+    entryListDiv.innerHTML = '';
+    entries.forEach(function (entry) {
+        entryListDiv.innerHTML += instantiateHtml(entryListItemTemplate, entry);
+    });
+}
+
+function instantiateHtml(template, options) {
+    return template.replace(/{{([^{}]*)}}/g, function (match, key) {
+        var value = options[key];
+        if(!value) {
+            value = match;
+        }
+        if(typeof value !== 'string') {
+            value = value.toString();
+        }
+        return value;
     });
 }
 
@@ -73,4 +114,17 @@ function requesting(method, path, versionRange, args) {
         };
         xhr.send(data);
     });
+}
+
+// From: http://stackoverflow.com/a/4835406/975539
+function escapeHtml(text) {
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }

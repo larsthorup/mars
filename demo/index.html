@@ -1,11 +1,13 @@
 <html>
 <head>
-    <title>Mars</title>
+    <title>Mars API demo</title>
     <link rel="stylesheet" href="mars.css" />
     <script src="mars.js"></script>
 </head>
 <body>
+
     <h1>Mars</h1>
+
     <div id="authPage" class="page">
         <label>
             User name:
@@ -17,6 +19,12 @@
         </label>
         <button id="authButton">Authenticate</button>
     </div>
+
+    <div id="menuPage" class="page">
+        <button id="gotoGreetingButton">Greetings</button>
+        <button id="gotoEntryButton">Entries</button>
+    </div>
+
     <div id="greetingPage" class="page">
         <label>
             Who do you want to greet?
@@ -25,5 +33,14 @@
         <button id="helloButton">Hello</button>
         <p id="greeting"></p>
     </div>
+
+    <div id="entryPage" class="page">
+        <ul id="entryList">
+        </ul>
+    </div>
+
+    <script id="entryListItemTemplate" type="text/template">
+        <li id="{{id}}"><span class="title">{{title}}</span> by <span class="author">{{authorName}}</span></li>
+    </script>
 </body>
 </html>

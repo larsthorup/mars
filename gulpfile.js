@@ -68,7 +68,7 @@ gulp.task('run', shell.task(['node src/mars.js']));
 var webserver = require('gulp-webserver');
 gulp.task('serve-demo', function () {
     gulp
-    .src('test/demo')
+    .src('demo')
     .pipe(webserver({
         port: 1718,
         https: true,
