@@ -20,9 +20,15 @@ function findingLatest() {
     .limit(10);
 }
 
-
+function findingById(id) {
+    return Knex.knex.from('entry')
+    .innerJoin('user', 'entry.authorId', 'user.id')
+    .first(['entry.id as id', 'title', 'user.name as authorName'])
+    .where({'entry.id': id});
+}
 
 module.exports = {
     creatingTestData: creatingTestData,
-    findingLatest: findingLatest
+    findingLatest: findingLatest,
+    findingById: findingById
 };

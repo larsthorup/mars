@@ -25,4 +25,23 @@ describe('model/entry', function () {
         });
 
     });
+
+
+    describe('findingById', function () {
+        var finding;
+
+        beforeEach(function () {
+            finding = repo.entry.findingById(1);
+        });
+
+        it('should return the correct rows', function () {
+            return finding.should.become({
+                id: 1,
+                title: 'More innovation',
+                authorName: 'Rob'
+            });
+        });
+
+    });
+
 });

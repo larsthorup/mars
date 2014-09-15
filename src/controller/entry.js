@@ -16,5 +16,16 @@ module.exports = new Controller({
                 }
             }
         }
+    },
+    '/entry/:id': {
+        '0.1.0': {
+            get: {
+                authorize: auth.user,
+                processing: function latest(req) {
+                    return repo.entry.findingById(req.params.id);
+                }
+            }
+        }
     }
+
 });

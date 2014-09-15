@@ -20,10 +20,40 @@ describe('controller/entry', function () {
             latest.authorize.should.equal(auth.user);
         });
 
-        it('should say hello', function () {
+        it('should return the entries', function () {
             return latest.processing().should.become({entry: [
                 {id: 1, title: 'plant trees', authorName: 'Derek'}
             ]});
+        });
+
+    });
+
+    describe('single', function () {
+        var single;
+
+        beforeEach(function () {
+            single = entryController.getMethod('/entry/:id', '*', 'get');
+            repo.stub({
+                entry: [
+                    {id: 1, title: 'plant trees', authorName: 'Derek'}
+                ]
+            });
+        });
+
+        it('should allow user access', function () {
+            single.authorize.should.equal(auth.user);
+        });
+
+        it('should return existing entry', function () {
+            return single.processing({params: {id: 1}}).should.become({
+                id: 1,
+                title: 'plant trees',
+                authorName: 'Derek'
+            });
+        });
+
+        it('should fail when entry does not exist', function () {
+            return single.processing({params: {id: 2}}).should.be.rejectedWith();
         });
 
     });

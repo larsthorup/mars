@@ -15,6 +15,15 @@ function stub(options) {
     sandbox.stub(repo.entry, 'findingLatest', function () {
         return Promise.resolve(options.entry);
     });
+
+    sandbox.stub(repo.entry, 'findingById', function (id) {
+        var entries = options.entry.filter(function (entry) { return entry.id === id; });
+        if(entries.length === 1) {
+            return Promise.resolve(entries[0]);
+        } else {
+            return Promise.reject();
+        }
+    });
 }
 
 module.exports = {
