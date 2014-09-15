@@ -37,10 +37,24 @@
     <div id="entryPage" class="page">
         <ul id="entryList">
         </ul>
+        <div id="entry">
+        </div>
     </div>
 
     <script id="entryListItemTemplate" type="text/template">
-        <li id="{{id}}"><span class="title">{{title}}</span> by <span class="author">{{authorName}}</span></li>
+        <li data-id="{{id}}" class="entryListItem">
+            <span class="title">{{title}}</span> by <span class="author">{{authorName}}</span>
+        </li>
+    </script>
+
+    <script id="entryTemplate" type="text/template">
+        <div data-id="{{id}}">
+            <label>
+                Title:
+                <input class="title" type="text" value="{{title}}"></title>
+            </label>
+            by <span class="author">{{authorName}}</span>
+        </div>
     </script>
 </body>
 </html>

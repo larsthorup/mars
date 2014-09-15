@@ -61,11 +61,32 @@ function gotoEntry() {
 
 function renderEntryList(entries) {
     var entryListItemTemplate = document.getElementById('entryListItemTemplate').innerHTML;
-    var entryListDiv = document.getElementById('entryList');
-    entryListDiv.innerHTML = '';
+    var entryListContainer = document.getElementById('entryList');
+    entryListContainer.innerHTML = '';
     entries.forEach(function (entry) {
-        entryListDiv.innerHTML += instantiateHtml(entryListItemTemplate, entry);
+        entryListContainer.innerHTML += instantiateHtml(entryListItemTemplate, entry);
     });
+    var entryListItems = entryListContainer.getElementsByClassName('entryListItem');
+    for(entryListItem of entryListItems) {
+        entryListItem.addEventListener('click', openEntry);
+    }
+}
+
+function openEntry() {
+    var id = this.dataset.id;
+    requesting('GET', '/entry/' + id, '0.1.0')
+    .then(function (entry) {
+        renderEntry(entry);
+    })
+    .catch(function (err) {
+        window.alert('Failed to load entry: ' + err.message);
+    });
+}
+
+function renderEntry(entry) {
+    var entryTemplate = document.getElementById('entryTemplate').innerHTML;
+    var entryContainer = document.getElementById('entry');
+    entryContainer.innerHTML = instantiateHtml(entryTemplate, entry);
 }
 
 function instantiateHtml(template, options) {
