@@ -16,8 +16,6 @@ Quick start:
 
     install NodeJS
     $ npm run dev
-    install Vagrant
-    $ npm run deploy
 
 Install:
 
@@ -35,13 +33,30 @@ Report coverage:
 
     $ npm run cover
 
-Start server locally:
+Run end2end tests:
 
-    $ npm run start-local
+    $ npm run end2end
 
-Smoke test local server:
+Open demo in browser:
 
-    $ npm run test-local
+    $ npm run demo
+
+
+Development
+-----------
+
+Add a new migration
+
+    node_modules\.bin\knex migrate:make entry-version
+
+
+Vagrant
+-------
+
+Quick start:
+
+    install Vagrant
+    $ npm run deploy
 
 Package for deployment:
 
@@ -62,5 +77,3 @@ Start server on virtual machine:
 Smoke test server on virtual machine:
 
     $ npm run test-remote
-
-
