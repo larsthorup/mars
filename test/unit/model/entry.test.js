@@ -37,6 +37,7 @@ describe('model/entry', function () {
         it('should return the correct rows', function () {
             return finding.should.become({
                 id: 1,
+                version: 1,
                 title: 'More innovation',
                 authorName: 'Rob'
             });

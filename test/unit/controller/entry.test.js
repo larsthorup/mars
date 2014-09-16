@@ -35,7 +35,7 @@ describe('controller/entry', function () {
             single = entryController.getMethod('/entry/:id', '*', 'get');
             repo.stub({
                 entry: [
-                    {id: 1, title: 'plant trees', authorName: 'Derek'}
+                    {id: 1, version: 2, title: 'plant trees', authorName: 'Derek'}
                 ]
             });
         });
@@ -47,6 +47,7 @@ describe('controller/entry', function () {
         it('should return existing entry', function () {
             return single.processing({params: {id: 1}}).should.become({
                 id: 1,
+                version: 2,
                 title: 'plant trees',
                 authorName: 'Derek'
             });

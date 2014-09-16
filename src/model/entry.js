@@ -4,8 +4,8 @@ var user = require('./user');
 function creatingTestData() {
     return user.mappingByName(['Rob', 'Lars']).then(function (users) {
         return Knex.knex('entry').insert([
-            {title: 'More innovation', authorId: users.Rob.id},
-            {title: 'Less bureaucracy', authorId: users.Lars.id}
+            {title: 'More innovation', authorId: users.Rob.id, version: 1},
+            {title: 'Less bureaucracy', authorId: users.Lars.id, version: 1}
         ]);
     });
 }
@@ -23,7 +23,7 @@ function findingLatest() {
 function findingById(id) {
     return Knex.knex.from('entry')
     .innerJoin('user', 'entry.authorId', 'user.id')
-    .first(['entry.id as id', 'title', 'user.name as authorName'])
+    .first(['entry.id as id', 'entry.version', 'title', 'user.name as authorName'])
     .where({'entry.id': id});
 }
 
