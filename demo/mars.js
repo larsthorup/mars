@@ -87,6 +87,23 @@ function renderEntry(entry) {
     var entryTemplate = document.getElementById('entryTemplate').innerHTML;
     var entryContainer = document.getElementById('entry');
     entryContainer.innerHTML = instantiateHtml(entryTemplate, entry);
+    entryContainer.getElementsByClassName('title')[0].addEventListener('input', onTitleChanged);
+}
+
+function onTitleChanged() {
+    // ToDo: collapse input events until done
+    savingTitle(this);
+}
+
+function savingTitle(titleInput) {
+    var entryDiv = titleInput.parentNode.parentNode;
+    var id = entryDiv.dataset.id;
+    var version = entryDiv.dataset.version;
+    var title = titleInput.value;
+    console.log('PATCH','entry',id,version,title);
+    // ToDo: post PATCH request
+    // ToDo: update version on success
+    // ToDo: return promise
 }
 
 function instantiateHtml(template, options) {
@@ -122,7 +139,7 @@ function requesting(method, path, versionRange, args) {
         }
         xhr.onload = function () {
             var response = JSON.parse(this.responseText);
-            console.dir(response);
+            // console.dir(response);
             if(this.status == 200) {
                 resolve(response);
             } else {
