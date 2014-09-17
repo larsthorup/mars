@@ -13,7 +13,13 @@ function gotoAuth() {
 function authenticate() {
     var user = document.getElementById('user').value;
     var pass = document.getElementById('pass').value;
-    requesting('POST', '/auth/authenticate/' + user, null, {pass: pass})
+    requesting({
+        method: 'POST',
+        path: '/auth/authenticate/' + user,
+        args: {
+            pass: pass
+        }
+    })
     .then(function (result) {
         window.mars.token = result.token;
         document.getElementById('authPage').style.display = 'none';
@@ -38,7 +44,11 @@ function gotoGreeting() {
 
 function hello() {
     var name = document.getElementById('name').value;
-    requesting('GET', '/hello/' + name, '0.1.0')
+    requesting({
+        method: 'GET',
+        path: '/hello/' + name,
+        versionRange: '0.1.0'
+    })
     .then(function (result) {
         window.alert('Greeting: ' + result);
     })
@@ -50,7 +60,10 @@ function hello() {
 function gotoEntry() {
     document.getElementById('greetingPage').style.display = 'none';
     document.getElementById('entryPage').style.display = 'block';
-    requesting('GET', '/entry/latest', '0.1.0')
+    requesting({
+        method: 'GET',
+        path: '/entry/latest'
+    })
     .then(function (result) {
         renderEntryList(result.entry);
     })
@@ -74,7 +87,10 @@ function renderEntryList(entries) {
 
 function openEntry() {
     var id = this.dataset.id;
-    requesting('GET', '/entry/' + id, '0.1.0')
+    requesting({
+        method: 'GET',
+        path: '/entry/' + id
+    })
     .then(function (entry) {
         renderEntry(entry);
     })
@@ -100,10 +116,22 @@ function savingTitle(titleInput) {
     var id = entryDiv.dataset.id;
     var version = entryDiv.dataset.version;
     var title = titleInput.value;
-    console.log('PATCH','entry',id,version,title);
-    // ToDo: post PATCH request
-    // ToDo: update version on success
-    // ToDo: return promise
+    // console.log('PATCH','entry',id,version,title);
+    var patch = [
+        { op: 'test', path: '/version', value: version},
+        { op: 'replace', path: '/title', value: title}
+    ];
+    console.dir(patch);
+    // ToDo: pass patch as body
+    // ToDo: pass version as If-Match header
+    return requesting({
+        method: 'PATCH',
+        path: '/entry/' + id,
+        body: JSON.stringify(patch)
+    })
+    .then(function (entry) {
+        // ToDo: update version on success
+    });
 }
 
 function instantiateHtml(template, options) {
@@ -119,20 +147,20 @@ function instantiateHtml(template, options) {
     });
 }
 
-function requesting(method, path, versionRange, args) {
+function requesting(options) {
     return new Promise(function (resolve, reject) {
         var data = new FormData();
 
-        if(args) {
+        if(options.args) {
             // ToDo: not multipart/form-data
             // ToDo: iterate over args
-            data.append('pass', args.pass);
+            data.append('pass', options.args.pass);
         }
 
         var xhr = new XMLHttpRequest();
-        xhr.open(method, 'https://localhost:1719' + path, true);
-        if(versionRange) {
-            xhr.setRequestHeader('Accept-Version', versionRange);
+        xhr.open(options.method, 'https://localhost:1719' + options.path, true);
+        if(options.versionRange) {
+            xhr.setRequestHeader('Accept-Version', options.versionRange);
         }
         if(window.mars.token) {
             xhr.setRequestHeader('Authorization', 'Bearer ' + window.mars.token);
