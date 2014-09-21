@@ -105,6 +105,9 @@ describe('server', function () {
                 unknownMethodHandler(req, res);
 
                 // then
+                res.header.getCall(1).args[0].should.equal('Access-Control-Allow-Headers');
+                res.header.getCall(1).args[1].should.contain('Authorization');
+                res.header.getCall(1).args[1].should.contain('If-Match');
                 res.header.getCall(2).args.should.deep.equal(['Access-Control-Allow-Methods', 'OPTIONS']);
                 res.header.getCall(3).args.should.deep.equal(['Access-Control-Allow-Origin', 'someOrigin']);
                 res.send.should.have.been.calledWith(200);

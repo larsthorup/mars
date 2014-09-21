@@ -83,6 +83,7 @@ function renderEntryList(entries) {
     for(entryListItem of entryListItems) {
         entryListItem.addEventListener('click', openEntry);
     }
+    openEntry.call(entryListItems[0]);
 }
 
 function openEntry() {
@@ -116,17 +117,14 @@ function savingTitle(titleInput) {
     var id = entryDiv.dataset.id;
     var version = entryDiv.dataset.version;
     var title = titleInput.value;
-    // console.log('PATCH','entry',id,version,title);
     var patch = [
-        { op: 'test', path: '/version', value: version},
         { op: 'replace', path: '/title', value: title}
     ];
-    console.dir(patch);
-    // ToDo: pass patch as body
-    // ToDo: pass version as If-Match header
+    // ToDo: set mimetype to JSON Patch
     return requesting({
         method: 'PATCH',
         path: '/entry/' + id,
+        version: version,
         body: JSON.stringify(patch)
     })
     .then(function (entry) {
@@ -149,12 +147,15 @@ function instantiateHtml(template, options) {
 
 function requesting(options) {
     return new Promise(function (resolve, reject) {
-        var data = new FormData();
+        var data;
 
         if(options.args) {
             // ToDo: not multipart/form-data
             // ToDo: iterate over args
+            data = new FormData();
             data.append('pass', options.args.pass);
+        } else if(options.body) {
+            data = options.body;
         }
 
         var xhr = new XMLHttpRequest();
@@ -165,8 +166,15 @@ function requesting(options) {
         if(window.mars.token) {
             xhr.setRequestHeader('Authorization', 'Bearer ' + window.mars.token);
         }
+        if(options.method === 'PATCH') {
+            xhr.setRequestHeader('Content-type', 'application/json-patch+json');
+        }
+        if(options.version) {
+            xhr.setRequestHeader('If-Match', options.version);
+        }
         xhr.onload = function () {
             var response = JSON.parse(this.responseText);
+            // ToDo: add ETag response header
             // console.dir(response);
             if(this.status == 200) {
                 resolve(response);

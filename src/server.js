@@ -43,7 +43,8 @@ function start(options) {
                 'Api-Version',
                 'Origin',
                 'X-Requested-With',
-                'Authorization'
+                'Authorization',
+                'If-Match'
             ];
 
             if (res.methods.indexOf('OPTIONS') === -1) {
