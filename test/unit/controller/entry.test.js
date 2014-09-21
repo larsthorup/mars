@@ -1,5 +1,7 @@
+/* globals -Promise */
+var Promise = require('bluebird');
 var entryController = require('../../../src/controller/entry');
-var repo = require('../../stub/repo.stub.js');
+var repo = require('../../../src/repo');
 var auth = require('../../../src/auth');
 
 describe('controller/entry', function () {
@@ -9,11 +11,7 @@ describe('controller/entry', function () {
 
         beforeEach(function () {
             latest = entryController.getMethod('/entry/latest', '*', 'get');
-            repo.stub({
-                entry: [
-                    {id: 1, title: 'plant trees', authorName: 'Derek'}
-                ]
-            });
+            sandbox.stub(repo.entry, 'findingLatest', function () { return Promise.resolve('someEntries'); });
         });
 
         it('should allow user access', function () {
@@ -21,40 +19,55 @@ describe('controller/entry', function () {
         });
 
         it('should return the entries', function () {
-            return latest.processing().should.become({entry: [
-                {id: 1, title: 'plant trees', authorName: 'Derek'}
-            ]});
+            return latest.processing().should.become({
+                entry: 'someEntries'
+            });
         });
 
     });
 
-    describe('single', function () {
-        var single;
+    describe('get', function () {
+        var get;
 
         beforeEach(function () {
-            single = entryController.getMethod('/entry/:id', '*', 'get');
-            repo.stub({
-                entry: [
-                    {id: 1, version: 2, title: 'plant trees', authorName: 'Derek'}
-                ]
-            });
+            get = entryController.getMethod('/entry/:id', '*', 'get');
+            sandbox.stub(repo.entry, 'findingById', function () { return Promise.resolve('someEntry'); });
         });
 
         it('should allow user access', function () {
-            single.authorize.should.equal(auth.user);
+            get.authorize.should.equal(auth.user);
         });
 
         it('should return existing entry', function () {
-            return single.processing({params: {id: 1}}).should.become({
-                id: 1,
-                version: 2,
-                title: 'plant trees',
-                authorName: 'Derek'
+            return get.processing({params: {id: 47}}).should.become('someEntry').then(function () {
+                repo.entry.findingById.should.have.been.calledWith(47);
             });
         });
 
-        it('should fail when entry does not exist', function () {
-            return single.processing({params: {id: 2}}).should.be.rejectedWith();
+    });
+
+    describe('patch', function () {
+        var patch;
+
+        beforeEach(function () {
+            patch = entryController.getMethod('/entry/:id', '*', 'patch');
+            sandbox.stub(repo.entry, 'patching', function () { return Promise.resolve({version: 3}); });
+        });
+
+        it('should allow user access', function () {
+            patch.authorize.should.equal(auth.user);
+        });
+
+        it('should patch the entry', function () {
+            return patch.processing({
+                params: {id: 1},
+                headers: {'if-match': '2'},
+                body: '{"somePatchDescription": true}'
+            }).should.become({
+                version: 3
+            }).then(function () {
+                repo.entry.patching.should.have.been.calledWith(1, 2, {somePatchDescription: true});
+            });
         });
 
     });

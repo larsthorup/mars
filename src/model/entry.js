@@ -1,5 +1,6 @@
 var Knex = require('knex');
 var user = require('./user');
+var assert = require('assert');
 
 function creatingTestData() {
     return user.mappingByName(['Rob', 'Lars']).then(function (users) {
@@ -27,8 +28,31 @@ function findingById(id) {
     .where({'entry.id': id});
 }
 
+function patching(id, version, patch) {
+    assert.equal(patch[0].op, 'replace');
+    assert.equal(patch[0].path, '/title');
+    // ToDo: use json patch?
+
+    var newVersion = version + 1;
+    return Knex.knex.table('entry')
+    .where({id: id, version: version})
+    .update({
+        version: newVersion,
+        title: patch[0].value
+    }).then(function (rowCount) {
+        if(rowCount === 1) {
+            return {
+                version: newVersion
+            };
+        } else {
+            throw new Error('Invalid version');
+        }
+    });
+}
+
 module.exports = {
     creatingTestData: creatingTestData,
     findingLatest: findingLatest,
-    findingById: findingById
+    findingById: findingById,
+    patching: patching
 };

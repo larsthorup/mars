@@ -35,10 +35,9 @@ module.exports = new Controller({
                     // ToDo: move extraction of IF-Match header and req.body to server plugin
                     // guided by the mime type
                     var id = req.params.id;
-                    var version = req.headers['if-match'];
+                    var version = parseInt(req.headers['if-match']);
                     var patch = JSON.parse(req.body.toString());
-                    // return repo.entry.patching(id, version, patch);
-                    return Promise.resolve({});
+                    return repo.entry.patching(id, version, patch);
                 }
             }
         }
