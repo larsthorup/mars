@@ -122,7 +122,6 @@ function savingTitle(titleInput) {
     var patch = {
         title: title
     };
-    // ToDo: set mimetype to JSON Patch
     return requesting({
         method: 'PATCH',
         path: '/entry/' + id,
@@ -170,7 +169,7 @@ function requesting(options) {
             xhr.setRequestHeader('Authorization', 'Bearer ' + window.mars.token);
         }
         if(options.method === 'PATCH') {
-            xhr.setRequestHeader('Content-type', 'application/json-patch+json');
+            xhr.setRequestHeader('Content-type', 'application/json');
         }
         if(options.version) {
             xhr.setRequestHeader('If-Match', options.version);

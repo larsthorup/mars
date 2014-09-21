@@ -62,7 +62,7 @@ describe('controller/entry', function () {
             return patch.processing({
                 params: {id: 1},
                 headers: {'if-match': '2'},
-                body: '{"somePatchDescription": true}'
+                body: {somePatchDescription: true}
             }).should.become({
                 version: 3
             }).then(function () {

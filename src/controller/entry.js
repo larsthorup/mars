@@ -36,7 +36,7 @@ module.exports = new Controller({
                     // guided by the mime type
                     var id = req.params.id;
                     var version = parseInt(req.headers['if-match']);
-                    var patch = JSON.parse(req.body.toString());
+                    var patch = req.body;
                     return repo.entry.patching(id, version, patch);
                 }
             }
