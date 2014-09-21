@@ -83,6 +83,8 @@ function renderEntryList(entries) {
     for(entryListItem of entryListItems) {
         entryListItem.addEventListener('click', openEntry);
     }
+    // ToDo: subscribe to entry patch events from server
+    // Note: open first entry for convenience
     openEntry.call(entryListItems[0]);
 }
 
@@ -127,9 +129,10 @@ function savingTitle(titleInput) {
         version: version,
         body: JSON.stringify(patch)
     })
-    .then(function (entry) {
-        // ToDo: update version on success
+    .then(function (result) {
+        entryDiv.dataset.version = result.version;
     });
+    // ToDo: reload on error
 }
 
 function instantiateHtml(template, options) {
@@ -176,7 +179,7 @@ function requesting(options) {
             var response = JSON.parse(this.responseText);
             // ToDo: add ETag response header
             // console.dir(response);
-            if(this.status == 200) {
+            if(this.status === 200) {
                 resolve(response);
             } else {
                 reject(new Error(response.message));
