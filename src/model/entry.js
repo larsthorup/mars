@@ -29,17 +29,13 @@ function findingById(id) {
 }
 
 function patching(id, version, patch) {
-    assert.equal(patch[0].op, 'replace');
-    assert.equal(patch[0].path, '/title');
     // ToDo: use json patch?
-
     var newVersion = version + 1;
+    patch.version = newVersion;
     return Knex.knex.table('entry')
     .where({id: id, version: version})
-    .update({
-        version: newVersion,
-        title: patch[0].value
-    }).then(function (rowCount) {
+    .update(patch)
+    .then(function (rowCount) {
         if(rowCount === 1) {
             return {
                 version: newVersion

@@ -49,7 +49,7 @@ describe('model/entry', function () {
         var patching;
 
         beforeEach(function () {
-            patching = repo.entry.patching(1, 1, [ { op: 'replace', path: '/title', value: 'Less innovation!' }]);
+            patching = repo.entry.patching(1, 1, { title: 'Less innovation!' });
         });
 
         it('should return the new version and update the repo', function () {

@@ -119,9 +119,9 @@ function savingTitle(titleInput) {
     var id = entryDiv.dataset.id;
     var version = entryDiv.dataset.version;
     var title = titleInput.value;
-    var patch = [
-        { op: 'replace', path: '/title', value: title}
-    ];
+    var patch = {
+        title: title
+    };
     // ToDo: set mimetype to JSON Patch
     return requesting({
         method: 'PATCH',
