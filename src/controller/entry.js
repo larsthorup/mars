@@ -32,11 +32,12 @@ module.exports = new Controller({
                 // ToDo: auth.author??
                 authorize: auth.user,
                 processing: function patchById(req) {
-                    // ToDo: move extraction of IF-Match header and req.body to a server plugin guided by the mime type
+                    // ToDo: move extraction of IF-Match header and req.body to server plugin
+                    // guided by the mime type
                     var id = req.params.id;
                     var version = req.headers['if-match'];
                     var patch = JSON.parse(req.body.toString());
-                    // return repo.entry.patch(id, patch);
+                    // return repo.entry.patching(id, version, patch);
                     return Promise.resolve({});
                 }
             }
