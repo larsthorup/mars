@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', main);
 
 function main() {
     window.mars = {};
+    window.mars.apiServer = 'localhost:1719';
+    window.mars.apiSocket = new WebSocket('wss://' + window.mars.apiServer);
     gotoAuth();
 }
 
@@ -33,11 +35,11 @@ function authenticate() {
 function gotoMenu() {
     document.getElementById('menuPage').style.display = 'block';
     document.getElementById('gotoGreetingButton').addEventListener('click', gotoGreeting);
-    document.getElementById('gotoEntryButton').addEventListener('click', gotoEntry);
+    document.getElementById('gotoEntryListButton').addEventListener('click', gotoEntryList);
 }
 
 function gotoGreeting() {
-    document.getElementById('entryPage').style.display = 'none';
+    document.getElementById('entryListPage').style.display = 'none';
     document.getElementById('greetingPage').style.display = 'block';
     document.getElementById('helloButton').addEventListener('click', hello);
 }
@@ -57,9 +59,9 @@ function hello() {
     });
 }
 
-function gotoEntry() {
+function gotoEntryList() {
     document.getElementById('greetingPage').style.display = 'none';
-    document.getElementById('entryPage').style.display = 'block';
+    document.getElementById('entryListPage').style.display = 'block';
     requesting({
         method: 'GET',
         path: '/entry/latest'
@@ -80,7 +82,9 @@ function renderEntryList(entries) {
         entryListContainer.innerHTML += instantiateHtml(entryListItemTemplate, entry);
     });
     var entryListItems = entryListContainer.getElementsByClassName('entryListItem');
-    for(entryListItem of entryListItems) {
+    // ToDo: use for(entryListItem of entryListItems) when supported by Chrome (v38?)
+    for(var i = 0; i < entryListItems.length; ++i) {
+        var entryListItem = entryListItems[i];
         entryListItem.addEventListener('click', openEntry);
     }
     // ToDo: subscribe to entry patch events from server
@@ -90,11 +94,18 @@ function renderEntryList(entries) {
 
 function openEntry() {
     var id = this.dataset.id;
+    var path = '/entry/' + id;
     requesting({
         method: 'GET',
-        path: '/entry/' + id
+        path: path
     })
     .then(function (entry) {
+        // ToDo: refactor
+        // ToDo: notifyNow: true (to avoid doing a GET)?
+        window.mars.apiSocket.send(JSON.stringify({
+            verb: 'SUBSCRIBE',
+            path: path
+        }));
         renderEntry(entry);
     })
     .catch(function (err) {
@@ -138,12 +149,12 @@ function instantiateHtml(template, options) {
     return template.replace(/{{([^{}]*)}}/g, function (match, key) {
         var value = options[key];
         if(!value) {
-            value = match;
+            return match;
         }
         if(typeof value !== 'string') {
             value = value.toString();
         }
-        return value;
+        return escapeHtml(value);
     });
 }
 
@@ -161,7 +172,7 @@ function requesting(options) {
         }
 
         var xhr = new XMLHttpRequest();
-        xhr.open(options.method, 'https://localhost:1719' + options.path, true);
+        xhr.open(options.method, 'https://' + window.mars.apiServer + options.path, true);
         if(options.versionRange) {
             xhr.setRequestHeader('Accept-Version', options.versionRange);
         }
@@ -176,7 +187,7 @@ function requesting(options) {
         }
         xhr.onload = function () {
             var response = JSON.parse(this.responseText);
-            // ToDo: add ETag response header
+            // ToDo: read ETag response header
             // console.dir(response);
             if(this.status === 200) {
                 resolve(response);

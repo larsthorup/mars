@@ -16,7 +16,8 @@
         "lodash": "^2.4.1",
         "require-all": "^0.0.8",
         "bunyan": "^1.0.1",
-        "semver": "^3.0.1"
+        "semver": "^3.0.1",
+        "ws": "^0.4.32"
     },
     "devDependencies": {
         "mocha": "^1.21.0",

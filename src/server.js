@@ -7,6 +7,7 @@ var fs = require('fs');
 var path = require('path');
 var token = require('./token');
 var bunyan = require('bunyan');
+var ws = require('ws');
 
 function start(options) {
 
@@ -63,7 +64,44 @@ function start(options) {
         }
     });
 
+    // map routes
     router.map(server);
+
+    // handle web sockets
+    var wss = new ws.Server({
+        server: server.server
+    });
+
+    // ToDo: refactor into a clients.js module
+    var subscriptions = {};
+    var latestConnectionId = 0;
+    wss.on('connection', function (connection) {
+        console.log('WebSocket connection established');
+        connection.id = ++latestConnectionId;
+        connection.subscriptions = {};
+        connection.on('close', function (code, message) {
+            console.log('WebSocket connection closed', code, message);
+            // ToDo: remove any subscriptions
+        });
+        // ToDo: could we avoid the closure by having the connection being passed to the callback?
+        connection.on('message', function (data) {
+            var message = JSON.parse(data);
+            if(message.verb === 'SUBSCRIBE') {
+                console.log('SUBSCRIBE', message.path);
+                // ToDo: error handling
+                subscriptions[message.path][connection.id] = connection;
+                connection.subscriptions[message.path] = true;
+            }
+            if(message.verb === 'UNSUBSCRIBE') {
+                console.log('UNSUBSCRIBE', message.path);
+                // ToDo: error handling
+                delete subscriptions[message.path][connection.id];
+                delete connection.subscriptions[message.path];
+            }
+        });
+    });
+
+    // start listening
     server.listen(1719, function() {
         console.log('%s listening at %s', server.name, server.url);
     });
