@@ -89,6 +89,7 @@ function start(options) {
             if(message.verb === 'SUBSCRIBE') {
                 console.log('SUBSCRIBE', message.path);
                 // ToDo: error handling
+                subscriptions[message.path] = subscriptions[message.path] || {};
                 subscriptions[message.path][connection.id] = connection;
                 connection.subscriptions[message.path] = true;
             }
