@@ -38,6 +38,7 @@ module.exports = new Controller({
                     var version = parseInt(req.headers['if-match']);
                     var patch = req.body;
                     return repo.entry.patching(id, version, patch);
+                    // ToDo: clients.patch(øreq.path, version, patch, toVersion);
                 }
             }
         }

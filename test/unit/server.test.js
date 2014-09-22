@@ -1,10 +1,11 @@
-var restify = require('restify');
-var server = require('../../src/server');
-var router = require('../../src/router');
+var bunyan = require('bunyan');
 var fs = require('fs');
 var path = require('path');
-var bunyan = require('bunyan');
-var ws = require('ws');
+var restify = require('restify');
+
+var server = require('../../src/server');
+var router = require('../../src/router');
+var clients = require('../../src/clients');
 
 describe('server', function () {
     var restifyServer;
@@ -28,7 +29,7 @@ describe('server', function () {
         sandbox.stub(router, 'map');
         sandbox.stub(console, 'log');
         sandbox.stub(bunyan, 'createLogger', function () { return 'theBunyanLogger'; });
-        sandbox.stub(ws, 'Server', function () { return { on: function () {} }; });
+        sandbox.stub(clients, 'connect');
     });
 
     describe('start', function () {
