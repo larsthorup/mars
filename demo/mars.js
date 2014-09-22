@@ -4,6 +4,10 @@ function main() {
     window.mars = {};
     window.mars.apiServer = 'localhost:1719';
     window.mars.apiSocket = new WebSocket('wss://' + window.mars.apiServer);
+    window.mars.apiSocket.onmessage = function (event) {
+        console.log('Received WebSocket message');
+        console.dir(JSON.parse(event.data));
+    };
     gotoAuth();
 }
 

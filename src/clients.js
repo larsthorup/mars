@@ -38,6 +38,20 @@ function connect(server) {
     });
 }
 
+function notifyPatch(path, fromVersion, patch, toVersion) {
+    var pathSubscriptions = subscriptions[path];
+    Object.keys(pathSubscriptions).forEach(function(connectionId) {
+        var connection = pathSubscriptions[connectionId];
+        connection.send(JSON.stringify({
+            path: path,
+            fromVersion: fromVersion,
+            patch: patch,
+            toVersion: toVersion
+        }));
+    });
+}
+
 module.exports = {
-    connect: connect
+    connect: connect,
+    notifyPatch: notifyPatch
 };

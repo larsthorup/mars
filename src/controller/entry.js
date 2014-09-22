@@ -1,8 +1,10 @@
 /* global -Promise */
 var Promise = require('bluebird');
+
+var auth = require('../auth');
+var clients = require('../clients');
 var Controller = require('../controller');
 var repo = require('../repo');
-var auth = require('../auth');
 
 module.exports = new Controller({
     '/entry/latest': {
@@ -37,8 +39,12 @@ module.exports = new Controller({
                     var id = req.params.id;
                     var version = parseInt(req.headers['if-match']);
                     var patch = req.body;
-                    return repo.entry.patching(id, version, patch);
-                    // ToDo: clients.patch(øreq.path, version, patch, toVersion);
+                    return repo.entry.patching(id, version, patch)
+                    .then(function (result) {
+                        // console.dir(req);
+                        clients.notifyPatch(req.url, version, patch, result.version);
+                        return result;
+                    });
                 }
             }
         }

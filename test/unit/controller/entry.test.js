@@ -1,8 +1,11 @@
 /* globals -Promise */
 var Promise = require('bluebird');
+
 var entryController = require('../../../src/controller/entry');
-var repo = require('../../../src/repo');
+
 var auth = require('../../../src/auth');
+var clients = require('../../../src/clients');
+var repo = require('../../../src/repo');
 
 describe('controller/entry', function () {
 
@@ -52,6 +55,7 @@ describe('controller/entry', function () {
         beforeEach(function () {
             patch = entryController.getMethod('/entry/:id', '*', 'patch');
             sandbox.stub(repo.entry, 'patching', function () { return Promise.resolve({version: 3}); });
+            sandbox.stub(clients, 'notifyPatch');
         });
 
         it('should allow user access', function () {
