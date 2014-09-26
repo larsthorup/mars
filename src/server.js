@@ -8,7 +8,6 @@ var restify = require('restify');
 
 var router = require('./router');
 var token = require('./token');
-var clients = require('./clients');
 
 function start(options) {
 
@@ -73,7 +72,7 @@ function start(options) {
     router.map(server);
 
     // handle web socket subscriptions from clients
-    server.clients = new clients.Clients(server);
+    server.clients = new (require('./clients').Clients)(server);
 
     // start listening
     server.listen(1719, function() {

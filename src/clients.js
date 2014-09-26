@@ -1,45 +1,41 @@
 var ws = require('ws');
 
 function Clients(server) {
-    var subscriptions = {};
-    var latestConnectionId = 0;
+    var subscriptions = new (require('./subscriptions').Subscriptions)();
+    var connections = {};
+    var latestClientId = 0;
 
     var wss = new ws.Server({
         server: server.server
     });
 
     wss.on('connection', function (connection) {
-        connection.id = ++latestConnectionId;
-        console.log('WebSocket connection established', connection.id);
-        connection.subscriptions = {};
+        var clientId = ++latestClientId;
+        console.log('WebSocket connection established', clientId);
+        connections[clientId] = connection;
         connection.on('close', function (code, message) {
-            console.log('WebSocket connection closed', connection.id, code, message);
-            // ToDo: remove any subscriptions
+            console.log('WebSocket connection closed', clientId, code, message);
+            subscriptions.unsubscribeClient(clientId);
+            delete connections[clientId];
         });
-        // ToDo: could we avoid the closure by having the connection being passed to the callback?
         connection.on('message', function (data) {
             var message = JSON.parse(data);
             // ToDo: refactor to avoid if statements
             if(message.verb === 'SUBSCRIBE') {
                 console.log('SUBSCRIBE', message.path);
-                // ToDo: error handling
-                subscriptions[message.path] = subscriptions[message.path] || {};
-                subscriptions[message.path][connection.id] = connection;
-                connection.subscriptions[message.path] = true;
+                subscriptions.subscribe(clientId, message.path);
             }
             if(message.verb === 'UNSUBSCRIBE') {
                 console.log('UNSUBSCRIBE', message.path);
-                // ToDo: error handling
-                delete subscriptions[message.path][connection.id];
-                delete connection.subscriptions[message.path];
+                subscriptions.unsubscribe(clientId, message.path);
             }
         });
     });
 
-    this.notifyPatch = function (options) {
-        var pathSubscriptions = subscriptions[options.path];
-        Object.keys(pathSubscriptions).forEach(function(connectionId) {
-            var connection = pathSubscriptions[connectionId];
+    this.notifyPatch = function notifyPatch(options) {
+        var clients = subscriptions.getClients(options.path);
+        clients.forEach(function(clientId) {
+            var connection = connections[clientId];
             connection.send(JSON.stringify({
                 path: options.path,
                 fromVersion: options.fromVersion,
