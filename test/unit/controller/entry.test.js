@@ -64,13 +64,21 @@ describe('controller/entry', function () {
 
         it('should patch the entry', function () {
             return patch.processing({
+                url: '/entry/1',
                 params: {id: 1},
                 headers: {'if-match': '2'},
                 body: {somePatchDescription: true}
             }).should.become({
                 version: 3
             }).then(function () {
-                repo.entry.patching.should.have.been.calledWith(1, 2, {somePatchDescription: true});
+                return repo.entry.patching.should.have.been.calledWith(1, 2, {somePatchDescription: true});
+            }).then(function () {
+                return clients.notifyPatch.should.have.been.calledWith({
+                    path: '/entry/1',
+                    fromVersion: 2,
+                    toVersion: 3,
+                    patch: {somePatchDescription: true}
+                });
             });
         });
 

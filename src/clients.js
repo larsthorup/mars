@@ -38,15 +38,15 @@ function connect(server) {
     });
 }
 
-function notifyPatch(path, fromVersion, patch, toVersion) {
-    var pathSubscriptions = subscriptions[path];
+function notifyPatch(options) {
+    var pathSubscriptions = subscriptions[options.path];
     Object.keys(pathSubscriptions).forEach(function(connectionId) {
         var connection = pathSubscriptions[connectionId];
         connection.send(JSON.stringify({
-            path: path,
-            fromVersion: fromVersion,
-            patch: patch,
-            toVersion: toVersion
+            path: options.path,
+            fromVersion: options.fromVersion,
+            patch: options.patch,
+            toVersion: options.toVersion
         }));
     });
 }

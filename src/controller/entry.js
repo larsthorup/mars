@@ -41,8 +41,12 @@ module.exports = new Controller({
                     var patch = req.body;
                     return repo.entry.patching(id, version, patch)
                     .then(function (result) {
-                        // console.dir(req);
-                        clients.notifyPatch(req.url, version, patch, result.version);
+                        clients.notifyPatch({
+                            path: req.url,
+                            fromVersion: version,
+                            patch: patch,
+                            toVersion: result.version
+                        });
                         return result;
                     });
                 }
