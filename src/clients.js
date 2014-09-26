@@ -1,10 +1,9 @@
 var ws = require('ws');
 
-// ToDo: avoid singleton pattern
-var subscriptions = {};
-var latestConnectionId = 0;
+function Clients(server) {
+    var subscriptions = {};
+    var latestConnectionId = 0;
 
-function connect(server) {
     var wss = new ws.Server({
         server: server.server
     });
@@ -36,22 +35,21 @@ function connect(server) {
             }
         });
     });
-}
 
-function notifyPatch(options) {
-    var pathSubscriptions = subscriptions[options.path];
-    Object.keys(pathSubscriptions).forEach(function(connectionId) {
-        var connection = pathSubscriptions[connectionId];
-        connection.send(JSON.stringify({
-            path: options.path,
-            fromVersion: options.fromVersion,
-            patch: options.patch,
-            toVersion: options.toVersion
-        }));
-    });
+    this.notifyPatch = function (options) {
+        var pathSubscriptions = subscriptions[options.path];
+        Object.keys(pathSubscriptions).forEach(function(connectionId) {
+            var connection = pathSubscriptions[connectionId];
+            connection.send(JSON.stringify({
+                path: options.path,
+                fromVersion: options.fromVersion,
+                patch: options.patch,
+                toVersion: options.toVersion
+            }));
+        });
+    };
 }
 
 module.exports = {
-    connect: connect,
-    notifyPatch: notifyPatch
+    Clients: Clients
 };

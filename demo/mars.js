@@ -7,6 +7,7 @@ function main() {
     window.mars.apiSocket.onmessage = function (event) {
         console.log('Received WebSocket message');
         console.dir(JSON.parse(event.data));
+        // ToDo: dispatch to listeners
     };
     gotoAuth();
 }
@@ -92,6 +93,7 @@ function renderEntryList(entries) {
         entryListItem.addEventListener('click', openEntry);
     }
     // ToDo: subscribe to entry patch events from server
+    // ToDo ignore entry patch events if version is already satisfied
     // Note: open first entry for convenience
     openEntry.call(entryListItems[0]);
 }

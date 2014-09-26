@@ -28,8 +28,8 @@ describe('server', function () {
         });
         sandbox.stub(router, 'map');
         sandbox.stub(console, 'log');
-        sandbox.stub(bunyan, 'createLogger', function () { return 'theBunyanLogger'; });
-        sandbox.stub(clients, 'connect');
+        sandbox.stub(bunyan, 'createLogger').returns('theBunyanLogger');
+        sandbox.stub(clients, 'Clients').returns({});
     });
 
     describe('start', function () {
@@ -67,6 +67,10 @@ describe('server', function () {
 
         it('maps the routes', function () {
             router.map.should.have.been.calledWith(restifyServer);
+        });
+
+        it('connect to clients', function () {
+            clients.Clients.should.have.been.calledWith(restifyServer);
         });
 
         it('listens on the right port', function () {

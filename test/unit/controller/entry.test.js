@@ -51,11 +51,16 @@ describe('controller/entry', function () {
 
     describe('patch', function () {
         var patch;
+        var server;
 
         beforeEach(function () {
             patch = entryController.getMethod('/entry/:id', '*', 'patch');
             sandbox.stub(repo.entry, 'patching', function () { return Promise.resolve({version: 3}); });
-            sandbox.stub(clients, 'notifyPatch');
+            server = {
+                clients: {
+                    notifyPatch: sandbox.spy()
+                }
+            };
         });
 
         it('should allow user access', function () {
@@ -67,13 +72,14 @@ describe('controller/entry', function () {
                 url: '/entry/1',
                 params: {id: 1},
                 headers: {'if-match': '2'},
-                body: {somePatchDescription: true}
+                body: {somePatchDescription: true},
+                server: server
             }).should.become({
                 version: 3
             }).then(function () {
                 return repo.entry.patching.should.have.been.calledWith(1, 2, {somePatchDescription: true});
             }).then(function () {
-                return clients.notifyPatch.should.have.been.calledWith({
+                return server.clients.notifyPatch.should.have.been.calledWith({
                     path: '/entry/1',
                     fromVersion: 2,
                     toVersion: 3,

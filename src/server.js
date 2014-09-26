@@ -66,10 +66,14 @@ function start(options) {
     });
 
     // map routes
+    server.use(function (req, res, next) {
+        req.server = server; // Note: expose server to controllers
+        next();
+    });
     router.map(server);
 
-    // handle web sockets
-    clients.connect(server);
+    // handle web socket subscriptions from clients
+    server.clients = new clients.Clients(server);
 
     // start listening
     server.listen(1719, function() {
