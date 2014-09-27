@@ -48,8 +48,8 @@ describe('clients', function () {
         describe('when receiving a subscribe message', function () {
 
             beforeEach(function () {
-                messageHandler('{"verb": "SUBSCRIBE", "path": "pathA"}');
-                messageHandler('{"verb": "SUBSCRIBE", "path": "pathB"}');
+                messageHandler.call(connection, '{"verb": "SUBSCRIBE", "path": "pathA"}');
+                messageHandler.call(connection, '{"verb": "SUBSCRIBE", "path": "pathB"}');
             });
 
             describe('notifyPatch', function () {
@@ -69,7 +69,7 @@ describe('clients', function () {
             describe('when receiving an unsubscribe message', function () {
 
                 beforeEach(function () {
-                    messageHandler('{"verb": "UNSUBSCRIBE", "path": "pathA"}');
+                    messageHandler.call(connection, '{"verb": "UNSUBSCRIBE", "path": "pathA"}');
                 });
 
                 it('no longer sends patches when notified', function () {
@@ -82,7 +82,7 @@ describe('clients', function () {
             describe('when closing the connection', function () {
 
                 beforeEach(function () {
-                    closeHandler();
+                    closeHandler.call(connection);
                 });
 
                 it('no longer sends patches when notified', function () {

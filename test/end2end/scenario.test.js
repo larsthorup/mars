@@ -11,7 +11,7 @@ describe('scenario', function () {
     });
 
     it('warms up', function () {
-        this.timeout(4000);
+        this.timeout(5000);
         return mars.posting('/auth/authenticate/unknown', '*', {}).should.be.rejectedWith('invalid user name or password');
     });
 

@@ -8,29 +8,45 @@ function Clients(server) {
     var webSocketServer = new ws.Server({
         server: server.server
     });
+    webSocketServer.on('connection', onConnect);
 
-    webSocketServer.on('connection', function (connection) {
+    function onConnect(connection) {
         var clientId = ++latestClientId;
-        // console.log('WebSocket connection established', clientId);
+        connection.clientId = clientId;
         connections[clientId] = connection;
-        connection.on('close', function (code, message) {
-            // console.log('WebSocket connection closed', clientId, code, message);
-            subscriptions.unsubscribeClient(clientId);
-            delete connections[clientId];
-        });
-        connection.on('message', function (data) {
-            var message = JSON.parse(data);
-            // ToDo: refactor to avoid if statements
-            if(message.verb === 'SUBSCRIBE') {
-                // console.log('SUBSCRIBE', message.path);
-                subscriptions.subscribe(clientId, message.path);
-            }
-            if(message.verb === 'UNSUBSCRIBE') {
-                // console.log('UNSUBSCRIBE', message.path);
-                subscriptions.unsubscribe(clientId, message.path);
-            }
-        });
-    });
+        // console.log('WebSocket connection established', clientId);
+        connection.on('close', onDisconnect);
+        connection.on('message', onMessage);
+    }
+
+    var messageHandlers = {
+        'SUBSCRIBE': onSubscribe,
+        'UNSUBSCRIBE': onUnsubscribe
+    };
+
+    function onMessage(data) {
+        var message = JSON.parse(data);
+        var handler = messageHandlers[message.verb];
+        if(handler) {
+            handler.call(this, message);
+        }
+    }
+
+    function onSubscribe(message) {
+        // console.log('SUBSCRIBE', message.path);
+        subscriptions.subscribe(this.clientId, message.path);
+    }
+
+    function onUnsubscribe(message) {
+        // console.log('UNSUBSCRIBE', message.path);
+        subscriptions.unsubscribe(this.clientId, message.path);
+    }
+
+    function onDisconnect(code, message) {
+        // console.log('WebSocket connection closed', clientId, code, message);
+        subscriptions.unsubscribeClient(this.clientId);
+        delete connections[this.clientId];
+    }
 
     this.notifyPatch = function notifyPatch(options) {
         var clients = subscriptions.getClients(options.path);
