@@ -5,9 +5,11 @@ function main() {
     window.mars.apiServer = 'localhost:1719';
     window.mars.apiSocket = new WebSocket('wss://' + window.mars.apiServer);
     window.mars.apiSocket.onmessage = function (event) {
-        console.log('Received WebSocket message');
-        console.dir(JSON.parse(event.data));
-        // ToDo: dispatch to listeners
+        // console.log('Received WebSocket message');
+        var message = JSON.parse(event.data);
+        // console.dir(message);
+        patchEntry(message);
+        // ToDo: dispatch to listeners[message.path]
     };
     gotoAuth();
 }
@@ -123,11 +125,23 @@ function renderEntry(entry) {
     var entryTemplate = document.getElementById('entryTemplate').innerHTML;
     var entryContainer = document.getElementById('entry');
     entryContainer.innerHTML = instantiateHtml(entryTemplate, entry);
-    entryContainer.getElementsByClassName('title')[0].addEventListener('input', onTitleChanged);
+    var titleInput = entryContainer.getElementsByClassName('title')[0];
+    titleInput.addEventListener('input', onTitleChanged);
+}
+
+function patchEntry(message) {
+    var entryContainer = document.getElementById('entry');
+    var entryDiv = entryContainer.getElementsByClassName('entry')[0];
+    var currentVersion = entryDiv.dataset.version;
+    if(message.fromVersion === currentVersion) {
+        var titleInput = entryContainer.getElementsByClassName('title')[0];
+        titleInput.value = message.patch.title;
+        entryDiv.dataset.version = message.toVersion;
+    }
 }
 
 function onTitleChanged() {
-    // ToDo: collapse input events until done
+    // ToDo: collapse input events (and ignore patch events?) until done
     savingTitle(this);
 }
 

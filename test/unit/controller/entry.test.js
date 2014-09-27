@@ -81,8 +81,8 @@ describe('controller/entry', function () {
             }).then(function () {
                 return server.clients.notifyPatch.should.have.been.calledWith({
                     path: '/entry/1',
-                    fromVersion: 2,
-                    toVersion: 3,
+                    fromVersion: '2',
+                    toVersion: '3',
                     patch: {somePatchDescription: true}
                 });
             });

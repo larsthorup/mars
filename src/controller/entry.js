@@ -43,9 +43,9 @@ module.exports = new Controller({
                     .then(function (result) {
                         req.server.clients.notifyPatch({
                             path: req.url,
-                            fromVersion: version,
+                            fromVersion: version.toString(),
                             patch: patch,
-                            toVersion: result.version
+                            toVersion: result.version.toString()
                         });
                         return result;
                     });
