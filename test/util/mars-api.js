@@ -14,21 +14,28 @@ function stop() {
     server.kill();
 }
 
-function requesting(path, versionRange, method, form, bearerToken) {
+function requesting(path, apiVersionRange, method, form, body, dataVersion, bearerToken) {
     var options = {
         uri: 'https://localhost:1719' + path,
         method: method,
         json: true,
         strictSSL: false,
         form: form,
+        body: body,
         headers: {
         }
     };
-    if(versionRange) {
-        options.headers['accept-version'] = versionRange;
+    if(apiVersionRange) {
+        options.headers['accept-version'] = apiVersionRange;
+    }
+    if(dataVersion) {
+        options.headers['if-match'] = dataVersion;
     }
     if(bearerToken) {
         options.headers.authorization = 'Bearer ' + bearerToken;
+    }
+    if(mars.trace) {
+        console.dir(options);
     }
     return request(options).then(function (data) {
         if(mars.trace) {
@@ -46,11 +53,15 @@ function requesting(path, versionRange, method, form, bearerToken) {
 }
 
 function getting(path, versionRange, bearerToken) {
-    return requesting(path, versionRange, 'GET', null, bearerToken);
+    return requesting(path, versionRange, 'GET', null, null, null, bearerToken);
 }
 
 function posting(path, versionRange, form, bearerToken) {
-    return requesting(path, versionRange, 'POST', form, bearerToken);
+    return requesting(path, versionRange, 'POST', form, null, null, bearerToken);
+}
+
+function patching(path, apiVersionRange, body, dataVersion, bearerToken) {
+    return requesting(path, apiVersionRange, 'PATCH', undefined, body, dataVersion, bearerToken);
 }
 
 var mars = module.exports = {
@@ -58,5 +69,6 @@ var mars = module.exports = {
     starting: starting,
     stop: stop,
     getting: getting,
-    posting: posting
+    posting: posting,
+    patching: patching
 };

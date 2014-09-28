@@ -43,6 +43,11 @@ function patching(id, version, patch) {
         } else {
             throw new Error('Invalid version');
         }
+    })
+    .catch(function (err) {
+        // ToDo: use bunyan
+        console.log('Failed to patch', id, version, patch, err);
+        throw err;
     });
 }
 

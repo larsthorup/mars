@@ -4,6 +4,8 @@ function main() {
     window.mars = {};
     window.mars.apiServer = 'localhost:1719';
     window.mars.apiSocket = new WebSocket('wss://' + window.mars.apiServer);
+    // ToDo: authentication
+    // ToDo: wait for 'open' event
     window.mars.apiSocket.onmessage = function (event) {
         // console.log('Received WebSocket message');
         var message = JSON.parse(event.data);

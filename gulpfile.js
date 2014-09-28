@@ -57,7 +57,7 @@ gulp.task('cover-report', function () {
 gulp.task('end2end', function () {
     return gulp
     .src(paths.test.end2end)
-    .pipe(mocha({reporter: 'dot'}));
+    .pipe(mocha({reporter: 'spec'}));
 });
 
 // run
