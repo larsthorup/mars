@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+// var debug = require('gulp-debug');
 
 var paths = {
     src: 'src/**/*.js',
@@ -44,7 +45,8 @@ gulp.task('cover', function (done) {
             reporters: ['text-summary', 'lcov', 'json']
         }))
         .on('end', done);
-    });
+    })
+    .resume();
 });
 var gulpOpen = require('gulp-open');
 gulp.task('cover-report', function () {
