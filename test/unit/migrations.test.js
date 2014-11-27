@@ -32,8 +32,7 @@ describe('migrations', function () {
         return versions[currentVersion].migration.down(Knex.knex).then(function () {
             return Knex.knex.schema.hasColumn('entry', 'version').should.become(false);
         }).then(function () {
-            // ToDo: figure out why our test data got deleted...
-            return Knex.knex.from('entry').count('title as count').should.become([{count: 0}]);
+            return Knex.knex.from('entry').count('title as count').should.become([{count: 2}]);
         }).then(function () {
             return Knex.knex.migrate.currentVersion();
         }).then(function (version) {
