@@ -24,13 +24,7 @@ function gotoAuth() {
 function authenticate() {
     var user = document.getElementById('user').value;
     var pass = document.getElementById('pass').value;
-    requesting({
-        method: 'POST',
-        path: '/auth/authenticate/' + user,
-        args: {
-            pass: pass
-        }
-    })
+    authenticating({user: user, pass: pass})
     .then(function (result) {
         window.mars.token = result.token;
         document.getElementById('authPage').style.display = 'none';

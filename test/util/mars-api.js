@@ -48,7 +48,10 @@ function requesting(path, apiVersionRange, method, form, body, dataVersion, bear
         if(mars.trace) {
             console.dir(data);
         }
-        exchange.response = data;
+        exchange.response = {
+            statusCode: 200,
+            body: data
+        };
         return data;
     }).catch(function (result) {
         if(mars.trace) {

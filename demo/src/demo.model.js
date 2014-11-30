@@ -1,3 +1,18 @@
+function authenticating(options) {
+    return requesting({
+        method: 'POST',
+        path: '/auth/authenticate/' + options.user,
+        args: {
+            pass: options.pass
+        }
+    })
+    .then(function (result) {
+        return {
+            token: result.token
+        };
+    });
+}
+
 function requesting(options) {
     return new Promise(function (resolve, reject) {
         var data;
@@ -42,7 +57,7 @@ function requesting(options) {
             }
         };
         xhr.onerror = function () {
-            console.dir(this);
+            // console.dir(this);
             reject('failed');
         };
         xhr.send(data);
