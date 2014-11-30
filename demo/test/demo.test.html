@@ -11,11 +11,14 @@
 <div id="mocha"></div>
 <script src="../../node_modules/mocha/mocha.js"></script>
 <script src="../../node_modules/chai/chai.js"></script>
+<script src="../../node_modules/chai-as-promised/lib/chai-as-promised.js"></script>
+<script src="../../node_modules/sinon/pkg/sinon.js"></script>
 <script>
     mocha.setup('bdd');
-    var should = chai.should();
+    var should = chai.should(); // Note: enable the actual.should.expectation style
 </script>
-<script src="demo.test.js"></script>
+<script src="../src/demo.model.js"></script>
+<script src="demo.model.test.js"></script>
 <script>
     if (window.mochaPhantomJS) {
         mochaPhantomJS.run();
