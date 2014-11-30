@@ -29,6 +29,7 @@
         "gulp-istanbul": "^0.4.0",
         "gulp-jshint": "^1.8.4",
         "gulp-mocha": "^2.0.0",
+        "gulp-mocha-phantomjs": "^0.5.1",
         "gulp-open": "^0.3.1",
         "gulp-shell": "^0.2.9",
         "gulp-webserver": "^0.8.2",

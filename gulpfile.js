@@ -8,9 +8,10 @@ var paths = {
         unit: 'test/unit/**/*.js',
         end2end: 'test/end2end/**/*.js'
     },
-    tool: '*.js'
+    tool: '*.js',
+    demo: 'demo/**/*.js'
 };
-paths.code = [paths.src, paths.test.all, paths.tool];
+paths.code = [paths.src, paths.test.all, paths.tool, paths.demo];
 
 // lint
 var jshint = require('gulp-jshint');
@@ -70,7 +71,7 @@ gulp.task('run', shell.task(['node src/mars.js']));
 var webserver = require('gulp-webserver');
 gulp.task('serve-demo', function () {
     gulp
-    .src('demo')
+    .src('demo/src')
     .pipe(webserver({
         port: 1718,
         https: true,
@@ -79,12 +80,21 @@ gulp.task('serve-demo', function () {
     }));
 });
 
+// demo test
+var mochaPhantomJS = require('gulp-mocha-phantomjs');
+gulp.task('demotest', function () {
+    return gulp
+    .src('demo/test/demo.test.html')
+    .pipe(mochaPhantomJS());
+});
+
+
 // watch
 gulp.task('watch', function () {
     gulp.watch(paths.code, ['lint', 'cover']);
 });
 
-gulp.task('default', ['lint', 'cover', 'end2end']);
-gulp.task('all', ['lint', 'test', 'cover', 'end2end']);
+gulp.task('default', ['lint', 'cover', 'demotest', 'end2end']);
+gulp.task('all', ['lint', 'test', 'cover', 'demotest', 'end2end']);
 gulp.task('live', ['watch']);
 gulp.task('demo', ['serve-demo', 'run']);
