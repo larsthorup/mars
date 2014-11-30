@@ -21,24 +21,6 @@ describe('model', function () {
         this.server.restore();
     });
 
-    it('should mock XmlHttpRequest', function (done) {
-        var test = this.test;
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'https://mars.com/weather/', true);
-        xhr.setRequestHeader('Accept-Version', '^0.9.4');
-        xhr.onload = function () {
-            this.status.should.equal(200);
-            JSON.parse(this.responseText).should.deep.equal({text: 'dim'});
-            done();
-        };
-        xhr.onerror = function () {
-            test.error('expected request to succeed but failed');
-            done();
-        };
-        xhr.send();
-    });
-
     describe('requesting', function () {
         var weather;
 

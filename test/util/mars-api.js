@@ -1,11 +1,14 @@
+var fs = require('fs');
 var process = require('child_process');
 /* global -Promise */
 var Promise = require('bluebird');
 var request = require('request-promise');
 
 var server; // Note: only one instance is supported
+var traffic;
 
 function starting() {
+    traffic = [];
     server = process.fork('src/mars.js');
     return Promise.delay(1000); // Note: give the server time to finish startup
 }
@@ -37,15 +40,21 @@ function requesting(path, apiVersionRange, method, form, body, dataVersion, bear
     if(mars.trace) {
         console.dir(options);
     }
+    var exchange = {
+        request: options
+    };
+    traffic.push(exchange);
     return request(options).then(function (data) {
         if(mars.trace) {
             console.dir(data);
         }
+        exchange.response = data;
         return data;
     }).catch(function (result) {
         if(mars.trace) {
             console.dir(result.error);
         }
+        exchange.response = result;
         var error = new Error(result.error.message);
         error.code = result.error.code;
         throw error;
@@ -64,11 +73,17 @@ function patching(path, apiVersionRange, body, dataVersion, bearerToken) {
     return requesting(path, apiVersionRange, 'PATCH', undefined, body, dataVersion, bearerToken);
 }
 
+function saveTraffic(jsonFilePath) {
+    var indent = 4;
+    fs.writeFileSync(jsonFilePath, JSON.stringify(traffic, null, indent));
+}
+
 var mars = module.exports = {
     trace: false,
     starting: starting,
     stop: stop,
     getting: getting,
     posting: posting,
-    patching: patching
+    patching: patching,
+    saveTraffic: saveTraffic
 };

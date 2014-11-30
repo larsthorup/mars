@@ -13,6 +13,7 @@ describe('scenario', function () {
 
     after(function () {
         mars.stop();
+        mars.saveTraffic('dist/mars.api.sample.json');
     });
 
     it('warms up', function () {
@@ -86,6 +87,7 @@ describe('scenario', function () {
 
         before(function (done) {
             process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+            // ToDo: move to mars-api
             ws = new WebSocket('wss://localhost:1719');
             messageData = new Promise(function (resolve) {
                 ws.on('message', function (data) {
