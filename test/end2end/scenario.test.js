@@ -13,7 +13,7 @@ describe('scenario', function () {
 
     after(function () {
         mars.stop();
-        mars.saveTraffic('dist/mars.api.sample.json');
+        mars.saveTraffic('mars.api.sample.json');
     });
 
     it('warms up', function () {
