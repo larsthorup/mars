@@ -94,7 +94,7 @@ gulp.task('watch', function () {
     gulp.watch(paths.code, ['lint', 'cover']);
 });
 
-gulp.task('default', ['lint', 'cover', 'demotest', 'end2end']);
-gulp.task('all', ['lint', 'test', 'cover', 'demotest', 'end2end']);
+gulp.task('default', ['lint', 'cover', 'end2end', 'demotest']);
+gulp.task('all', ['lint', 'test', 'cover', 'end2end', 'demotest']);
 gulp.task('live', ['watch']);
 gulp.task('demo', ['serve-demo', 'run']);

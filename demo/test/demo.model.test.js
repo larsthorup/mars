@@ -43,7 +43,7 @@ describe('model', function () {
         server.respondWith(function (request) {
             var keyString = JSON.stringify({method: request.method, uri: request.url});
             var acceptVersion = request.requestHeaders['Accept-Version'];
-            console.log(keyString);
+            // console.log(keyString);
             var fakeExchangeList = fakeExchanges[keyString];
             var mockExchange;
             if(fakeExchangeList) {
@@ -64,6 +64,7 @@ describe('model', function () {
             }
         });
         server.autoRespond = true;
+        server.autoRespondAfter = 1;
     });
 
     afterEach(function () {
