@@ -1,12 +1,38 @@
 describe('model', function () {
-    var apiSample;
+    var fakeExchanges;
     var server;
 
     before(function (done) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', '../../mars.api.sample.json', true);
         xhr.onload = function () {
-            apiSample = JSON.parse(this.responseText);
+            var apiSample = JSON.parse(this.responseText);
+            fakeExchanges = {};
+            apiSample.forEach(function (sampleExchange) {
+                var fakeExchange = {
+                    method: sampleExchange.request.method,
+                    uri: sampleExchange.request.uri,
+                    version: sampleExchange.request.headers['accept-version'],
+                    form: sampleExchange.request.form,
+                    statusCode: sampleExchange.response.statusCode,
+                    headers: {},
+                    body: JSON.stringify(sampleExchange.response.body)
+                };
+                // console.log(fakeExchange.method, fakeExchange.uri, fakeExchange.version, fakeExchange.form, fakeExchange.statusCode, fakeExchange.body);
+                var key = JSON.stringify({method: fakeExchange.method, uri: fakeExchange.uri});
+                var fakeExchangeList = fakeExchanges[key] || [];
+                fakeExchangeList.push(fakeExchange);
+                fakeExchanges[key] = fakeExchangeList;
+            });
+            // Note: adding test specific data
+            var key = JSON.stringify({method: 'GET', uri: 'https://mars.com/weather/'});
+            fakeExchanges[key] = [{
+                version: '^0.9.4',
+                form: {},
+                statusCode: 200,
+                headers: {},
+                body: JSON.stringify({text: 'dim'})
+            }];
             done();
         };
         xhr.send();
@@ -14,30 +40,27 @@ describe('model', function () {
 
     beforeEach(function () {
         server = window.sinon.fakeServer.create();
-        server.respondWith('GET', 'https://mars.com/weather/', function (request) {
+        server.respondWith(function (request) {
+            var keyString = JSON.stringify({method: request.method, uri: request.url});
             var acceptVersion = request.requestHeaders['Accept-Version'];
-            var headers = {};
-            if(acceptVersion === '^0.9.4') {
-                request.respond(200, headers, '{"text":"dim"}');
-            } else {
-                request.respond(404, headers, '{"message":"Accept-Version ' + acceptVersion + ' of ' + request.method + ' ' + request.url + ' is not mocked"}');
+            console.log(keyString);
+            var fakeExchangeList = fakeExchanges[keyString];
+            var mockExchange;
+            if(fakeExchangeList) {
+                for (var i = 0; i < fakeExchangeList.length; ++i) {
+                    var fakeExchange = fakeExchangeList[i];
+                    if (fakeExchange.version === acceptVersion) {
+                        // ToDo: take form data into consideration
+                        mockExchange = fakeExchange;
+                        break;
+                    }
+                }
             }
-        });
-        var once = false;
-        apiSample.forEach(function (sampleExchange) {
-            var method = sampleExchange.request.method;
-            var uri = sampleExchange.request.uri;
-            var statusCode = sampleExchange.response.statusCode;
-            var headers = {};
-            var body = JSON.stringify(sampleExchange.response.body);
-            // ToDo: take form data into consideration
-            // ToDo: build a proper map and configure sinon only with unique requests
-            if (uri === 'https://localhost:1719/auth/authenticate/Lars' && statusCode === 200 && !once) {
-                once = true;
-                // console.log(method, uri, statusCode, body);
-                server.respondWith(method, uri, function (request) {
-                    request.respond(statusCode, headers, body);
-                });
+            if(mockExchange) {
+                // console.log(mockExchange.method, mockExchange.uri, mockExchange.version, mockExchange.form, mockExchange.statusCode, mockExchange.body);
+                request.respond(mockExchange.statusCode, mockExchange.headers, mockExchange.body);
+            } else {
+                request.respond(404, {}, 'Not Found');
             }
         });
         server.autoRespond = true;
