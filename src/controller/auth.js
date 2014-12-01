@@ -11,7 +11,7 @@ module.exports = new Controller({
                 authorize: auth.anyone,
                 processing: function authenticating (req) {
                     var userName = req.params.user;
-                    var password = req.params.pass;
+                    var password = req.body.pass;
                     return repo.user.findingByName(userName)
                     .then(function (users) {
                         var passwordValid = false;

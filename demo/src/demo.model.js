@@ -2,9 +2,9 @@ function authenticating(options) {
     return requesting({
         method: 'POST',
         path: '/auth/authenticate/' + options.user,
-        args: {
+        body: JSON.stringify({
             pass: options.pass
-        }
+        })
     })
     .then(function (result) {
         return {
@@ -15,17 +15,6 @@ function authenticating(options) {
 
 function requesting(options) {
     return new Promise(function (resolve, reject) {
-        var data;
-
-        if(options.args) {
-            // ToDo: not multipart/form-data
-            // ToDo: iterate over args
-            data = new FormData();
-            data.append('pass', options.args.pass);
-        } else if(options.body) {
-            data = options.body;
-        }
-
         var xhr = new XMLHttpRequest();
         xhr.open(options.method, 'https://' + window.mars.apiServer + options.path, true);
         if(options.versionRange) {
@@ -34,7 +23,7 @@ function requesting(options) {
         if(window.mars.token) {
             xhr.setRequestHeader('Authorization', 'Bearer ' + window.mars.token);
         }
-        if(options.method === 'PATCH') {
+        if(options.method === 'PATCH' || options.method === 'POST') {
             xhr.setRequestHeader('Content-type', 'application/json');
         }
         if(options.version) {
@@ -60,6 +49,6 @@ function requesting(options) {
             // console.dir(this);
             reject('failed');
         };
-        xhr.send(data);
+        xhr.send(options.body);
     });
 }

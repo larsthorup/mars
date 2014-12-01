@@ -25,15 +25,15 @@ describe('controller/auth', function () {
         });
 
         it('should authenticate valid user with valid password', function () {
-            return authenticate.processing({ params: { user: 'lars', pass: 'valid' } }).should.eventually.have.property('token').that.equals('lars.token');
+            return authenticate.processing({ params: { user: 'lars'}, body: { pass: 'valid' } }).should.eventually.have.property('token').that.equals('lars.token');
         });
 
         it('should reject valid user with invalid password', function () {
-            return authenticate.processing({ params: { user: 'lars', pass: 'invalid' } }).should.be.rejectedWith('invalid user name or password');
+            return authenticate.processing({ params: { user: 'lars'}, body: { pass: 'invalid' } }).should.be.rejectedWith('invalid user name or password');
         });
 
         it('should reject non existing user', function () {
-            return authenticate.processing({ params: { user: 'unknown' } }).should.be.rejectedWith('invalid user name or password');
+            return authenticate.processing({ params: { user: 'unknown' }, body: {} }).should.be.rejectedWith('invalid user name or password');
         });
     });
 });

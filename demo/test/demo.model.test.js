@@ -13,12 +13,12 @@ describe('model', function () {
                     method: sampleExchange.request.method,
                     uri: sampleExchange.request.uri,
                     version: sampleExchange.request.headers['accept-version'],
-                    form: sampleExchange.request.form,
+                    requestBody: JSON.stringify(sampleExchange.request.body),
                     statusCode: sampleExchange.response.statusCode,
                     headers: {},
-                    body: JSON.stringify(sampleExchange.response.body)
+                    responseBody: JSON.stringify(sampleExchange.response.body)
                 };
-                // console.log(fakeExchange.method, fakeExchange.uri, fakeExchange.version, fakeExchange.form, fakeExchange.statusCode, fakeExchange.body);
+                // console.log(fakeExchange.method, fakeExchange.uri, fakeExchange.version, fakeExchange.requestBody, fakeExchange.statusCode, fakeExchange.responseBody);
                 var key = JSON.stringify({method: fakeExchange.method, uri: fakeExchange.uri});
                 var fakeExchangeList = fakeExchanges[key] || [];
                 fakeExchangeList.push(fakeExchange);
@@ -28,10 +28,10 @@ describe('model', function () {
             var key = JSON.stringify({method: 'GET', uri: 'https://mars.com/weather/'});
             fakeExchanges[key] = [{
                 version: '^0.9.4',
-                form: {},
+                requestBody: JSON.stringify({}),
                 statusCode: 200,
                 headers: {},
-                body: JSON.stringify({text: 'dim'})
+                responseBody: JSON.stringify({text: 'dim'})
             }];
             done();
         };
@@ -50,15 +50,16 @@ describe('model', function () {
                 for (var i = 0; i < fakeExchangeList.length; ++i) {
                     var fakeExchange = fakeExchangeList[i];
                     if (fakeExchange.version === acceptVersion) {
-                        // ToDo: take form data into consideration
-                        mockExchange = fakeExchange;
-                        break;
+                        if (request.method === 'GET' || fakeExchange.requestBody === request.requestBody) {
+                            mockExchange = fakeExchange;
+                            break;
+                        }
                     }
                 }
             }
             if(mockExchange) {
-                // console.log(mockExchange.method, mockExchange.uri, mockExchange.version, mockExchange.form, mockExchange.statusCode, mockExchange.body);
-                request.respond(mockExchange.statusCode, mockExchange.headers, mockExchange.body);
+                // console.log(mockExchange.method, mockExchange.uri, mockExchange.version, mockExchange.requestBody, mockExchange.statusCode, mockExchange.responseBody);
+                request.respond(mockExchange.statusCode, mockExchange.headers, mockExchange.responseBody);
             } else {
                 request.respond(404, {}, 'Not Found');
             }

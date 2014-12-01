@@ -17,13 +17,12 @@ function stop() {
     server.kill();
 }
 
-function requesting(path, apiVersionRange, method, form, body, dataVersion, bearerToken) {
+function requesting(path, apiVersionRange, method, body, dataVersion, bearerToken) {
     var options = {
         uri: 'https://localhost:1719' + path,
         method: method,
         json: true,
         strictSSL: false,
-        form: form,
         body: body,
         headers: {
         }
@@ -65,15 +64,15 @@ function requesting(path, apiVersionRange, method, form, body, dataVersion, bear
 }
 
 function getting(path, versionRange, bearerToken) {
-    return requesting(path, versionRange, 'GET', null, null, null, bearerToken);
+    return requesting(path, versionRange, 'GET', null, null, bearerToken);
 }
 
-function posting(path, versionRange, form, bearerToken) {
-    return requesting(path, versionRange, 'POST', form, null, null, bearerToken);
+function posting(path, versionRange, body, bearerToken) {
+    return requesting(path, versionRange, 'POST', body, null, bearerToken);
 }
 
 function patching(path, apiVersionRange, body, dataVersion, bearerToken) {
-    return requesting(path, apiVersionRange, 'PATCH', undefined, body, dataVersion, bearerToken);
+    return requesting(path, apiVersionRange, 'PATCH', body, dataVersion, bearerToken);
 }
 
 function saveTraffic(jsonFilePath) {
