@@ -2,6 +2,7 @@ describe('model', function () {
     var fakeExchanges;
     var server;
 
+    // ToDo: extract api sample parsing
     before(function (done) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', '../../mars.api.sample.json', true);
@@ -38,6 +39,7 @@ describe('model', function () {
         xhr.send();
     });
 
+    // ToDo: extract sinon fake server setup
     beforeEach(function () {
         server = window.sinon.fakeServer.create();
         server.respondWith(function (request) {
@@ -72,8 +74,7 @@ describe('model', function () {
         server.restore();
     });
 
-    describe('authenticating', function () {
-        var auth;
+    describe('api', function () {
 
         beforeEach(function () {
             window.mars = {
@@ -81,14 +82,60 @@ describe('model', function () {
             };
         });
 
-        describe('when successful', function () {
+        describe('authenticating', function () {
+            var auth;
 
-            beforeEach(function () {
-                auth = window.authenticating({user: 'Lars', pass: 'lars123'});
+            describe('when successful', function () {
+
+                beforeEach(function () {
+                    auth = window.authenticating({user: 'Lars', pass: 'lars123'});
+                });
+
+                it('should resolve with a valid token', function () {
+                    return auth.should.become({token: '{"user":"Lars","hashed":true}'});
+                });
+
             });
 
-            it('should resolve with a valid token', function () {
-                return auth.should.become({token: '{"user":"Lars","hashed":true}'});
+            describe('when unsuccessful', function () {
+
+                beforeEach(function () {
+                    auth = window.authenticating({user: 'Lars', pass: 'lars987'});
+                });
+
+                it('should be rejected', function () {
+                    return auth.should.be.rejected;
+                });
+
+            });
+
+        });
+
+        describe('greeting', function () {
+            var greet;
+
+            describe('when successful', function () {
+
+                beforeEach(function () {
+                    greet = window.greeting({name: 'Lars'});
+                });
+
+                it('should resolve with a greeting', function () {
+                    return greet.should.become({message: 'hello Lars'});
+                });
+
+            });
+
+            describe('when unsuccessful', function () {
+
+                beforeEach(function () {
+                    greet = window.greeting({name: 'Putin'});
+                });
+
+                it('should be rejected', function () {
+                    return greet.should.be.rejected;
+                });
+
             });
 
         });

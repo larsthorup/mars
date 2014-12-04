@@ -49,13 +49,9 @@ function gotoGreeting() {
 
 function hello() {
     var name = document.getElementById('name').value;
-    requesting({
-        method: 'GET',
-        path: '/hello/' + name,
-        versionRange: '0.1.0'
-    })
+    greeting({name: name})
     .then(function (result) {
-        window.alert('Greeting: ' + result);
+        window.alert('Greeting: ' + result.message);
     })
     .catch(function (err) {
         window.alert('Failed to greet: ' + err.message);

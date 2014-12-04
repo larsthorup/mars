@@ -13,6 +13,19 @@ function authenticating(options) {
     });
 }
 
+function greeting(options) {
+    return requesting({
+        method: 'GET',
+        path: '/hello/' + options.name,
+        versionRange: '0.1.0'
+    })
+    .then(function (result) {
+        return {
+            message: result
+        };
+    });
+}
+
 function requesting(options) {
     return new Promise(function (resolve, reject) {
         var xhr = new XMLHttpRequest();

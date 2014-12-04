@@ -85,7 +85,7 @@ var mochaPhantomJS = require('gulp-mocha-phantomjs');
 gulp.task('demotest', function () {
     return gulp
     .src('demo/test/demo.test.html')
-    .pipe(mochaPhantomJS());
+    .pipe(mochaPhantomJS({reporter: 'dot'}));
 });
 
 
