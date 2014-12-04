@@ -61,12 +61,9 @@ function hello() {
 function gotoEntryList() {
     document.getElementById('greetingPage').style.display = 'none';
     document.getElementById('entryListPage').style.display = 'block';
-    requesting({
-        method: 'GET',
-        path: '/entry/latest'
-    })
+    gettingLatestEntries()
     .then(function (result) {
-        renderEntryList(result.entry);
+        renderEntryList(result.entries);
     })
     .catch(function (err) {
         window.alert('Failed to load entries: ' + err.message);
@@ -145,12 +142,7 @@ function savingTitle(titleInput) {
     var patch = {
         title: title
     };
-    return requesting({
-        method: 'PATCH',
-        path: '/entry/' + id,
-        version: version,
-        body: JSON.stringify(patch)
-    })
+    return patchingEntry({id: id, version: version, patch: patch})
     .then(function (result) {
         entryDiv.dataset.version = result.version;
     });

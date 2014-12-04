@@ -140,6 +140,28 @@ describe('model', function () {
 
         });
 
+        describe.skip('gettingLatestEntries', function () {
+            // ToDo: need an end2end test to produce the sample exchange
+        });
+
+        describe('patchingEntry', function () {
+            var entry;
+
+            beforeEach(function () {
+                entry = window.patchingEntry({
+                    id: 1,
+                    version: 1,
+                    patch: {
+                        title: 'newTitle'
+                    }
+                });
+            });
+
+            it('should resolve with the new version number', function () {
+                entry.should.become({version: 2});
+            });
+        });
+
     });
 
     describe('requesting', function () {

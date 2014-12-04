@@ -26,6 +26,27 @@ function greeting(options) {
     });
 }
 
+function gettingLatestEntries() {
+    return requesting({
+        method: 'GET',
+        path: '/entry/latest'
+    })
+    .then(function (result) {
+        return {
+            entries: result.entry
+        };
+    });
+}
+
+function patchingEntry(options) {
+    return requesting({
+        method: 'PATCH',
+        path: '/entry/' + options.id,
+        version: options.version,
+        body: JSON.stringify(options.patch)
+    });
+}
+
 function requesting(options) {
     return new Promise(function (resolve, reject) {
         var xhr = new XMLHttpRequest();
