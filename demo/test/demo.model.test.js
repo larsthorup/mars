@@ -6,6 +6,16 @@ describe('model', function () {
         return window.apiFaker.loading('../../mars.api.sample.json')
         .then(function (result) {
             fakeApi = result;
+            // Note: adding test specific data
+            window.apiFaker.add(fakeApi, {
+                method: 'GET',
+                uri: 'https://mars.com/weather/',
+                version: '^0.9.4',
+                requestBody: JSON.stringify({}),
+                statusCode: 200,
+                headers: {},
+                responseBody: JSON.stringify({text: 'dim'})
+            });
         });
     });
 

@@ -1,5 +1,13 @@
 (function (window) {
 
+    function add(api, exchange) {
+        // console.dir(exchange);
+        var key = JSON.stringify({method: exchange.method, uri: exchange.uri});
+        var exchangeList = api[key] || [];
+        exchangeList.push(exchange);
+        api[key] = exchangeList;
+    }
+
     function loading(path) {
         return new Promise(function (resolve, reject) {
             var api;
@@ -9,7 +17,7 @@
                 var apiSample = JSON.parse(this.responseText);
                 api = {};
                 apiSample.forEach(function (sampleExchange) {
-                    var fakeExchange = {
+                    var exchange = {
                         method: sampleExchange.request.method,
                         uri: sampleExchange.request.uri,
                         version: sampleExchange.request.headers['accept-version'],
@@ -18,22 +26,8 @@
                         headers: {},
                         responseBody: JSON.stringify(sampleExchange.response.body)
                     };
-                    // console.log(fakeExchange.method, fakeExchange.uri, fakeExchange.version, fakeExchange.requestBody, fakeExchange.statusCode, fakeExchange.responseBody);
-                    var key = JSON.stringify({method: fakeExchange.method, uri: fakeExchange.uri});
-                    var fakeExchangeList = api[key] || [];
-                    fakeExchangeList.push(fakeExchange);
-                    api[key] = fakeExchangeList;
+                    add(api, exchange);
                 });
-                // Note: adding test specific data
-                // ToDo: move back to test
-                var key = JSON.stringify({method: 'GET', uri: 'https://mars.com/weather/'});
-                api[key] = [{
-                    version: '^0.9.4',
-                    requestBody: JSON.stringify({}),
-                    statusCode: 200,
-                    headers: {},
-                    responseBody: JSON.stringify({text: 'dim'})
-                }];
                 resolve(api);
             };
             xhr.send();
@@ -69,7 +63,8 @@
 
     window.apiFaker = {
         loading: loading,
-        fake: fake
+        fake: fake,
+        add: add
     };
 
 })(window);
