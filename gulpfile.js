@@ -37,6 +37,7 @@ gulp.task('cover', function (done) {
     gulp
     .src(paths.src)
     .pipe(istanbul())
+    .pipe(istanbul.hookRequire())
     .on('finish', function () {
         gulp
         .src(paths.test.unit)
@@ -46,8 +47,7 @@ gulp.task('cover', function (done) {
             reporters: ['text-summary', 'lcov', 'json']
         }))
         .on('end', done);
-    })
-    .resume();
+    });
 });
 var gulpOpen = require('gulp-open');
 gulp.task('cover-report', function () {
