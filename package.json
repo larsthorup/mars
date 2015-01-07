@@ -47,10 +47,11 @@
     "scripts": {
         "-- fast feedback ": "--",
         "lint": "node node_modules/gulp/bin/gulp lint",
-        "test": "node node_modules/gulp/bin/gulp test",
+        "unittest": "node node_modules/gulp/bin/gulp test",
         "cover": "node node_modules/gulp/bin/gulp cover",
         "demotest": "node node_modules/gulp/bin/gulp demotest",
         "end2end": "node node_modules/gulp/bin/gulp end2end",
+        "test": "node node_modules/gulp/bin/gulp lint cover && node node_modules/gulp/bin/gulp end2end && node node_modules/gulp/bin/gulp demotest",
         "package": "npm shrinkwrap && rm -rf dist && mkdir dist && cp --recursive --target-directory=dist src demo package.json npm-shrinkwrap.json && rm -rf npm-shrinkwrap.json",
         "dev": "npm install && npm run lint && npm run cover && npm run end2end",
         "-- run locally ": "--",
