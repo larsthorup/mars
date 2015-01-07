@@ -7,7 +7,7 @@ var server = require('../../src/server');
 describe('booter', function () {
 
     beforeEach(function () {
-        sandbox.stub(repo, 'connecting', Promise.method(function () {}));
+        sandbox.stub(repo, 'connecting', Promise.method(function () { return 'dummyRepo'; }));
         sandbox.stub(server, 'starting');
     });
 
@@ -16,7 +16,7 @@ describe('booter', function () {
 
         beforeEach(function () {
             var config = {
-                server: 'serverConfig',
+                server: {},
                 database: 'dbConfig'
             };
             booting = booter.booting(config);
@@ -28,7 +28,7 @@ describe('booter', function () {
 
         it('starts the server after successfully connecting to the repo', function () {
             return repo.connecting.getCall(0).returnValue.then(function () {
-                server.starting.should.have.been.calledWith('serverConfig');
+                server.starting.should.have.been.calledWith({repo: 'dummyRepo'});
                 booting.isFulfilled().should.equal(true);
             });
         });

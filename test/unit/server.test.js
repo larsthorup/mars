@@ -6,6 +6,7 @@ var restify = require('restify');
 var server = require('../../src/server');
 var router = require('../../src/router');
 var clients = require('../../src/clients');
+var token = require('../../src/token');
 
 describe('server', function () {
     var restifyServer;
@@ -27,20 +28,23 @@ describe('server', function () {
             if(path.resolve(__dirname, '../../src/config/certs/someCertificate.key') === filePath) { return 'theKey'; }
         });
         sandbox.stub(router, 'map');
+        sandbox.stub(token, 'requestParser', function () { return 'theAuthenticationHeaderParser'; });
         sandbox.stub(console, 'log');
         sandbox.stub(bunyan, 'createLogger').returns('theBunyanLogger');
         sandbox.stub(clients, 'Clients').returns({});
     });
 
     describe('starting', function () {
+        var serverOptions;
         var starting;
 
         beforeEach(function () {
-            starting = server.starting({
+            serverOptions = {
                 certName: 'someCertificate',
                 cors: 'someCorsConfig',
                 bunyan: 'someBunyanConfig'
-            });
+            };
+            starting = server.starting(serverOptions);
         });
 
         it('names the server', function () {
@@ -51,11 +55,11 @@ describe('server', function () {
                 log: 'theBunyanLogger'
             });
             // Hmm... this suddenly started failing, replacing with code above...
-//            restify.createServer.should.have.been.calledWith({
-//                name: 'mars',
-//                certificate: 'theCert',
-//                key: 'theKey'
-//            });
+            //restify.createServer.should.have.been.calledWith({
+            //    name: 'mars',
+            //    certificate: 'theCert',
+            //    key: 'theKey'
+            //});
         });
 
         it('does audit logging', function () {
@@ -64,6 +68,20 @@ describe('server', function () {
 
         it('parses the body', function () {
             restifyServer.use.should.have.been.calledWith('theBodyParser');
+        });
+
+        it('parses the authentication header', function () {
+            restifyServer.use.should.have.been.calledWith('theAuthenticationHeaderParser');
+        });
+
+        it('passes server to controllers through req', function () {
+            var contextExposer = restifyServer.use.getCall(3).args[0];
+            contextExposer.name.should.equal('contextExposer');
+            var req = {};
+            var next = sandbox.spy();
+            contextExposer(req, null, next);
+            req.server.should.equal(restifyServer);
+            next.should.have.been.calledWith();
         });
 
         it('maps the routes', function () {
@@ -82,11 +100,15 @@ describe('server', function () {
             starting.isFulfilled().should.equal(false); // yet
             var listenCallback = restifyServer.listen.getCall(0).args[1];
             listenCallback();
-            starting.isFulfilled().should.equal(true); // now
             console.log.should.have.been.calledWith('%s listening at %s', 'serverName', 'serverUrl');
+            return starting.should.eventually.have.property('options', serverOptions);
         });
 
         describe('CORS', function () {
+
+            it('parses CORS headers', function () {
+                restifyServer.use.should.have.been.calledWith('theCorsHandler');
+            });
 
             it('handles CORS', function () {
                 restify.CORS.getCall(0).args[0].should.equal('someCorsConfig');
