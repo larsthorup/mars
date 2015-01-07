@@ -16,11 +16,6 @@ describe('scenario in process', function () {
         mars.saveTraffic('mars.api.sample.json');
     });
 
-    it.skip('warms up', function () {
-        this.timeout(5000);
-        return mars.posting('/auth/authenticate/unknown', '*', {}).should.be.rejectedWith('invalid user name or password');
-    });
-
     describe('authentication', function () {
 
         it('authenticates existing user', function () {

@@ -10,11 +10,17 @@ function connecting(options) {
     if(options.testdata.create) {
         recreate(options);
     }
-    Knex.knex = Knex.initialize(options);
-    return migrateLatest().then(function () {
+    var knex = Knex.initialize(options);
+    var repo = {
+        knex: knex
+    };
+    Knex.knex = knex; // ToDo: eliminate singleton
+    return migrateLatest(repo).then(function () {
         if(options.testdata.create) {
-            return testdata.creating();
+            return testdata.creating(repo);
         }
+    }).then(function () {
+        return repo;
     });
 }
 
@@ -30,11 +36,11 @@ function recreate(options) {
     }
 }
 
-function migrateLatest() {
-    return Knex.knex.migrate.latest();
+function migrateLatest(repo) {
+    return repo.knex.migrate.latest();
 }
 
 module.exports = _.merge(models, {
     connecting: connecting,
-    disconnecting: disconnecting,
+    disconnecting: disconnecting
 });

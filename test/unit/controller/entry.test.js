@@ -8,6 +8,12 @@ var clients = require('../../../src/clients');
 var repo = require('../../../src/repo');
 
 describe('controller/entry', function () {
+    var server;
+
+    beforeEach(function () {
+        server = { options: { repo: 'dummyRepo' }};
+    });
+
 
     describe('latest', function () {
         var latest;
@@ -22,7 +28,7 @@ describe('controller/entry', function () {
         });
 
         it('should return the entries', function () {
-            return latest.processing().should.become({
+            return latest.processing({server: server}).should.become({
                 entry: 'someEntries'
             });
         });
@@ -42,8 +48,8 @@ describe('controller/entry', function () {
         });
 
         it('should return existing entry', function () {
-            return get.processing({params: {id: 47}}).should.become('someEntry').then(function () {
-                repo.entry.findingById.should.have.been.calledWith(47);
+            return get.processing({params: {id: 47}, server: server}).should.become('someEntry').then(function () {
+                repo.entry.findingById.should.have.been.calledWith('dummyRepo', 47);
             });
         });
 
@@ -51,15 +57,12 @@ describe('controller/entry', function () {
 
     describe('patch', function () {
         var patch;
-        var server;
 
         beforeEach(function () {
             patch = entryController.getMethod('/entry/:id', '*', 'patch');
             sandbox.stub(repo.entry, 'patching', function () { return Promise.resolve({version: 3}); });
-            server = {
-                clients: {
-                    notifyPatch: sandbox.spy()
-                }
+            server.clients = {
+                notifyPatch: sandbox.spy()
             };
         });
 
@@ -77,7 +80,7 @@ describe('controller/entry', function () {
             }).should.become({
                 version: 3
             }).then(function () {
-                return repo.entry.patching.should.have.been.calledWith(1, 2, {somePatchDescription: true});
+                return repo.entry.patching.should.have.been.calledWith('dummyRepo', 1, 2, {somePatchDescription: true});
             }).then(function () {
                 return server.clients.notifyPatch.should.have.been.calledWith({
                     path: '/entry/1',

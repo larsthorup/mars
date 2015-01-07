@@ -4,6 +4,11 @@ var token = require('../../../src/token');
 var auth = require('../../../src/auth');
 
 describe('controller/greet', function () {
+    var server;
+
+    beforeEach(function () {
+        server = { options: {}};
+    });
 
     describe('hello, 0.1.0', function () {
         var hello;
@@ -23,11 +28,11 @@ describe('controller/greet', function () {
         });
 
         it('should say hello', function () {
-            return hello.processing({ params: { name: 'lars' }, headers: {} }).should.become('hello lars');
+            return hello.processing({ params: { name: 'lars' }, headers: {}, server: server }).should.become('hello lars');
         });
 
         it('should refuse to say hello to putin', function () {
-            return hello.processing({ params: { name: 'putin' }, headers: {} }).should.be.rejectedWith('does not compute: putin');
+            return hello.processing({ params: { name: 'putin' }, headers: {}, server: server }).should.be.rejectedWith('does not compute: putin');
         });
     });
 
@@ -49,11 +54,11 @@ describe('controller/greet', function () {
         });
 
         it('should say hello', function () {
-            return hello.processing({ params: { name: 'lars' }, headers: {} }).should.become({greeting: 'hello lars' });
+            return hello.processing({ params: { name: 'lars' }, headers: {}, server: server }).should.become({greeting: 'hello lars' });
         });
 
         it('should refuse to say hello to putin', function () {
-            return hello.processing({ params: { name: 'putin' }, headers: {} }).should.be.rejectedWith('User not found: putin');
+            return hello.processing({ params: { name: 'putin' }, headers: {}, server: server }).should.be.rejectedWith('User not found: putin');
         });
     });
 });

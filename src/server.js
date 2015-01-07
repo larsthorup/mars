@@ -23,6 +23,7 @@ function starting(options) {
             key: key,
             log: bunyan.createLogger(options.bunyan)
         });
+        server.options = options;
 
         // Note: Log requests
         server.on('after', restify.auditLogger({

@@ -8,6 +8,7 @@ describe('controller/auth', function () {
 
     describe('authenticate', function () {
         var authenticate;
+        var server;
 
         beforeEach(function () {
             authenticate = authController.getMethod('/auth/authenticate/:user', '0.1.0', 'post');
@@ -18,6 +19,7 @@ describe('controller/auth', function () {
             });
             sandbox.stub(hasher, 'verify', function (password) { return password === 'valid'; });
             sandbox.stub(token, 'create', function (user) { return user.name + '.token'; });
+            server = { options: {}};
         });
 
         it('should allow anyone access', function () {
@@ -25,15 +27,15 @@ describe('controller/auth', function () {
         });
 
         it('should authenticate valid user with valid password', function () {
-            return authenticate.processing({ params: { user: 'lars'}, body: { pass: 'valid' } }).should.eventually.have.property('token').that.equals('lars.token');
+            return authenticate.processing({ params: { user: 'lars'}, body: { pass: 'valid' }, server: server }).should.eventually.have.property('token').that.equals('lars.token');
         });
 
         it('should reject valid user with invalid password', function () {
-            return authenticate.processing({ params: { user: 'lars'}, body: { pass: 'invalid' } }).should.be.rejectedWith('invalid user name or password');
+            return authenticate.processing({ params: { user: 'lars'}, body: { pass: 'invalid' }, server: server }).should.be.rejectedWith('invalid user name or password');
         });
 
         it('should reject non existing user', function () {
-            return authenticate.processing({ params: { user: 'unknown' }, body: {} }).should.be.rejectedWith('invalid user name or password');
+            return authenticate.processing({ params: { user: 'unknown' }, body: {}, server: server }).should.be.rejectedWith('invalid user name or password');
         });
     });
 });

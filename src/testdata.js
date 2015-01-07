@@ -11,12 +11,12 @@ function runningTasksInSequence(steps) {
     return chain;
 }
 
-function creating() {
+function creating(repo) {
     // ToDo: auto generate dependency graph from columnInfo()
     var orderedModels = [models.user, models.entry];
     var testDataCreationTasks = orderedModels.map(function (model) {
         return function () {
-            return model.creatingTestData();
+            return model.creatingTestData(repo);
         };
     });
     return runningTasksInSequence(testDataCreationTasks);
