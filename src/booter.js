@@ -1,15 +1,15 @@
-/* globals -Promise */
 var repo = require('./repo');
 var server = require('./server');
+/* globals -Promise */
 var Promise = require('bluebird');
 
-function boot(options) {
+function booting(options) {
     Promise.longStackTraces(); // ToDo: configure
-    repo.connecting(options.database).then(function () {
-        server.start(options.server);
+    return repo.connecting(options.database).then(function () {
+        return server.starting(options.server);
     });
 }
 
 module.exports = {
-    boot: boot
+    booting: booting
 };

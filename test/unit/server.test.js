@@ -32,10 +32,11 @@ describe('server', function () {
         sandbox.stub(clients, 'Clients').returns({});
     });
 
-    describe('start', function () {
+    describe('starting', function () {
+        var starting;
 
         beforeEach(function () {
-            server.start({
+            starting = server.starting({
                 certName: 'someCertificate',
                 cors: 'someCorsConfig',
                 bunyan: 'someBunyanConfig'
@@ -78,8 +79,10 @@ describe('server', function () {
         });
 
         it('tells how it listens', function () {
+            starting.isFulfilled().should.equal(false); // yet
             var listenCallback = restifyServer.listen.getCall(0).args[1];
             listenCallback();
+            starting.isFulfilled().should.equal(true); // now
             console.log.should.have.been.calledWith('%s listening at %s', 'serverName', 'serverUrl');
         });
 

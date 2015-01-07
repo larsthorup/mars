@@ -1,20 +1,29 @@
+/* global process */
 var fs = require('fs');
-var process = require('child_process');
 /* global -Promise */
 var Promise = require('bluebird');
 var request = require('request-promise');
+var _ = require('lodash');
+var booter = require('../../src/booter');
 
-var server; // Note: only one instance is supported
+var marsConfig = require('../../src/config/mars.conf.js');
+var options = _.merge({}, marsConfig);
+options.database = require('../../knexfile').development;
+
+var booting;
 var traffic;
 
 function starting() {
     traffic = [];
-    server = process.fork('src/mars.js');
-    return Promise.delay(1000); // Note: give the server time to finish startup
+    booting = booter.booting(options);
+    return booting;
 }
 
 function stop() {
-    server.kill();
+    booting.then(function (server) {
+        server.close();
+        process.exit(); // ToDo: figure out why the server takes 30 seconds to close...
+    });
 }
 
 function requesting(path, apiVersionRange, method, body, dataVersion, bearerToken) {

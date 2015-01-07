@@ -6,7 +6,7 @@ var WebSocket = require('ws');
 var Promise = require('bluebird');
 
 
-describe('scenario', function () {
+describe('scenario in process', function () {
     before(function () {
         return mars.starting();
     });
@@ -16,7 +16,7 @@ describe('scenario', function () {
         mars.saveTraffic('mars.api.sample.json');
     });
 
-    it('warms up', function () {
+    it.skip('warms up', function () {
         this.timeout(5000);
         return mars.posting('/auth/authenticate/unknown', '*', {}).should.be.rejectedWith('invalid user name or password');
     });
