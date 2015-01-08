@@ -15,11 +15,14 @@ var options = {
     // ,"debug": true
 };
 
-before(function () {
-    return repo.connecting(options);
+beforeEach(function () {
+    var context = this;
+    return repo.connecting(options).then(function (repo) {
+        context.repo = repo;
+    });
 });
 
-after(function () {
+afterEach(function () {
     return repo.disconnecting();
 });
 

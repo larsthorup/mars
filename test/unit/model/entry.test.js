@@ -1,22 +1,13 @@
-var Knex = require('knex');
 var entry = require('../../../src/model/entry');
 
 
 describe('model/entry', function () {
-    var repo;
-
-    beforeEach(function () {
-        repo = {
-            knex: Knex.knex
-        };
-    });
-
 
     describe('findingLatest', function () {
         var finding;
 
         beforeEach(function () {
-            finding = entry.findingLatest(repo);
+            finding = entry.findingLatest(this.repo);
         });
 
         it('should return the correct rows', function () {
@@ -41,7 +32,7 @@ describe('model/entry', function () {
         var finding;
 
         beforeEach(function () {
-            finding = entry.findingById(repo, 1);
+            finding = entry.findingById(this.repo, 1);
         });
 
         it('should return the correct rows', function () {
@@ -59,14 +50,15 @@ describe('model/entry', function () {
         var patching;
 
         beforeEach(function () {
-            patching = entry.patching(repo, 1, 1, { title: 'Less innovation!' });
+            patching = entry.patching(this.repo, 1, 1, { title: 'Less innovation!' });
         });
 
         it('should return the new version and update the repo', function () {
+            var context = this;
             return patching.should.become({
                 version: 2
             }).then(function () {
-                return entry.findingById(repo, 1).should.become({
+                return entry.findingById(context.repo, 1).should.become({
                     id: 1,
                     version: 2,
                     title: 'Less innovation!',

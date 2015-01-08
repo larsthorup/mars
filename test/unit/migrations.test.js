@@ -8,7 +8,7 @@ var latestVersion = '20140916095237';
 var repo = require('../../src/repo');
 var schema = require('./schema');
 
-describe('migrations', function () {
+describe.skip('migrations', function () {
     var currentVersion;
 
     before(function () {
