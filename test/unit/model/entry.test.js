@@ -54,11 +54,11 @@ describe('model/entry', function () {
         });
 
         it('should return the new version and update the repo', function () {
-            var context = this;
+            var testContext = this;
             return patching.should.become({
                 version: 2
             }).then(function () {
-                return entry.findingById(context.repo, 1).should.become({
+                return entry.findingById(testContext.repo, 1).should.become({
                     id: 1,
                     version: 2,
                     title: 'Less innovation!',

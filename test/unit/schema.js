@@ -16,14 +16,14 @@ var options = {
 };
 
 beforeEach(function () {
-    var context = this;
+    var testContext = this;
     return repo.connecting(options).then(function (repo) {
-        context.repo = repo;
+        testContext.repo = repo;
     });
 });
 
 afterEach(function () {
-    return repo.disconnecting();
+    return repo.disconnecting(this.repo);
 });
 
 module.exports = {

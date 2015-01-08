@@ -1,42 +1,28 @@
-var Knex = require('knex');
 var versions = {
     '20140916095237': {
         migration: require('../../src/migrations/20140916095237_entry-version')
     }
 };
-var latestVersion = '20140916095237';
 var repo = require('../../src/repo');
-var schema = require('./schema');
 
-describe.skip('migrations', function () {
-    var currentVersion;
-
-    before(function () {
-        return Knex.knex.migrate.currentVersion().then(function (version) {
-            currentVersion = version;
-        });
-    });
-
-    after(function () {
-        // Note: recreate the schema and test data
-        return repo.disconnecting().then(function () {
-            return repo.connecting(schema.options);
-        });
-    });
+describe('migrations', function () {
 
     it('starts out with latest version', function () {
-        currentVersion.should.equal('20140916095237');
+        return this.repo.knex.migrate.currentVersion().should.become('20140916095237');
     });
 
     it('migrates entry-version down', function () {
-        return versions[currentVersion].migration.down(Knex.knex).then(function () {
-            return Knex.knex.schema.hasColumn('entry', 'version').should.become(false);
+        var repo = this.repo;
+        return repo.knex.migrate.currentVersion().then(function (currentVersion) {
+            // When:
+            return versions[currentVersion].migration.down(repo.knex);
         }).then(function () {
-            return Knex.knex.from('entry').count('title as count').should.become([{count: 2}]);
+            // ToDo: how to verify the version after migration?
+            // Then: column deleted
+            return repo.knex.schema.hasColumn('entry', 'version').should.become(false);
         }).then(function () {
-            return Knex.knex.migrate.currentVersion();
-        }).then(function (version) {
-            currentVersion = version;
+            // Then: rows not deleted
+            return repo.knex.from('entry').count('title as count').should.become([{count: 2}]);
         });
     });
 

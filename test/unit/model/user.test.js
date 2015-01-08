@@ -1,18 +1,10 @@
-var Knex = require('knex');
 var user = require('../../../src/model/user');
 var hasher = require('../../../src/hasher');
 
 describe('model/user', function () {
-    var repo;
-
-    beforeEach(function () {
-        repo = {
-            knex: Knex.knex
-        };
-    });
 
     it('should count rows', function () {
-        var userCount = user.counting(repo);
+        var userCount = user.counting(this.repo);
         return userCount.should.become(2);
     });
 
@@ -20,7 +12,7 @@ describe('model/user', function () {
         var finding;
 
         beforeEach(function () {
-            finding = user.findingByName(repo, 'Lars');
+            finding = user.findingByName(this.repo, 'Lars');
         });
 
         it('should return the correct number of rows', function () {
@@ -42,7 +34,7 @@ describe('model/user', function () {
 
     describe('mappingByName', function () {
         it('should return a map from name to id', function () {
-            return user.mappingByName(repo, ['Lars', 'Rob']).should.become({
+            return user.mappingByName(this.repo, ['Lars', 'Rob']).should.become({
                 'Lars': { id: 1 },
                 'Rob': { id: 2 }
             });

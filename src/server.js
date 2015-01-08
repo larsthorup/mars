@@ -68,7 +68,7 @@ function starting(app) {
         });
 
         // map routes
-        server.use(function contextExposer (req, res, next) {
+        server.use(function appExposer (req, res, next) {
             req.app = app; // Note: expose app to controllers
             next();
         });

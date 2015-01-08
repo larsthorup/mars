@@ -14,7 +14,6 @@ function connecting(options) {
     var repo = {
         knex: knex
     };
-    Knex.knex = knex; // ToDo: eliminate singleton
     return migrateLatest(repo).then(function () {
         if(options.testdata.create) {
             return testdata.creating(repo);
@@ -24,8 +23,8 @@ function connecting(options) {
     });
 }
 
-function disconnecting() {
-    return Knex.knex.destroy();
+function disconnecting(repo) {
+    return repo.knex.destroy();
 }
 
 function recreate(options) {

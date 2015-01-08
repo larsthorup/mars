@@ -79,11 +79,11 @@ describe('server', function () {
         });
 
         it('passes app to controllers through req', function () {
-            var contextExposer = restifyServer.use.getCall(3).args[0];
-            contextExposer.name.should.equal('contextExposer');
+            var appExposer = restifyServer.use.getCall(3).args[0];
+            appExposer.name.should.equal('appExposer');
             var req = {};
             var next = sandbox.spy();
-            contextExposer(req, null, next);
+            appExposer(req, null, next);
             req.app.should.equal(app);
             next.should.have.been.calledWith();
         });
