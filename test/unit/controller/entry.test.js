@@ -8,10 +8,12 @@ var clients = require('../../../src/clients');
 var repo = require('../../../src/repo');
 
 describe('controller/entry', function () {
-    var server;
+    var app;
 
     beforeEach(function () {
-        server = { options: { repo: 'dummyRepo' }};
+        app = {
+            repo: 'dummyRepo'
+        };
     });
 
 
@@ -28,7 +30,7 @@ describe('controller/entry', function () {
         });
 
         it('should return the entries', function () {
-            return latest.processing({server: server}).should.become({
+            return latest.processing({app: app}).should.become({
                 entry: 'someEntries'
             });
         });
@@ -48,7 +50,7 @@ describe('controller/entry', function () {
         });
 
         it('should return existing entry', function () {
-            return get.processing({params: {id: 47}, server: server}).should.become('someEntry').then(function () {
+            return get.processing({params: {id: 47}, app: app}).should.become('someEntry').then(function () {
                 repo.entry.findingById.should.have.been.calledWith('dummyRepo', 47);
             });
         });
@@ -61,7 +63,7 @@ describe('controller/entry', function () {
         beforeEach(function () {
             patch = entryController.getMethod('/entry/:id', '*', 'patch');
             sandbox.stub(repo.entry, 'patching', function () { return Promise.resolve({version: 3}); });
-            server.clients = {
+            app.clients = {
                 notifyPatch: sandbox.spy()
             };
         });
@@ -76,13 +78,13 @@ describe('controller/entry', function () {
                 params: {id: 1},
                 headers: {'if-match': '2'},
                 body: {somePatchDescription: true},
-                server: server
+                app: app
             }).should.become({
                 version: 3
             }).then(function () {
                 return repo.entry.patching.should.have.been.calledWith('dummyRepo', 1, 2, {somePatchDescription: true});
             }).then(function () {
-                return server.clients.notifyPatch.should.have.been.calledWith({
+                return app.clients.notifyPatch.should.have.been.calledWith({
                     path: '/entry/1',
                     fromVersion: '2',
                     toVersion: '3',

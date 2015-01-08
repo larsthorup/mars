@@ -35,16 +35,20 @@ describe('server', function () {
     });
 
     describe('starting', function () {
-        var serverOptions;
+        var app;
         var starting;
 
         beforeEach(function () {
-            serverOptions = {
-                certName: 'someCertificate',
-                cors: 'someCorsConfig',
-                bunyan: 'someBunyanConfig'
+            app = {
+                options: {
+                    server: {
+                        certName: 'someCertificate',
+                        cors: 'someCorsConfig',
+                        bunyan: 'someBunyanConfig'
+                    }
+                }
             };
-            starting = server.starting(serverOptions);
+            starting = server.starting(app);
         });
 
         it('names the server', function () {
@@ -74,13 +78,13 @@ describe('server', function () {
             restifyServer.use.should.have.been.calledWith('theAuthenticationHeaderParser');
         });
 
-        it('passes server to controllers through req', function () {
+        it('passes app to controllers through req', function () {
             var contextExposer = restifyServer.use.getCall(3).args[0];
             contextExposer.name.should.equal('contextExposer');
             var req = {};
             var next = sandbox.spy();
             contextExposer(req, null, next);
-            req.server.should.equal(restifyServer);
+            req.app.should.equal(app);
             next.should.have.been.calledWith();
         });
 
@@ -101,7 +105,7 @@ describe('server', function () {
             var listenCallback = restifyServer.listen.getCall(0).args[1];
             listenCallback();
             console.log.should.have.been.calledWith('%s listening at %s', 'serverName', 'serverUrl');
-            return starting.should.eventually.have.property('options', serverOptions);
+            return starting.should.eventually.become(restifyServer);
         });
 
         describe('CORS', function () {

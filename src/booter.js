@@ -5,9 +5,15 @@ var Promise = require('bluebird');
 
 function booting(options) {
     Promise.longStackTraces(); // ToDo: configure
-    return repo.connecting(options.database).then(function (repo) {
-        options.server.repo = repo;
-        return server.starting(options.server);
+    var app = {
+        options: options
+    };
+    return repo.connecting(app.options.database).then(function (repo) {
+        app.repo = repo;
+        return server.starting(app);
+    }).then(function (server) {
+        app.server = server;
+        return app;
     });
 }
 

@@ -12,7 +12,7 @@ module.exports = new Controller({
             get: {
                 authorize: auth.user,
                 processing: function getLatest(req) {
-                    return repo.entry.findingLatest(req.server.options.repo).then(function (entry) {
+                    return repo.entry.findingLatest(req.app.repo).then(function (entry) {
                         // ToDo: add ETag header with version
                         return {
                             entry: entry
@@ -27,7 +27,7 @@ module.exports = new Controller({
             get: {
                 authorize: auth.user,
                 processing: function getById(req) {
-                    return repo.entry.findingById(req.server.options.repo, req.params.id);
+                    return repo.entry.findingById(req.app.repo, req.params.id);
                 }
             },
             patch: {
@@ -39,9 +39,9 @@ module.exports = new Controller({
                     var id = req.params.id;
                     var version = parseInt(req.headers['if-match']);
                     var patch = req.body;
-                    return repo.entry.patching(req.server.options.repo, id, version, patch)
+                    return repo.entry.patching(req.app.repo, id, version, patch)
                     .then(function (result) {
-                        req.server.clients.notifyPatch({
+                        req.app.clients.notifyPatch({
                             path: req.url,
                             fromVersion: version.toString(),
                             patch: patch,

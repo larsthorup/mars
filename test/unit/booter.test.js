@@ -8,18 +8,18 @@ describe('booter', function () {
 
     beforeEach(function () {
         sandbox.stub(repo, 'connecting', Promise.method(function () { return 'dummyRepo'; }));
-        sandbox.stub(server, 'starting');
+        sandbox.stub(server, 'starting', Promise.method(function () { return 'dummyServer'; }));
     });
 
     describe('booting', function () {
-        var booting;
+        var options;
 
         beforeEach(function () {
-            var config = {
+            options = {
                 server: {},
                 database: 'dbConfig'
             };
-            booting = booter.booting(config);
+            return booter.booting(options);
         });
 
         it('connects to the repo', function () {
@@ -27,10 +27,7 @@ describe('booter', function () {
         });
 
         it('starts the server after successfully connecting to the repo', function () {
-            return repo.connecting.getCall(0).returnValue.then(function () {
-                server.starting.should.have.been.calledWith({repo: 'dummyRepo'});
-                booting.isFulfilled().should.equal(true);
-            });
+            server.starting.should.have.been.calledWith({options: options, repo: 'dummyRepo', server: 'dummyServer'});
         });
     });
 

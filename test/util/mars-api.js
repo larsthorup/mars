@@ -20,8 +20,8 @@ function starting() {
 }
 
 function stop() {
-    booting.then(function (server) {
-        server.close();
+    booting.then(function (app) {
+        app.server.close();
         process.exit(); // ToDo: figure out why the server takes 30 seconds to close...
     });
 }

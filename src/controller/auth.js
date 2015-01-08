@@ -12,7 +12,7 @@ module.exports = new Controller({
                 processing: function authenticating (req) {
                     var userName = req.params.user;
                     var password = req.body.pass;
-                    return repo.user.findingByName(req.server.options.repo, userName)
+                    return repo.user.findingByName(req.app.repo, userName)
                     .then(function (users) {
                         var passwordValid = false;
                         var user;

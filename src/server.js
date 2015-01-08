@@ -11,7 +11,8 @@ var Promise = require('bluebird');
 var router = require('./router');
 var token = require('./token');
 
-function starting(options) {
+function starting(app) {
+    var options = app.options.server;
     return new Promise(function (resolve, reject) {
         var certPath = path.resolve(__dirname, './config/certs');
         var certificate = fs.readFileSync(path.resolve(certPath, options.certName + '.cert'));
@@ -23,7 +24,6 @@ function starting(options) {
             key: key,
             log: bunyan.createLogger(options.bunyan)
         });
-        server.options = options;
 
         // Note: Log requests
         server.on('after', restify.auditLogger({
@@ -69,13 +69,13 @@ function starting(options) {
 
         // map routes
         server.use(function contextExposer (req, res, next) {
-            req.server = server; // Note: expose server to controllers
+            req.app = app; // Note: expose app to controllers
             next();
         });
         router.map(server);
 
         // handle web socket subscriptions from clients
-        server.clients = new (require('./clients').Clients)(server);
+        app.clients = new (require('./clients').Clients)(server);
 
         // start listening
         server.listen(1719, function () {
