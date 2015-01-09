@@ -12,8 +12,9 @@ describe('scenario in process', function () {
     });
 
     after(function () {
-        mars.stop();
-        mars.saveTraffic('mars.api.sample.json');
+        return mars.stopping().then(function () {
+            mars.saveTraffic('mars.api.sample.json');
+        });
     });
 
     describe('authentication', function () {
@@ -92,6 +93,10 @@ describe('scenario in process', function () {
             ws.on('open', function () {
                 done();
             });
+        });
+
+        after(function () {
+            ws.close();
         });
 
         describe('when subscribing', function () {

@@ -5,10 +5,12 @@ var Promise = require('bluebird');
 var request = require('request-promise');
 var _ = require('lodash');
 var booter = require('../../src/booter');
+var repo = require('../../src/repo');
 
 var marsConfig = require('../../src/config/mars.conf.js');
 var options = _.merge({}, marsConfig);
 options.database = require('../../knexfile').development;
+options.server.silent = true;
 
 var booting;
 var traffic;
@@ -19,10 +21,10 @@ function starting() {
     return booting;
 }
 
-function stop() {
-    booting.then(function (app) {
+function stopping() {
+    return booting.then(function (app) {
         app.server.close();
-        process.exit(); // ToDo: figure out why the server takes 30 seconds to close...
+        return repo.disconnecting(app.repo);
     });
 }
 
@@ -92,7 +94,7 @@ function saveTraffic(jsonFilePath) {
 var mars = module.exports = {
     trace: false,
     starting: starting,
-    stop: stop,
+    stopping: stopping,
     getting: getting,
     posting: posting,
     patching: patching,
