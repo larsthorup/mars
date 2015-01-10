@@ -3,17 +3,39 @@ document.addEventListener('DOMContentLoaded', main);
 function main() {
     window.app = {};
     window.app.apiServer = 'localhost:1719';
+
+    // ToDo: consider using https://github.com/joewalnes/reconnecting-websocket
     window.app.apiSocket = new WebSocket('wss://' + window.app.apiServer);
+
     // ToDo: authentication
-    // ToDo: wait for 'open' event
-    window.app.apiSocket.onmessage = function (event) {
+
+    window.app.apiSocket.addEventListener('open', function () {
+        showOnlineStatus(true);
+    });
+
+    window.app.apiSocket.addEventListener('close', function () {
+        showOnlineStatus(false);
+    });
+
+    window.app.apiSocket.addEventListener('message', function (event) {
         // console.log('Received WebSocket message');
         var message = JSON.parse(event.data);
         // console.dir(message);
         patchEntry(message);
         // ToDo: dispatch to listeners[message.path]
-    };
+    });
+
     gotoAuth();
+}
+
+function showOnlineStatus(isOnline) {
+    var onlineStatus = document.getElementById('online-status');
+    var spans = onlineStatus.getElementsByTagName('span');
+    for(var i = 0; i < spans.length; ++i) {
+        var span = spans[i];
+        span.classList.remove(isOnline ? 'is-offline' : 'is-online');
+        span.classList.add(isOnline ? 'is-online' : 'is-offline');
+    }
 }
 
 function gotoAuth() {

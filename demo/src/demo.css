@@ -5,3 +5,23 @@ body {
 div.page {
     display: none;
 }
+
+#online-status {
+    float: right;
+}
+
+.online {
+    display: none;
+}
+
+.online.is-online {
+    display: inline;
+}
+
+.offline {
+    display: none;
+}
+
+.offline.is-offline {
+    display: inline;
+}
