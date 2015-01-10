@@ -20,7 +20,7 @@ function starting(app) {
         app.log = bunyan.createLogger(options.bunyan);
 
         var server = restify.createServer({
-            name: 'mars',
+            name: app.options.app.name,
             certificate: certificate,
             key: key,
             log: app.log

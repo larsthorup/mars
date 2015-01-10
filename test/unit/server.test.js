@@ -41,6 +41,9 @@ describe('server', function () {
         beforeEach(function () {
             app = {
                 options: {
+                    app: {
+                        name: 'someAppName'
+                    },
                     server: {
                         certName: 'someCertificate',
                         cors: 'someCorsConfig',
@@ -53,14 +56,14 @@ describe('server', function () {
 
         it('names the server', function () {
             restify.createServer.getCall(0).args[0].should.deep.equal({
-                name: 'mars',
+                name: 'someAppName',
                 certificate: 'theCert',
                 key: 'theKey',
                 log: 'theBunyanLogger'
             });
             // Hmm... this suddenly started failing, replacing with code above...
             //restify.createServer.should.have.been.calledWith({
-            //    name: 'mars',
+            //    name: 'someAppName',
             //    certificate: 'theCert',
             //    key: 'theKey'
             //});
