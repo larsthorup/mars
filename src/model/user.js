@@ -1,11 +1,5 @@
-var Knex = require('knex');
-var hasher = require('./../hasher');
-
-function creatingTestData(repo) {
-    return repo.knex('user').insert([
-        {name: 'Lars', passwordHash: hasher.generate('lars123')},
-        {name: 'Rob', passwordHash: hasher.generate('p')}
-    ]);
+function creating(repo, rows) {
+    return repo.knex('user').insert(rows);
 }
 
 function counting(repo) {
@@ -33,7 +27,7 @@ function mappingByName(repo, names) {
 }
 
 module.exports = {
-    creatingTestData: creatingTestData,
+    creating: creating,
     findingByName: findingByName,
     counting: counting,
     mappingByName: mappingByName

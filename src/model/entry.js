@@ -1,14 +1,5 @@
-var Knex = require('knex');
-var user = require('./user');
-var assert = require('assert');
-
-function creatingTestData(repo) {
-    return user.mappingByName(repo, ['Rob', 'Lars']).then(function (users) {
-        return repo.knex('entry').insert([
-            {title: 'More innovation', authorId: users.Rob.id, version: 1},
-            {title: 'Less bureaucracy', authorId: users.Lars.id, version: 1}
-        ]);
-    });
+function creating(repo, rows) {
+    return repo.knex('entry').insert(rows);
 }
 
 function findingLatest(repo) {
@@ -52,7 +43,7 @@ function patching(repo, id, version, patch) {
 }
 
 module.exports = {
-    creatingTestData: creatingTestData,
+    creating: creating,
     findingLatest: findingLatest,
     findingById: findingById,
     patching: patching
