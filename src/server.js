@@ -1,7 +1,3 @@
-// ToDo: hosting (digial ocean)
-// ToDo: zero downtime upgrades (http-proxy)
-
-var bunyan = require('bunyan');
 var fs = require('fs');
 var path = require('path');
 var restify = require('restify');
@@ -17,13 +13,12 @@ function starting(app) {
         var certPath = path.resolve(__dirname, './config/certs');
         var certificate = fs.readFileSync(path.resolve(certPath, options.certName + '.cert'));
         var key = fs.readFileSync(path.resolve(certPath, options.certName + '.key'));
-        app.log = bunyan.createLogger(options.bunyan);
 
         var server = restify.createServer({
             name: app.options.app.name,
             certificate: certificate,
             key: key,
-            log: app.log
+            log: app.options.log
         });
 
         // Note: Log requests

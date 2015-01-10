@@ -1,4 +1,3 @@
-var bunyan = require('bunyan');
 var fs = require('fs');
 var path = require('path');
 var restify = require('restify');
@@ -30,7 +29,6 @@ describe('server', function () {
         sandbox.stub(router, 'map');
         sandbox.stub(token, 'requestParser', function () { return 'theAuthenticationHeaderParser'; });
         sandbox.stub(console, 'log');
-        sandbox.stub(bunyan, 'createLogger').returns('theBunyanLogger');
         sandbox.stub(clients, 'Clients').returns({});
     });
 
@@ -41,13 +39,13 @@ describe('server', function () {
         beforeEach(function () {
             app = {
                 options: {
+                    log: 'someLogger',
                     app: {
                         name: 'someAppName'
                     },
                     server: {
                         certName: 'someCertificate',
-                        cors: 'someCorsConfig',
-                        bunyan: 'someBunyanConfig'
+                        cors: 'someCorsConfig'
                     }
                 }
             };
@@ -59,7 +57,7 @@ describe('server', function () {
                 name: 'someAppName',
                 certificate: 'theCert',
                 key: 'theKey',
-                log: 'theBunyanLogger'
+                log: 'someLogger'
             });
             // Hmm... this suddenly started failing, replacing with code above...
             //restify.createServer.should.have.been.calledWith({
