@@ -65,7 +65,7 @@ gulp.task('end2end', function () {
 
 // run
 var shell = require('gulp-shell');
-gulp.task('run', shell.task(['node src/mars.js']));
+gulp.task('run', shell.task(['node src/cli.js']));
 
 // demo
 var webserver = require('gulp-webserver');

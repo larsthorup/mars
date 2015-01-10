@@ -1,6 +1,6 @@
 /* globals -WebSocket, -Promise, process */
-var mars = require('../util/mars-api');
-// mars.trace = true;
+var api = require('../util/api.proxy');
+// api.trace = true;
 
 var WebSocket = require('ws');
 var Promise = require('bluebird');
@@ -8,27 +8,27 @@ var Promise = require('bluebird');
 
 describe('scenario in process', function () {
     before(function () {
-        return mars.starting();
+        return api.starting();
     });
 
     after(function () {
-        return mars.stopping().then(function () {
-            mars.saveTraffic('mars.api.sample.json');
+        return api.stopping().then(function () {
+            api.saveTraffic('api.sample.json');
         });
     });
 
     describe('authentication', function () {
 
         it('authenticates existing user', function () {
-            return mars.posting('/auth/authenticate/Lars', '0.1.0', {pass: 'lars123'}).should.become({ token: '{\"user\":\"Lars\",\"hashed\":true}'});
+            return api.posting('/auth/authenticate/Lars', '0.1.0', {pass: 'lars123'}).should.become({ token: '{\"user\":\"Lars\",\"hashed\":true}'});
         });
 
         it('fails authenticating existing user with wrong password', function () {
-            return mars.posting('/auth/authenticate/Lars', '0.1.0', {pass: 'qwerty'}).should.be.rejectedWith('invalid user name or password');
+            return api.posting('/auth/authenticate/Lars', '0.1.0', {pass: 'qwerty'}).should.be.rejectedWith('invalid user name or password');
         });
 
         it('fails authenticating non-existing user', function () {
-            return mars.posting('/auth/authenticate/unknown', '0.1.0', {}).should.be.rejectedWith('invalid user name or password');
+            return api.posting('/auth/authenticate/unknown', '0.1.0', {}).should.be.rejectedWith('invalid user name or password');
         });
 
     });
@@ -37,17 +37,17 @@ describe('scenario in process', function () {
         var token;
 
         before(function () {
-            return mars.posting('/auth/authenticate/Lars', '0.1.0', {pass: 'lars123'}).then(function (result) {
+            return api.posting('/auth/authenticate/Lars', '0.1.0', {pass: 'lars123'}).then(function (result) {
                  token = result.token;
             });
         });
 
         it('authorizes authenticated requests', function () {
-            return mars.getting('/hello/Lars', '0.1.0', token).should.become('hello Lars');
+            return api.getting('/hello/Lars', '0.1.0', token).should.become('hello Lars');
         });
 
         it('rejects fake authentication', function () {
-            return mars.getting('/hello/Lars', '0.1.0', 'invalidToken').should.be.rejectedWith('not authorized');
+            return api.getting('/hello/Lars', '0.1.0', 'invalidToken').should.be.rejectedWith('not authorized');
         });
 
     });
@@ -55,24 +55,24 @@ describe('scenario in process', function () {
     describe('versioning', function () {
 
         it('succeeds when version range can be satisfied', function () {
-            return mars.posting('/auth/authenticate/Lars', '0.1.0', {pass: 'lars123'}).should.become({ token: '{\"user\":\"Lars\",\"hashed\":true}'});
+            return api.posting('/auth/authenticate/Lars', '0.1.0', {pass: 'lars123'}).should.become({ token: '{\"user\":\"Lars\",\"hashed\":true}'});
         });
 
         it('fails when version range cannot be satisfied', function () {
-            return mars.posting('/auth/authenticate/Lars', '0.0.5', {pass: 'lars123'}).should.be.rejectedWith('0.0.5 is not supported by POST /auth/authenticate/Lars');
+            return api.posting('/auth/authenticate/Lars', '0.0.5', {pass: 'lars123'}).should.be.rejectedWith('0.0.5 is not supported by POST /auth/authenticate/Lars');
         });
 
         describe('when version range not specified', function () {
             var token;
 
             beforeEach(function () {
-                return mars.posting('/auth/authenticate/Lars', null, {pass: 'lars123'}).then(function (result) {
+                return api.posting('/auth/authenticate/Lars', null, {pass: 'lars123'}).then(function (result) {
                     token = result.token;
                 });
             });
 
             it('defaults to latest version', function () {
-                return mars.getting('/hello/Rob', null, token).should.become({greeting: 'hello Rob'});
+                return api.getting('/hello/Rob', null, token).should.become({greeting: 'hello Rob'});
             });
         });
     });
@@ -83,7 +83,7 @@ describe('scenario in process', function () {
 
         before(function (done) {
             process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-            // ToDo: move to mars-api
+            // ToDo: move to api.proxy
             ws = new WebSocket('wss://localhost:1719');
             messageData = new Promise(function (resolve) {
                 ws.on('message', function (data) {
@@ -109,10 +109,10 @@ describe('scenario in process', function () {
             describe('when posting a patch', function () {
 
                 before(function () {
-                    return mars.posting('/auth/authenticate/Lars', null, {pass: 'lars123'}).then(function (result) {
+                    return api.posting('/auth/authenticate/Lars', null, {pass: 'lars123'}).then(function (result) {
                         return result.token;
                     }).then(function (token) {
-                        return mars.patching('/entry/1', null, {title:'newTitle'}, 1, token);
+                        return api.patching('/entry/1', null, {title:'newTitle'}, 1, token);
                     });
                 });
 
