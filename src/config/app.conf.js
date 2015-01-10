@@ -3,14 +3,15 @@ var path = require('path');
 var config = {};
 
 config.app = {
-    name: 'mars'
+    name: 'mars',
+    silent: false
 };
 
 config.app.bunyan = {
     name: config.app.name,
     streams: [
         {
-            path: config.app.name + '.log'
+            path: 'app.log'
         }
     ]
 };
@@ -26,13 +27,13 @@ config.database = {
     // debug: true,
     client: 'sqlite3',
     connection: {
-        filename: config.app.name + '.sqlite'
+        filename: 'app.sqlite'
     },
     migrations: {
         directory: path.resolve(__dirname, '../migrations')
     },
     testdata: {
-        create: true
+        create: false
     }
 };
 

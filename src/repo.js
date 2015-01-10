@@ -8,15 +8,22 @@ var models = require('require-all')(path.resolve(__dirname, 'model/'));
 
 function connecting(options) {
     if(options.testdata.create) {
-        recreate(options);
+        remove(options);
     }
     var knex = Knex.initialize(options);
     var repo = {
         knex: knex
     };
-    return migrateLatest(repo).then(function () {
+    return migratingLatest(repo).then(function () {
+        if(!options.silent) {
+            console.log('database migrated');
+        }
         if(options.testdata.create) {
-            return testdata.creating(repo);
+            return testdata.creating(repo).then(function () {
+                if(!options.silent) {
+                    console.log('testdata created');
+                }
+            });
         }
     }).then(function () {
         return repo;
@@ -27,15 +34,18 @@ function disconnecting(repo) {
     return repo.knex.destroy();
 }
 
-function recreate(options) {
+function remove(options) {
     assert.equal(options.client, 'sqlite3'); // ToDo: extend to other providers
     var dbfile = options.connection.filename;
     if(fs.existsSync(dbfile)) {
         fs.unlinkSync(dbfile);
+        if(!options.silent) {
+            console.log('database removed');
+        }
     }
 }
 
-function migrateLatest(repo) {
+function migratingLatest(repo) {
     return repo.knex.migrate.latest();
 }
 

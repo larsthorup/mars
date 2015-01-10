@@ -11,7 +11,8 @@ var options = {
     },
     testdata: {
         create: true
-    }
+    },
+    silent: true
     // ,"debug": true
 };
 

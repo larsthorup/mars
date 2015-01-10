@@ -18,7 +18,11 @@ describe('booter', function () {
 
         beforeEach(function () {
             options = {
-                app: {},
+                app: {
+                    args: {
+                        flags: {}
+                    }
+                },
                 server: {},
                 database: 'dbConfig'
             };

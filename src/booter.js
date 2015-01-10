@@ -12,6 +12,10 @@ function booting(options) {
     app.options = options;
     var log = bunyan.createLogger(app.options.app.bunyan);
     app.log = log;
+    app.options.database.silent = app.options.app.silent;
+    if(options.app.args.flags.dbRecreate) {
+        app.options.database.testdata.create = true;
+    }
     return repo.connecting(app.options.database).then(function (repo) {
         app.repo = repo;
         app.repo.log = app.log;

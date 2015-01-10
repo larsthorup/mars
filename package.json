@@ -1,7 +1,7 @@
 {
     "name": "mars",
     "version": "0.1.0",
-    "description": "NodeJS, Mocha, Bookshelf, Restify",
+    "description": "NodeJS, Restify, ws, Knex, Mocha",
     "repository": {
         "type": "git",
         "url": "https://github.com/larsthorup/mars.git"
@@ -12,6 +12,7 @@
         "forever": "^0.13.0",
         "knex": "^0.7.3",
         "lodash": "^2.4.1",
+        "meow": "^2.1.0",
         "password-hash": "^1.2.1",
         "require-all": "^1.0.0",
         "restify": "^2.8.2",

@@ -75,14 +75,14 @@ function starting(app) {
 
         // start listening
         server.listen(1719, function () {
-            if(!options.silent) {
+            if(!app.options.app.silent) {
                 console.log('%s listening at %s', server.name, server.url);
             }
             resolve(server);
         });
 
         server.on('close', function () {
-            if(!options.silent) {
+            if(!app.options.app.silent) {
                 console.log('%s closing down', server.name);
             }
         });

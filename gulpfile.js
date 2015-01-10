@@ -66,6 +66,7 @@ gulp.task('end2end', function () {
 // run
 var shell = require('gulp-shell');
 gulp.task('run', shell.task(['node src/cli.js']));
+gulp.task('run-recreate', shell.task(['node src/cli.js --db-recreate']));
 
 // demo
 var webserver = require('gulp-webserver');
@@ -95,4 +96,4 @@ gulp.task('watch', function () {
 });
 
 gulp.task('live', ['watch']);
-gulp.task('demo', ['serve-demo', 'run']);
+gulp.task('demo', ['serve-demo', 'run-recreate']);

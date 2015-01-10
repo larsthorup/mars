@@ -9,6 +9,12 @@ var repo = require('../../src/repo');
 
 var appConfig = require('../../src/config/app.conf.js');
 var options = _.merge({}, appConfig);
+options.app.args = {
+    flags: {}
+};
+options.database.testdata = options.database.testdata || {};
+options.database.testdata.create = true;
+options.database.silent = true;
 options.server.silent = true;
 
 var booting;
