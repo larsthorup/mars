@@ -109,6 +109,12 @@ describe('server', function () {
             return starting.should.eventually.become(restifyServer);
         });
 
+        it('tells when it shuts down', function () {
+            restifyServer.on.getCall(2).args[0].should.equal('close');
+            restifyServer.on.getCall(2).args[1]();
+            console.log.should.have.been.calledWith('%s closing down', 'serverName');
+        });
+
         describe('CORS', function () {
 
             it('parses CORS headers', function () {

@@ -20,17 +20,22 @@ describe('booter', function () {
             options = {
                 app: {
                     args: {
-                        flags: {}
-                    }
+                        flags: {
+                            dbRecreate: true
+                        }
+                    },
+                    silent: true,
                 },
                 server: {},
-                database: 'dbConfig'
+                database: {
+                    testdata: {}
+                }
             };
             return booter.booting(options);
         });
 
         it('connects to the repo', function () {
-            repo.connecting.should.have.been.calledWith('dbConfig');
+            repo.connecting.should.have.been.calledWith({silent: true, testdata: { create: true}});
         });
 
         it('starts the server after successfully connecting to the repo', function () {

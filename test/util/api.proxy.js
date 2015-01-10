@@ -14,8 +14,7 @@ options.app.args = {
 };
 options.database.testdata = options.database.testdata || {};
 options.database.testdata.create = true;
-options.database.silent = true;
-options.server.silent = true;
+options.app.silent = true;
 
 var booting;
 var traffic;
