@@ -1,3 +1,5 @@
+var path = require('path');
+
 var config = {};
 
 config.app = {
@@ -19,6 +21,18 @@ config.server = {
     }
 };
 
-// ToDo: move knexfile to config.database
+config.database = {
+    // debug: true,
+    client: 'sqlite3',
+    connection: {
+        filename: config.app.name + '.sqlite'
+    },
+    migrations: {
+        directory: path.resolve(__dirname, '../migrations')
+    },
+    testdata: {
+        create: true
+    }
+};
 
 module.exports = config;

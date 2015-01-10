@@ -9,7 +9,6 @@ var repo = require('../../src/repo');
 
 var appConfig = require('../../src/config/app.conf.js');
 var options = _.merge({}, appConfig);
-options.database = require('../../knexfile').development;
 options.server.silent = true;
 
 var booting;
