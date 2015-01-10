@@ -13,6 +13,7 @@
         "knex": "^0.7.3",
         "lodash": "^2.4.1",
         "meow": "^2.1.0",
+        "mkdirp": "^0.5.0",
         "password-hash": "^1.2.1",
         "require-all": "^1.0.0",
         "restify": "^2.8.2",

@@ -13,7 +13,7 @@ describe('scenario in process', function () {
 
     after(function () {
         return api.stopping().then(function () {
-            api.saveTraffic('api.sample.json');
+            api.saveTraffic('dist/test/api.sample.json');
         });
     });
 

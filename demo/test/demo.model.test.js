@@ -3,7 +3,7 @@ describe('model', function () {
     var server;
 
     before(function () {
-        return window.apiFaker.loading('../../api.sample.json')
+        return window.apiFaker.loading('../../dist/test/api.sample.json')
         .then(function (result) {
             fakeApi = result;
             // Note: adding test specific data

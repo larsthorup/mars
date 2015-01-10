@@ -11,7 +11,7 @@ config.app.bunyan = {
     name: config.app.name,
     streams: [
         {
-            path: 'app.log'
+            path: 'dist/run/app.log'
         }
     ]
 };
@@ -27,7 +27,7 @@ config.database = {
     // debug: true,
     client: 'sqlite3',
     connection: {
-        filename: 'app.sqlite'
+        filename: 'dist/run/app.sqlite'
     },
     migrations: {
         directory: path.resolve(__dirname, '../migrations')

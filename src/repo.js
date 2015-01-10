@@ -1,5 +1,6 @@
 var Knex = require('knex');
 var fs = require('fs');
+var mkdirp = require('mkdirp');
 var assert = require('assert');
 var _ = require('lodash');
 var testdata = require('./testdata');
@@ -43,6 +44,7 @@ function remove(options) {
             console.log('database removed');
         }
     }
+    mkdirp.sync(path.dirname(dbfile));
 }
 
 function migratingLatest(repo) {

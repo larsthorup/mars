@@ -2,6 +2,7 @@
 var Promise = require('bluebird');
 var Knex = require('knex');
 var fs = require('fs');
+var mkdirp = require('mkdirp');
 var repo = require('../../src/repo');
 var testdata = require('../../src/testdata');
 
@@ -19,13 +20,14 @@ describe('repo', function () {
             sandbox.stub(Knex, 'initialize', function () { return knex; });
             sandbox.stub(fs, 'existsSync', function () { return true; });
             sandbox.stub(fs, 'unlinkSync');
+            sandbox.stub(mkdirp, 'sync');
             sandbox.stub(testdata, 'creating', function () { return Promise.resolve(); });
             sandbox.stub(console, 'log');
             return repo.connecting({
                 silent: false,
                 client: 'sqlite3',
                 connection: {
-                    filename: 'dbFileName'
+                    filename: 'dbDir/dbFileName'
                 },
                 testdata: {
                     create: true
@@ -34,8 +36,12 @@ describe('repo', function () {
         });
 
         it('should remove the database', function () {
-            fs.unlinkSync.should.have.been.calledWith('dbFileName');
+            fs.unlinkSync.should.have.been.calledWith('dbDir/dbFileName');
             console.log.should.have.been.calledWith('database removed');
+        });
+
+        it('should create the parent directories', function () {
+            mkdirp.sync.should.have.been.calledWith('dbDir');
         });
 
         it('should migrate', function () {

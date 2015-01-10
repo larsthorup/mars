@@ -1,7 +1,8 @@
 /* globals -Promise */
 var Promise = require('bluebird');
 var bunyan = require('bunyan');
-
+var path = require('path');
+var mkdirp = require('mkdirp');
 var repo = require('./repo');
 var server = require('./server');
 
@@ -10,6 +11,7 @@ function booting(options) {
     Promise.longStackTraces(); // ToDo: configure
     var app = {};
     app.options = options;
+    mkdirp.sync(path.dirname(app.options.app.bunyan.streams[0].path));
     var log = bunyan.createLogger(app.options.app.bunyan);
     app.log = log;
     app.options.database.silent = app.options.app.silent;

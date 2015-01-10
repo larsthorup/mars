@@ -1,5 +1,7 @@
 /* global process */
 var fs = require('fs');
+var path = require('path');
+var mkdirp = require('mkdirp');
 /* global -Promise */
 var Promise = require('bluebird');
 var request = require('request-promise');
@@ -92,6 +94,7 @@ function patching(path, apiVersionRange, body, dataVersion, bearerToken) {
 
 function saveTraffic(jsonFilePath) {
     var indent = 4;
+    mkdirp.sync(path.dirname(jsonFilePath));
     fs.writeFileSync(jsonFilePath, JSON.stringify(traffic, null, indent));
 }
 

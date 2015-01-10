@@ -1,6 +1,7 @@
 /* global -Promise */
 var Promise = require('bluebird');
 var bunyan = require('bunyan');
+var mkdirp = require('mkdirp');
 var booter = require('../../src/booter');
 var repo = require('../../src/repo');
 var server = require('../../src/server');
@@ -11,6 +12,7 @@ describe('booter', function () {
         sandbox.stub(repo, 'connecting', Promise.method(function () { return 'dummyRepo'; }));
         sandbox.stub(server, 'starting', Promise.method(function () { return 'dummyServer'; }));
         sandbox.stub(bunyan, 'createLogger').returns('theBunyanLogger');
+        sandbox.stub(mkdirp, 'sync');
     });
 
     describe('booting', function () {
@@ -25,6 +27,11 @@ describe('booter', function () {
                         }
                     },
                     silent: true,
+                    bunyan: {
+                        streams: [{
+                            path: 'logDir/logFile'
+                        }]
+                    }
                 },
                 server: {},
                 database: {
@@ -32,6 +39,10 @@ describe('booter', function () {
                 }
             };
             return booter.booting(options);
+        });
+
+        it('creates log parent directories', function () {
+            mkdirp.sync.should.have.been.calledWith('logDir');
         });
 
         it('connects to the repo', function () {

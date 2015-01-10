@@ -43,7 +43,7 @@ gulp.task('cover', function (done) {
         .src(paths.test.unit)
         .pipe(mocha({reporter: 'dot'}))
         .pipe(istanbul.writeReports({
-            dir: './coverage',
+            dir: './dist/coverage',
             reporters: ['text-summary', 'lcov', 'json']
         }))
         .on('end', done);
@@ -52,7 +52,7 @@ gulp.task('cover', function (done) {
 var gulpOpen = require('gulp-open');
 gulp.task('cover-report', function () {
     return gulp
-    .src('coverage/lcov-report/index.html')
+    .src('dist/coverage/lcov-report/index.html')
     .pipe(gulpOpen());
 });
 
