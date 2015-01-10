@@ -17,12 +17,13 @@ function starting(app) {
         var certPath = path.resolve(__dirname, './config/certs');
         var certificate = fs.readFileSync(path.resolve(certPath, options.certName + '.cert'));
         var key = fs.readFileSync(path.resolve(certPath, options.certName + '.key'));
+        app.log = bunyan.createLogger(options.bunyan);
 
         var server = restify.createServer({
             name: 'mars',
             certificate: certificate,
             key: key,
-            log: bunyan.createLogger(options.bunyan)
+            log: app.log
         });
 
         // Note: Log requests

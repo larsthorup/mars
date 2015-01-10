@@ -36,8 +36,7 @@ function patching(repo, id, version, patch) {
         }
     })
     .catch(function (err) {
-        // ToDo: use bunyan
-        console.log('Failed to patch', id, version, patch, err);
+        repo.log.error('Failed to patch', id, version, patch, err);
         throw err;
     });
 }

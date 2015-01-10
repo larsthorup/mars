@@ -5,7 +5,7 @@ module.exports = {
             origins: ['https://localhost:1718']
         },
         bunyan: {
-            name: 'lars',
+            name: 'mars',
             streams: [
                 {
                     path: 'mars.log'

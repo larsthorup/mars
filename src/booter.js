@@ -13,6 +13,7 @@ function booting(options) {
         return server.starting(app);
     }).then(function (server) {
         app.server = server;
+        app.repo.log = app.log;
         return app;
     });
 }
