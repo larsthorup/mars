@@ -9,7 +9,7 @@ describe('model', function () {
             // Note: adding test specific data
             window.apiFaker.add(fakeApi, {
                 method: 'GET',
-                uri: 'https://mars.com/weather/',
+                uri: 'https://app.com/weather/',
                 version: '^0.9.4',
                 requestBody: JSON.stringify({}),
                 statusCode: 200,
@@ -33,7 +33,7 @@ describe('model', function () {
     describe('api', function () {
 
         beforeEach(function () {
-            window.mars = {
+            window.app = {
                 apiServer: 'localhost:1719'
             };
         });
@@ -124,8 +124,8 @@ describe('model', function () {
         var weather;
 
         beforeEach(function () {
-            window.mars = {
-                apiServer: 'mars.com'
+            window.app = {
+                apiServer: 'app.com'
             };
         });
 

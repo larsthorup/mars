@@ -47,7 +47,7 @@ function requesting(path, apiVersionRange, method, body, dataVersion, bearerToke
     if(bearerToken) {
         options.headers.authorization = 'Bearer ' + bearerToken;
     }
-    if(mars.trace) {
+    if(proxy.trace) {
         console.dir(options);
     }
     var exchange = {
@@ -55,7 +55,7 @@ function requesting(path, apiVersionRange, method, body, dataVersion, bearerToke
     };
     traffic.push(exchange);
     return request(options).then(function (data) {
-        if(mars.trace) {
+        if(proxy.trace) {
             console.dir(data);
         }
         exchange.response = {
@@ -64,7 +64,7 @@ function requesting(path, apiVersionRange, method, body, dataVersion, bearerToke
         };
         return data;
     }).catch(function (result) {
-        if(mars.trace) {
+        if(proxy.trace) {
             console.dir(result.error);
         }
         exchange.response = result;
@@ -91,7 +91,7 @@ function saveTraffic(jsonFilePath) {
     fs.writeFileSync(jsonFilePath, JSON.stringify(traffic, null, indent));
 }
 
-var mars = module.exports = {
+var proxy = module.exports = {
     trace: false,
     starting: starting,
     stopping: stopping,

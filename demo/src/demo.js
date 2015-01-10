@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', main);
 
 function main() {
-    window.mars = {};
-    window.mars.apiServer = 'localhost:1719';
-    window.mars.apiSocket = new WebSocket('wss://' + window.mars.apiServer);
+    window.app = {};
+    window.app.apiServer = 'localhost:1719';
+    window.app.apiSocket = new WebSocket('wss://' + window.app.apiServer);
     // ToDo: authentication
     // ToDo: wait for 'open' event
-    window.mars.apiSocket.onmessage = function (event) {
+    window.app.apiSocket.onmessage = function (event) {
         // console.log('Received WebSocket message');
         var message = JSON.parse(event.data);
         // console.dir(message);
@@ -26,7 +26,7 @@ function authenticate() {
     var pass = document.getElementById('pass').value;
     authenticating({user: user, pass: pass})
     .then(function (result) {
-        window.mars.token = result.token;
+        window.app.token = result.token;
         document.getElementById('authPage').style.display = 'none';
         gotoMenu();
     })
@@ -99,7 +99,7 @@ function openEntry() {
     .then(function (entry) {
         // ToDo: refactor
         // ToDo: notifyNow: true (to avoid doing a GET)?
-        window.mars.apiSocket.send(JSON.stringify({
+        window.app.apiSocket.send(JSON.stringify({
             verb: 'SUBSCRIBE',
             path: path
         }));

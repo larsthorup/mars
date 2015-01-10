@@ -50,12 +50,12 @@ function patchingEntry(options) {
 function requesting(options) {
     return new Promise(function (resolve, reject) {
         var xhr = new XMLHttpRequest();
-        xhr.open(options.method, 'https://' + window.mars.apiServer + options.path, true);
+        xhr.open(options.method, 'https://' + window.app.apiServer + options.path, true);
         if(options.versionRange) {
             xhr.setRequestHeader('Accept-Version', options.versionRange);
         }
-        if(window.mars.token) {
-            xhr.setRequestHeader('Authorization', 'Bearer ' + window.mars.token);
+        if(window.app.token) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + window.app.token);
         }
         if(options.method === 'PATCH' || options.method === 'POST') {
             xhr.setRequestHeader('Content-type', 'application/json');
