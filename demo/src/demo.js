@@ -3,29 +3,36 @@ document.addEventListener('DOMContentLoaded', main);
 function main() {
     window.app = {};
     window.app.apiServer = 'localhost:1719';
+    showOnlineStatus(false);
+    connectSocket();
+    gotoAuth();
+}
 
+function connectSocket() {
     // ToDo: consider using https://github.com/joewalnes/reconnecting-websocket
-    window.app.apiSocket = new WebSocket('wss://' + window.app.apiServer);
+    var apiSocket = new WebSocket('wss://' + window.app.apiServer);
 
     // ToDo: authentication
 
-    window.app.apiSocket.addEventListener('open', function () {
+    apiSocket.addEventListener('open', function () {
+        window.app.apiSocket = apiSocket;
+
+        apiSocket.addEventListener('message', function (event) {
+            // console.log('Received WebSocket message');
+            var message = JSON.parse(event.data);
+            // console.dir(message);
+            patchEntry(message);
+            // ToDo: dispatch to listeners[message.path]
+        });
+
         showOnlineStatus(true);
     });
 
-    window.app.apiSocket.addEventListener('close', function () {
+    apiSocket.addEventListener('close', function () {
+        window.app.apiSocket = null;
         showOnlineStatus(false);
+        setTimeout(connectSocket, 500);
     });
-
-    window.app.apiSocket.addEventListener('message', function (event) {
-        // console.log('Received WebSocket message');
-        var message = JSON.parse(event.data);
-        // console.dir(message);
-        patchEntry(message);
-        // ToDo: dispatch to listeners[message.path]
-    });
-
-    gotoAuth();
 }
 
 function showOnlineStatus(isOnline) {
@@ -121,10 +128,12 @@ function openEntry() {
     .then(function (entry) {
         // ToDo: refactor
         // ToDo: notifyNow: true (to avoid doing a GET)?
-        window.app.apiSocket.send(JSON.stringify({
-            verb: 'SUBSCRIBE',
-            path: path
-        }));
+        if(window.app.apiSocket) {
+            window.app.apiSocket.send(JSON.stringify({
+                verb: 'SUBSCRIBE',
+                path: path
+            }));
+        }
         renderEntry(entry);
     })
     .catch(function (err) {
