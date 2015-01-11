@@ -70,7 +70,7 @@
         "test-remote": "sleep 2 && curl --insecure https://192.168.50.4:1719/hello/Lars",
         "deploy": "npm run package && npm run up && npm run install-remote && npm run start-remote && npm run test-remote",
         "-- continuous integration ": "--",
-        "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+        "coveralls": "cat ./dist/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
         "travis": "npm run lint && npm run cover && npm run coveralls && npm run end2end && npm run demotest && npm run package"
     },
     "license": "MIT",
