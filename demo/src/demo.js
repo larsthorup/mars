@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', main);
 
 function main() {
-    window.app = {};
+    window.app = {
+        subscriptions: []
+    };
     window.app.apiServer = 'localhost:1719';
     showOnlineStatus(false);
     connectSocket();
@@ -22,6 +24,8 @@ function connectSocket() {
             patchEntry(message);
             // ToDo: dispatch to listeners[message.path]
         });
+
+        resubscribe();
 
     });
 
@@ -126,18 +130,30 @@ function openEntry() {
     .then(function (entry) {
         // ToDo: refactor
         // ToDo: notifyNow: true (to avoid doing a GET)?
-        if(window.app.apiSocket) {
-            window.app.apiSocket.send(JSON.stringify({
-                verb: 'SUBSCRIBE',
-                auth: getAuthorizationHeader(),
-                path: path
-            }));
-        }
+        window.app.subscriptions.push(path);
+        subscribe(path);
         renderEntry(entry);
     })
     .catch(function (err) {
         window.alert('Failed to load entry: ' + err.message);
     });
+}
+
+function resubscribe() {
+    for(var i = 0; i < window.app.subscriptions.length; ++i) {
+        var path = window.app.subscriptions[i];
+        subscribe(path);
+    }
+}
+
+function subscribe(path) {
+    if(window.app.apiSocket) {
+        window.app.apiSocket.send(JSON.stringify({
+            verb: 'SUBSCRIBE',
+            auth: getAuthorizationHeader(),
+            path: path
+        }));
+    }
 }
 
 function renderEntry(entry) {
