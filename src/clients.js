@@ -1,4 +1,6 @@
 var ws = require('ws');
+var auth = require('./auth');
+var token = require('./token');
 
 function Clients(server) {
     var subscriptions = new (require('./subscriptions').Subscriptions)();
@@ -28,7 +30,10 @@ function Clients(server) {
         var message = JSON.parse(data);
         var handler = messageHandlers[message.verb];
         if(handler) {
-            handler.call(this, message);
+            var userName = token.authenticate(message.auth);
+            if(auth.user({userName: userName})) {
+                handler.call(this, message);
+            }
         }
     }
 

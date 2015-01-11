@@ -102,7 +102,7 @@ describe('scenario in process', function () {
         describe('when subscribing', function () {
 
             before(function () {
-                ws.send('{"verb":"SUBSCRIBE","path":"/entry/1"}');
+                ws.send('{"verb":"SUBSCRIBE","auth":"Bearer {\\"user\\":\\"Lars\\",\\"hashed\\":true}","path":"/entry/1"}');
                 return Promise.delay(1000); // Note: give the server time to process subscription
             });
 

@@ -3,33 +3,13 @@ document.addEventListener('DOMContentLoaded', main);
 function main() {
     window.app = {};
     window.app.apiServer = 'localhost:1719';
+    showOnlineStatus(false);
+    connectSocket();
     gotoAuth();
-}
-
-function gotoAuth() {
-    document.getElementById('authPage').style.display = 'block';
-    document.getElementById('authButton').addEventListener('click', authenticate);
-}
-
-function authenticate() {
-    var user = document.getElementById('user').value;
-    var pass = document.getElementById('pass').value;
-    authenticating({user: user, pass: pass})
-    .then(function (result) {
-        window.app.token = result.token;
-        connectSocket();
-        document.getElementById('authPage').style.display = 'none';
-        gotoMenu();
-    })
-    .catch(function (err) {
-        window.alert('Failed to login: ' + err.message);
-    });
 }
 
 function connectSocket() {
     var apiSocket = new WebSocket('wss://' + window.app.apiServer);
-
-    // ToDo: authentication
 
     apiSocket.addEventListener('open', function () {
         window.app.apiSocket = apiSocket;
@@ -61,6 +41,25 @@ function showOnlineStatus(isOnline) {
         span.classList.remove(isOnline ? 'is-offline' : 'is-online');
         span.classList.add(isOnline ? 'is-online' : 'is-offline');
     }
+}
+
+function gotoAuth() {
+    document.getElementById('authPage').style.display = 'block';
+    document.getElementById('authButton').addEventListener('click', authenticate);
+}
+
+function authenticate() {
+    var user = document.getElementById('user').value;
+    var pass = document.getElementById('pass').value;
+    authenticating({user: user, pass: pass})
+    .then(function (result) {
+        window.app.token = result.token;
+        document.getElementById('authPage').style.display = 'none';
+        gotoMenu();
+    })
+    .catch(function (err) {
+        window.alert('Failed to login: ' + err.message);
+    });
 }
 
 function gotoMenu() {
@@ -130,6 +129,7 @@ function openEntry() {
         if(window.app.apiSocket) {
             window.app.apiSocket.send(JSON.stringify({
                 verb: 'SUBSCRIBE',
+                auth: getAuthorizationHeader(),
                 path: path
             }));
         }

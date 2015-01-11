@@ -55,7 +55,7 @@ function requesting(options) {
             xhr.setRequestHeader('Accept-Version', options.versionRange);
         }
         if(window.app.token) {
-            xhr.setRequestHeader('Authorization', 'Bearer ' + window.app.token);
+            xhr.setRequestHeader('Authorization', getAuthorizationHeader());
         }
         if(options.method === 'PATCH' || options.method === 'POST') {
             xhr.setRequestHeader('Content-type', 'application/json');
@@ -85,4 +85,8 @@ function requesting(options) {
         };
         xhr.send(options.body);
     });
+}
+
+function getAuthorizationHeader() {
+    return 'Bearer ' + window.app.token;
 }

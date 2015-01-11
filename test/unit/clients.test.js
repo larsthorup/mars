@@ -1,5 +1,7 @@
 var Clients = require('../../src/clients').Clients;
 var ws = require('ws');
+var token = require('../../src/token');
+var auth = require('../../src/auth');
 
 describe('clients', function () {
     var clients;
@@ -14,6 +16,7 @@ describe('clients', function () {
             on: sandbox.spy()
         };
         sandbox.stub(ws, 'Server').returns(webSocketServer);
+        sandbox.stub(token, 'authenticate').returns('aUser');
         clients = new Clients(server);
         connectionHandler = webSocketServer.on.getCall(0).args[1];
     });
@@ -45,11 +48,30 @@ describe('clients', function () {
             connection.on.should.have.been.calledWith('message', messageHandler);
         });
 
-        describe('when receiving a subscribe message', function () {
+        describe('when receiving an unauthenticated subscribe message', function () {
 
             beforeEach(function () {
-                messageHandler.call(connection, '{"verb": "SUBSCRIBE", "path": "pathA"}');
-                messageHandler.call(connection, '{"verb": "SUBSCRIBE", "path": "pathB"}');
+                sandbox.stub(auth, 'user').returns(false);
+                messageHandler.call(connection, '{"verb": "SUBSCRIBE", "auth": "aBearer", "path": "pathA"}');
+            });
+
+            it('should perform authorization', function () {
+                token.authenticate.should.have.been.calledWith('aBearer');
+                auth.user.should.have.been.calledWith({userName: 'aUser'});
+            });
+
+            it('not sends patches when notified', function () {
+                clients.notifyPatch({path: 'pathA'});
+                connection.send.callCount.should.equal(0);
+            });
+        });
+
+        describe('when receiving an authenticated subscribe message', function () {
+
+            beforeEach(function () {
+                sandbox.stub(auth, 'user').returns(true);
+                messageHandler.call(connection, '{"verb": "SUBSCRIBE", "auth": "aBearer", "path": "pathA"}');
+                messageHandler.call(connection, '{"verb": "SUBSCRIBE", "auth": "aBearer", "path": "pathB"}');
             });
 
             describe('notifyPatch', function () {
