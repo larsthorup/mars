@@ -8,6 +8,11 @@ div.page {
 
 #online-status {
     float: right;
+    display: none;
+}
+
+#online-status.visible {
+    display: block;
 }
 
 .online {
