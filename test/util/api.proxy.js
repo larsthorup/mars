@@ -8,6 +8,7 @@ var request = require('request-promise');
 var _ = require('lodash');
 var booter = require('../../src/booter');
 var repo = require('../../src/repo');
+var Channel = require('../../src/channel');
 
 var appConfig = require('../../src/config/app.conf.js');
 var options = _.merge({}, appConfig);
@@ -21,42 +22,21 @@ options.app.silent = true;
 var booting;
 var traffic;
 var ws;
-var messageQueue = [];
-var messageResolvers = [];
+var messageChannel;
 
 function starting() {
     traffic = [];
+    messageChannel = new Channel();
     booting = booter.booting(options);
     return booting.then(function () {
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
         ws = new WebSocket('wss://localhost:1719');
         ws.on('message', function (data) {
-            addMessage(data);
+            messageChannel.put(data);
         });
         return new Promise(function (resolve) {
             ws.on('open', resolve);
         });
-    });
-}
-
-function addMessage(data) {
-    if(messageResolvers.length > 0) {
-        var resolve = messageResolvers.splice(0, 1)[0];
-        resolve(data);
-    } else {
-        messageQueue.push(data);
-    }
-}
-
-// Note: poor mans async yield
-function nextMessage() {
-    return new Promise(function (resolve) {
-        if(messageQueue.length > 0) {
-            var message = messageQueue.splice(0, 1)[0];
-            resolve(message);
-        } else {
-            messageResolvers.push(resolve);
-        }
     });
 }
 
@@ -66,6 +46,10 @@ function stopping() {
         app.server.close();
         return repo.disconnecting(app.repo);
     });
+}
+
+function nextMessage() {
+    return messageChannel.take();
 }
 
 function requesting(path, apiVersionRange, method, body, dataVersion, bearerToken) {
