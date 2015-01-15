@@ -1,8 +1,7 @@
-/* globals -WebSocket, -Promise, process */
+/* globals -Promise, process */
 var api = require('../util/api.proxy');
 // api.trace = true;
 
-var WebSocket = require('ws');
 var Promise = require('bluebird');
 
 
@@ -78,31 +77,30 @@ describe('scenario in process', function () {
     });
 
     describe('real time notification', function () {
-        var ws;
+        var token;
         var messageData;
 
-        before(function (done) {
-            process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-            // ToDo: move to api.proxy
-            ws = new WebSocket('wss://localhost:1719');
+        before(function () {
+            // ToDo: come up with a nicer way to test streams
             messageData = new Promise(function (resolve) {
-                ws.on('message', function (data) {
+                api.setMessageCallback(function (data) {
                     resolve(data);
                 });
             });
-            ws.on('open', function () {
-                done();
+            return api.posting('/auth/authenticate/Lars', '0.1.0', {pass: 'lars123'}).then(function (result) {
+                token = result.token;
             });
         });
 
         after(function () {
-            ws.close();
+            api.setMessageCallback(null);
         });
 
         describe('when subscribing', function () {
 
             before(function () {
-                ws.send('{"verb":"SUBSCRIBE","auth":"Bearer {\\"user\\":\\"Lars\\",\\"hashed\\":true}","path":"/entry/1"}');
+                api.subscribe('/entry/1', token);
+                // ToDo: how to wait for socket response? wait for SUBSCRIBE ack?
                 return Promise.delay(1000); // Note: give the server time to process subscription
             });
 

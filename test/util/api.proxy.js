@@ -1,8 +1,8 @@
-/* global process */
+/* global -Promise, -WebSocket, process */
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
-/* global -Promise */
+var WebSocket = require('ws');
 var Promise = require('bluebird');
 var request = require('request-promise');
 var _ = require('lodash');
@@ -20,15 +20,29 @@ options.app.silent = true;
 
 var booting;
 var traffic;
+var ws;
+var messageCallback;
 
 function starting() {
     traffic = [];
     booting = booter.booting(options);
-    return booting;
+    return booting.then(function () {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+        ws = new WebSocket('wss://localhost:1719');
+        return new Promise(function (resolve) {
+            ws.on('message', function (data) {
+                if(messageCallback) {
+                    messageCallback(data);
+                }
+            });
+            ws.on('open', resolve);
+        });
+    });
 }
 
 function stopping() {
     return booting.then(function (app) {
+        ws.close();
         app.server.close();
         return repo.disconnecting(app.repo);
     });
@@ -92,6 +106,19 @@ function patching(path, apiVersionRange, body, dataVersion, bearerToken) {
     return requesting(path, apiVersionRange, 'PATCH', body, dataVersion, bearerToken);
 }
 
+function setMessageCallback(callback) {
+    messageCallback = callback;
+}
+
+function subscribe(path, token) {
+    var message = {
+        verb: 'SUBSCRIBE',
+        auth: 'Bearer ' + token,
+        path: path
+    };
+    ws.send(JSON.stringify(message));
+}
+
 function saveTraffic(jsonFilePath) {
     var indent = 4;
     mkdirp.sync(path.dirname(jsonFilePath));
@@ -105,5 +132,7 @@ var proxy = module.exports = {
     getting: getting,
     posting: posting,
     patching: patching,
+    setMessageCallback: setMessageCallback,
+    subscribe: subscribe,
     saveTraffic: saveTraffic
 };
