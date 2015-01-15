@@ -78,30 +78,18 @@ describe('scenario in process', function () {
 
     describe('real time notification', function () {
         var token;
-        var messageData;
 
         before(function () {
-            // ToDo: come up with a nicer way to test streams
-            messageData = new Promise(function (resolve) {
-                api.setMessageCallback(function (data) {
-                    resolve(data);
-                });
-            });
             return api.posting('/auth/authenticate/Lars', '0.1.0', {pass: 'lars123'}).then(function (result) {
                 token = result.token;
             });
-        });
-
-        after(function () {
-            api.setMessageCallback(null);
         });
 
         describe('when subscribing', function () {
 
             before(function () {
                 api.subscribe('/entry/1', token);
-                // ToDo: how to wait for socket response? wait for SUBSCRIBE ack?
-                return Promise.delay(1000); // Note: give the server time to process subscription
+                return Promise.delay(1000); // ToDo: wait for SUBSCRIBE ack
             });
 
             describe('when posting a patch', function () {
@@ -115,7 +103,7 @@ describe('scenario in process', function () {
                 });
 
                 it('should notify', function () {
-                    return messageData.should.eventually.become('{"path":"/entry/1","fromVersion":"1","patch":{"title":"newTitle","version":2},"toVersion":"2"}');
+                    return api.nextMessage().should.eventually.become('{"path":"/entry/1","fromVersion":"1","patch":{"title":"newTitle","version":2},"toVersion":"2"}');
                 });
 
             });

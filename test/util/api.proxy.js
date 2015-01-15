@@ -21,7 +21,8 @@ options.app.silent = true;
 var booting;
 var traffic;
 var ws;
-var messageCallback;
+var messageQueue = [];
+var messageResolvers = [];
 
 function starting() {
     traffic = [];
@@ -29,14 +30,33 @@ function starting() {
     return booting.then(function () {
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
         ws = new WebSocket('wss://localhost:1719');
+        ws.on('message', function (data) {
+            addMessage(data);
+        });
         return new Promise(function (resolve) {
-            ws.on('message', function (data) {
-                if(messageCallback) {
-                    messageCallback(data);
-                }
-            });
             ws.on('open', resolve);
         });
+    });
+}
+
+function addMessage(data) {
+    if(messageResolvers.length > 0) {
+        var resolve = messageResolvers.splice(0, 1)[0];
+        resolve(data);
+    } else {
+        messageQueue.push(data);
+    }
+}
+
+// Note: poor mans async yield
+function nextMessage() {
+    return new Promise(function (resolve) {
+        if(messageQueue.length > 0) {
+            var message = messageQueue.splice(0, 1)[0];
+            resolve(message);
+        } else {
+            messageResolvers.push(resolve);
+        }
     });
 }
 
@@ -106,10 +126,6 @@ function patching(path, apiVersionRange, body, dataVersion, bearerToken) {
     return requesting(path, apiVersionRange, 'PATCH', body, dataVersion, bearerToken);
 }
 
-function setMessageCallback(callback) {
-    messageCallback = callback;
-}
-
 function subscribe(path, token) {
     var message = {
         verb: 'SUBSCRIBE',
@@ -132,7 +148,7 @@ var proxy = module.exports = {
     getting: getting,
     posting: posting,
     patching: patching,
-    setMessageCallback: setMessageCallback,
+    nextMessage: nextMessage,
     subscribe: subscribe,
     saveTraffic: saveTraffic
 };
