@@ -103,7 +103,7 @@ describe('scenario in process', function () {
                 });
 
                 it('should notify', function () {
-                    return api.nextMessage().should.eventually.become('{"path":"/entry/1","fromVersion":"1","patch":{"title":"newTitle","version":2},"toVersion":"2"}');
+                    return api.nextMessage().should.eventually.become('{"path":"/entry/1","fromVersion":"1","patch":{"title":"newTitle","version":2},"toVersion":"2","verb":"EVENT","type":"PATCH"}');
                 });
 
             });

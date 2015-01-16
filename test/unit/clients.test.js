@@ -2,6 +2,7 @@ var Clients = require('../../src/clients').Clients;
 var ws = require('ws');
 var token = require('../../src/token');
 var auth = require('../../src/auth');
+var match = require('./match');
 
 describe('clients', function () {
     var clients;
@@ -83,7 +84,16 @@ describe('clients', function () {
                 });
 
                 it('sends the patch to the subscribed client', function () {
-                    connection.send.should.have.been.calledWith('{"path":"pathA"}');
+                    connection.send.should.have.been.calledWith(match.json({
+                        verb: 'EVENT',
+                        type: 'PATCH',
+                        path:'pathA'
+                    }));
+                    //JSON.parse(connection.send.getCall(0).args[0]).should.deep.equal({
+                    //    verb: 'EVENT',
+                    //    type: 'PATCH',
+                    //    path:'pathA'
+                    //});
                 });
 
             });

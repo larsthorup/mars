@@ -57,6 +57,8 @@ function Clients(server) {
         var clients = subscriptions.getClients(options.path);
         clients.forEach(function(clientId) {
             var connection = connections[clientId];
+            options.verb = 'EVENT';
+            options.type = 'PATCH';
             connection.send(JSON.stringify(options));
         });
     };
