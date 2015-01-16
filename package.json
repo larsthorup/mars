@@ -48,7 +48,7 @@
     },
     "scripts": {
         "-- fast feedback ": "--",
-        "lint": "node node_modules/gulp/bin/gulp lint",
+        "lint": "gulp lint",
         "unittest": "node node_modules/gulp/bin/gulp test",
         "cover": "node node_modules/gulp/bin/gulp cover",
         "demotest": "node node_modules/gulp/bin/gulp demotest",
