@@ -1,5 +1,8 @@
+/* global process */
 var gulp = require('gulp');
 // var debug = require('gulp-debug');
+
+var nodeExe = '"' + process.execPath + '"';
 
 var paths = {
     src: 'src/**/*.js',
@@ -65,8 +68,8 @@ gulp.task('end2end', function () {
 
 // run
 var shell = require('gulp-shell');
-gulp.task('run', shell.task(['node src/cli.js']));
-gulp.task('run-demo', shell.task(['node src/cli.js --db-recreate']));
+gulp.task('run', shell.task([nodeExe + ' src/cli.js']));
+gulp.task('run-demo', shell.task([nodeExe + ' src/cli.js --db-recreate']));
 
 // demo
 var webserver = require('gulp-webserver');
