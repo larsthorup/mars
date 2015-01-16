@@ -32,7 +32,7 @@ function starting() {
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
         ws = new WebSocket('wss://localhost:1719');
         ws.on('message', function (data) {
-            messageChannel.put(data);
+            messageChannel.put(JSON.parse(data));
         });
         return new Promise(function (resolve) {
             ws.on('open', resolve);
