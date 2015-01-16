@@ -78,7 +78,10 @@ gulp.task('serve-demo', function () {
     .src('demo/src')
     .pipe(webserver({
         port: 1718,
-        https: true,
+        https: {
+            key: 'src/config/certs/28125098_localhost.key',
+            cert: 'src/config/certs/28125098_localhost.cert'
+        },
         fallback: 'index.html',
         open: true
     }));
