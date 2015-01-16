@@ -1,7 +1,20 @@
 var user = require('../../../src/model/user');
 var hasher = require('../../../src/hasher');
+var repo = require('../../../src/repo');
+var schema = require('../schema');
 
 describe('model/user', function () {
+
+    beforeEach(function () {
+        var testContext = this;
+        return repo.connecting(schema.options).then(function (repo) {
+            testContext.repo = repo;
+        });
+    });
+
+    afterEach(function () {
+        return repo.disconnecting(this.repo);
+    });
 
     it('should count rows', function () {
         var userCount = user.counting(this.repo);

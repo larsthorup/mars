@@ -1,7 +1,19 @@
 var entry = require('../../../src/model/entry');
-
+var repo = require('../../../src/repo');
+var schema = require('../schema');
 
 describe('model/entry', function () {
+
+    beforeEach(function () {
+        var testContext = this;
+        return repo.connecting(schema.options).then(function (repo) {
+            testContext.repo = repo;
+        });
+    });
+
+    afterEach(function () {
+        return repo.disconnecting(this.repo);
+    });
 
     describe('findingLatest', function () {
         var finding;

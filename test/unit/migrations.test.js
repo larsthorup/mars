@@ -4,8 +4,20 @@ var versions = {
     }
 };
 var repo = require('../../src/repo');
+var schema = require('./schema');
 
 describe('migrations', function () {
+
+    beforeEach(function () {
+        var testContext = this;
+        return repo.connecting(schema.options).then(function (repo) {
+            testContext.repo = repo;
+        });
+    });
+
+    afterEach(function () {
+        return repo.disconnecting(this.repo);
+    });
 
     it('starts out with latest version', function () {
         return this.repo.knex.migrate.currentVersion().should.become('20140916095237');
