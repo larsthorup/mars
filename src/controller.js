@@ -13,14 +13,15 @@ module.exports = function Controller(options) {
         throw new Error('No match for version ' + versionRange + ' of method ' + path);
     };
 
-    this.map = function (server) {
+    this.map = function (server, controllerName) {
         Object.keys(options).forEach(function (path) {
             var versions = options[path];
+            var fullPath = path[0] === '/' ? path : '/' + controllerName + '/' + path;
             Object.keys(versions).forEach(function (version) {
                 var verbs = versions[version];
                 Object.keys(verbs).forEach(function (verb) {
                     var pathAndVersion = {
-                        path: path,
+                        path: fullPath,
                         version: version
                     };
                     var handler = verbs[verb];

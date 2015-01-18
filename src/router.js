@@ -6,7 +6,7 @@ function map(server) {
         if(controllers.hasOwnProperty(controllerName)) {
             var controller = controllers[controllerName];
             // ToDo: inject controller name and add to path
-            controller.map(server);
+            controller.map(server, controllerName);
         }
     }
 }

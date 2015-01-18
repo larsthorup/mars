@@ -21,7 +21,7 @@ describe('controller/entry', function () {
         var latest;
 
         beforeEach(function () {
-            latest = entryController.getMethod('/entry/latest', '*', 'get');
+            latest = entryController.getMethod('latest', '*', 'get');
             sandbox.stub(repo.entry, 'findingLatest', function () { return Promise.resolve('someEntries'); });
         });
 
@@ -41,7 +41,7 @@ describe('controller/entry', function () {
         var get;
 
         beforeEach(function () {
-            get = entryController.getMethod('/entry/:id', '*', 'get');
+            get = entryController.getMethod(':id', '*', 'get');
             sandbox.stub(repo.entry, 'findingById', function () { return Promise.resolve('someEntry'); });
         });
 
@@ -61,7 +61,7 @@ describe('controller/entry', function () {
         var patch;
 
         beforeEach(function () {
-            patch = entryController.getMethod('/entry/:id', '*', 'patch');
+            patch = entryController.getMethod(':id', '*', 'patch');
             sandbox.stub(repo.entry, 'patching', function () { return Promise.resolve({version: 3}); });
             app.clients = {
                 notifyPatch: sandbox.spy()

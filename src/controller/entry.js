@@ -7,7 +7,7 @@ var Controller = require('../controller');
 var repo = require('../repo');
 
 module.exports = new Controller({
-    '/entry/latest': {
+    'latest': {
         '0.1.0': {
             get: {
                 authorize: auth.user,
@@ -22,7 +22,7 @@ module.exports = new Controller({
             }
         }
     },
-    '/entry/:id': {
+    ':id': {
         '0.1.0': {
             get: {
                 authorize: auth.user,

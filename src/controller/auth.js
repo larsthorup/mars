@@ -5,7 +5,7 @@ var token = require('../token');
 var auth = require('../auth');
 
 module.exports = new Controller({
-    '/auth/authenticate/:user': {
+    'authenticate/:user': {
         '0.1.0': {
             post: {
                 authorize: auth.anyone,
