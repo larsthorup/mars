@@ -25,7 +25,7 @@ describe('Channel', function () {
             });
 
             it('should resolve', function () {
-                return gettingFirst.should.eventually.become('first');
+                return gettingFirst.should.become('first');
             });
 
             describe('when more puts', function () {

@@ -51,6 +51,7 @@
         "lint": "gulp lint",
         "unittest": "gulp test",
         "cover": "gulp cover",
+        "cover-report": "gulp cover-report",
         "end2end": "gulp end2end",
         "demotest": "gulp demotest",
         "test": "gulp lint cover && gulp end2end && gulp demotest",

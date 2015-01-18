@@ -103,7 +103,7 @@ describe('scenario in process', function () {
                 });
 
                 it('should notify', function () {
-                    return api.nextMessage().should.eventually.become({
+                    return api.nextMessage().should.become({
                         verb: 'EVENT',
                         type: 'PATCH',
                         path: '/entry/1',

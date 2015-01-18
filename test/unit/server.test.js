@@ -106,7 +106,7 @@ describe('server', function () {
             var listenCallback = restifyServer.listen.getCall(0).args[1];
             listenCallback();
             console.log.should.have.been.calledWith('%s listening at %s', 'serverName', 'serverUrl');
-            return starting.should.eventually.become(restifyServer);
+            return starting.should.become(restifyServer);
         });
 
         it('tells when it shuts down', function () {
