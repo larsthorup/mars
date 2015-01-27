@@ -11,15 +11,15 @@
         "bunyan": "^1.0.1",
         "forever": "^0.13.0",
         "knex": "^0.7.3",
-        "lodash": "^2.4.1",
-        "meow": "^2.1.0",
+        "lodash": "^3.0.0",
+        "meow": "^3.0.0",
         "mkdirp": "^0.5.0",
         "password-hash": "^1.2.1",
         "require-all": "^1.0.0",
         "restify": "^2.8.2",
         "semver": "^4.0.0",
         "sqlite3": "^3.0.0",
-        "ws": "^0.6.3"
+        "ws": "^0.7.0"
     },
     "devDependencies": {
         "chai": "^1.9.0",
@@ -27,7 +27,7 @@
         "coveralls": "^2.11.1",
         "gulp": "^3.8.7",
         "gulp-changed": "^1.0.0",
-        "gulp-debug": "^1.0.1",
+        "gulp-debug": "^2.0.0",
         "gulp-istanbul": "^0.5.0",
         "gulp-jshint": "^1.8.4",
         "gulp-mocha": "^2.0.0",
