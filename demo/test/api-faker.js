@@ -1,3 +1,4 @@
+/* globals Promise */
 (function (window) {
 
     function add(api, exchange) {
