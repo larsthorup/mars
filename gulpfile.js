@@ -37,15 +37,6 @@ gulp.task('serve-demo', function () {
     }));
 });
 
-// demo test
-var mochaPhantomJS = require('gulp-mocha-phantomjs');
-gulp.task('demotest', function () {
-    return gulp
-    .src('demo/test/demo.test.html')
-    .pipe(mochaPhantomJS({reporter: 'dot'}));
-});
-
-
 // watch
 gulp.task('watch', function () {
     gulp.watch(paths.code, ['cover']);
