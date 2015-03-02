@@ -18,36 +18,6 @@ paths.code = [paths.src, paths.test.all, paths.tool, paths.demo];
 
 // test
 var mocha = require('gulp-mocha');
-gulp.task('test', function () {
-    return gulp
-    .src(paths.test.unit)
-    .pipe(mocha({reporter: 'spec'}));
-});
-
-// cover
-var istanbul = require('gulp-istanbul');
-gulp.task('cover', function (done) {
-    gulp
-    .src(paths.src)
-    .pipe(istanbul())
-    .pipe(istanbul.hookRequire())
-    .on('finish', function () {
-        gulp
-        .src(paths.test.unit)
-        .pipe(mocha({reporter: 'dot'}))
-        .pipe(istanbul.writeReports({
-            dir: './dist/coverage',
-            reporters: ['text-summary', 'lcov', 'json']
-        }))
-        .on('end', done);
-    });
-});
-var gulpOpen = require('gulp-open');
-gulp.task('cover-report', function () {
-    return gulp
-    .src('dist/coverage/lcov-report/index.html')
-    .pipe(gulpOpen());
-});
 
 // end2end
 gulp.task('end2end', function () {
