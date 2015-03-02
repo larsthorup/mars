@@ -16,16 +16,6 @@ var paths = {
 };
 paths.code = [paths.src, paths.test.all, paths.tool, paths.demo];
 
-// lint
-var jshint = require('gulp-jshint');
-gulp.task('lint', function () {
-    return gulp
-    .src(paths.code)
-    .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(jshint.reporter('fail'));
-});
-
 // test
 var mocha = require('gulp-mocha');
 gulp.task('test', function () {
@@ -98,7 +88,7 @@ gulp.task('demotest', function () {
 
 // watch
 gulp.task('watch', function () {
-    gulp.watch(paths.code, ['lint', 'cover']);
+    gulp.watch(paths.code, ['cover']);
 });
 
 gulp.task('live', ['watch']);
