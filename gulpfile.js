@@ -16,16 +16,6 @@ var paths = {
 };
 paths.code = [paths.src, paths.test.all, paths.tool, paths.demo];
 
-// test
-var mocha = require('gulp-mocha');
-
-// end2end
-gulp.task('end2end', function () {
-    return gulp
-    .src(paths.test.end2end)
-    .pipe(mocha({reporter: 'spec'}));
-});
-
 // run
 var shell = require('gulp-shell');
 gulp.task('run', shell.task([nodeExe + ' src/cli.js']));
