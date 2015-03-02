@@ -1,0 +1,6 @@
+reporting:
+  reports:
+    - lcov
+    - json
+    - text-summary
+  dir: ./dist/coverage
