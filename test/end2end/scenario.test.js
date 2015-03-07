@@ -89,7 +89,10 @@ describe('scenario in process', function () {
 
             before(function () {
                 api.subscribe('/entry/1', token);
-                return Promise.delay(1000); // ToDo: wait for SUBSCRIBE ack
+                return api.nextMessage().should.become({
+                    verb: 'SUBSCRIBED',
+                    path: '/entry/1'
+                });
             });
 
             describe('when posting a patch', function () {

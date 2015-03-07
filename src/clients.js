@@ -38,12 +38,15 @@ function Clients(server) {
     }
 
     function onSubscribe(message) {
-        // console.log('SUBSCRIBE', message.path);
         subscriptions.subscribe(this.clientId, message.path);
+        var options = {
+            verb: 'SUBSCRIBED',
+            path: message.path
+        };
+        notify(this.clientId, options);
     }
 
     function onUnsubscribe(message) {
-        // console.log('UNSUBSCRIBE', message.path);
         subscriptions.unsubscribe(this.clientId, message.path);
     }
 
@@ -53,13 +56,18 @@ function Clients(server) {
         delete connections[this.clientId];
     }
 
+    function notify(clientId, options) {
+        var connection = connections[clientId];
+        connection.send(JSON.stringify(options));
+    }
+
     this.notifyPatch = function notifyPatch(options) {
+        var self = this;
         var clients = subscriptions.getClients(options.path);
+        options.verb = 'EVENT';
+        options.type = 'PATCH';
         clients.forEach(function(clientId) {
-            var connection = connections[clientId];
-            options.verb = 'EVENT';
-            options.type = 'PATCH';
-            connection.send(JSON.stringify(options));
+            notify(clientId, options);
         });
     };
 }

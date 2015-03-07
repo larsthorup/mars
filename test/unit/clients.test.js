@@ -75,6 +75,17 @@ describe('clients', function () {
                 messageHandler.call(connection, '{"verb": "SUBSCRIBE", "auth": "aBearer", "path": "pathB"}');
             });
 
+            it('sends confirmation to the subscribed client', function () {
+                connection.send.should.have.been.calledWith(match.json({
+                    verb: 'SUBSCRIBED',
+                    path:'pathA'
+                }));
+                connection.send.should.have.been.calledWith(match.json({
+                    verb: 'SUBSCRIBED',
+                    path:'pathB'
+                }));
+            });
+
             describe('notifyPatch', function () {
 
                 beforeEach(function () {
@@ -106,7 +117,7 @@ describe('clients', function () {
 
                 it('no longer sends patches when notified', function () {
                     clients.notifyPatch({path: 'pathA'});
-                    connection.send.callCount.should.equal(0);
+                    connection.send.callCount.should.equal(2 + 0); // Note: none in addition to the two SUBSCRIBED events
                 });
 
             });
@@ -119,7 +130,7 @@ describe('clients', function () {
 
                 it('no longer sends patches when notified', function () {
                     clients.notifyPatch({path: 'pathA'});
-                    connection.send.callCount.should.equal(0);
+                    connection.send.callCount.should.equal(2 + 0); // Note: none in addition to the two SUBSCRIBED events
                 });
 
             });
