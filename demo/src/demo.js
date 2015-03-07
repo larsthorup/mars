@@ -19,7 +19,7 @@ function connectSocket() {
 
         apiSocket.addEventListener('message', function (event) {
             var message = JSON.parse(event.data);
-            // console.dir(message);
+            socketLog('RECV', event.data);
             switch(message.verb) {
                 case 'SUBSCRIBED':
                     onSubscribed(message);
@@ -121,15 +121,26 @@ function renderEntryList(entries) {
         entryListContainer.innerHTML += instantiateHtml(entryListItemTemplate, entry);
     });
     var entryListItems = entryListContainer.getElementsByClassName('entryListItem');
-    // ToDo: subscribe to entry patch events from server
+
     // ToDo: use for(entryListItem of entryListItems) when supported by Chrome (v38?)
     for(var i = 0; i < entryListItems.length; ++i) {
         var entryListItem = entryListItems[i];
         entryListItem.addEventListener('click', openEntry);
+        subscribe('/entry/' + entryListItem.dataset.id, onEntryListItemPatched, entryListItem);
     }
-    // ToDo ignore entry patch events if version is already satisfied
     // Note: open first entry for convenience
     openEntry.call(entryListItems[0]);
+}
+
+function onEntryListItemPatched(message) {
+    if (message.fromVersion == this.dataset.version) {
+        var titleSpan = this.getElementsByClassName('title')[0];
+        titleSpan.textContent = message.patch.title;
+        this.dataset.version = message.toVersion;
+    } else {
+        // Note: ignore entry patch events if version is already satisfied
+        console.log('Ignoring patch from version ' + message.fromVersion + ' as we have version ' + this.dataset.version);
+    }
 }
 
 function openEntry() {
@@ -158,11 +169,11 @@ function resubscribe() {
 function subscribe(path, patcher, element) {
     if (!window.app.subscriptions[path]) {
         if (window.app.apiSocket) {
-            window.app.apiSocket.send(JSON.stringify({
+            send({
                 verb: 'SUBSCRIBE',
                 auth: getAuthorizationHeader(),
                 path: path
-            }));
+            });
         }
         window.app.subscriptions[path] = [];
     }
@@ -189,15 +200,16 @@ function renderEntry(path, entry) {
     entryElement = entryContainer.getElementsByClassName('entry')[0];
     var titleInput = entryContainer.getElementsByClassName('title')[0];
     titleInput.addEventListener('input', onTitleChanged);
-    subscribe(path, onTitlePatched, entryElement);
+    subscribe(path, onEntryPatched, entryElement);
 }
 
-function onTitlePatched(message) {
+function onEntryPatched(message) {
     if (message.fromVersion == this.dataset.version) {
         var titleInput = this.getElementsByClassName('title')[0];
         titleInput.value = message.patch.title;
         this.dataset.version = message.toVersion;
     } else {
+        // Note: ignore entry patch events if version is already satisfied
         // console.log('Ignoring patch from version ' + message.fromVersion + ' as we have version ' + this.dataset.version);
     }
 }
@@ -222,8 +234,18 @@ function savingTitle(titleInput) {
     // ToDo: reload on error
 }
 
+function send(data) {
+    var message = JSON.stringify(data);
+    socketLog('SEND', message);
+    window.app.apiSocket.send(message);
+}
+
 function handleError(message) {
     window.alert(message);
+}
+
+function socketLog(dir, message) {
+    console.log('WS', dir, message);
 }
 
 function instantiateHtml(template, options) {

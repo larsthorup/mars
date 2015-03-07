@@ -27,12 +27,14 @@ describe('model/entry', function () {
                 {
                     id: 1,
                     title: 'More innovation',
-                    authorName: 'Rob'
+                    authorName: 'Rob',
+                    version: 1
                 },
                 {
                     id: 2,
                     title: 'Less bureaucracy',
-                    authorName: 'Lars'
+                    authorName: 'Lars',
+                    version: 1
                 }
             ]);
         });

@@ -7,7 +7,7 @@ function findingLatest(repo) {
     // ToDo: configurable limit
     return repo.knex.from('entry')
     .innerJoin('user', 'entry.authorId', 'user.id')
-    .select(['entry.id as id', 'title', 'user.name as authorName'])
+    .select(['entry.id as id', 'entry.version', 'title', 'user.name as authorName'])
     .orderBy('user.id', 'desc')
     .limit(10);
 }
