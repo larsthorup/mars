@@ -18,15 +18,27 @@ function connectSocket() {
         showOnlineStatus(true);
 
         apiSocket.addEventListener('message', function (event) {
-            // console.log('Received WebSocket message');
             var message = JSON.parse(event.data);
             // console.dir(message);
-            patchEntry(message);
-            // ToDo: dispatch to listeners[message.path]
+            switch(message.verb) {
+                case 'SUBSCRIBED':
+                    onSubscribed(message);
+                    break;
+                case 'EVENT':
+                    switch(message.type) {
+                        case 'PATCH':
+                            onPatched(message);
+                            break;
+                        default:
+                            handleError('Unknown message type: ' + message.type);
+                    }
+                    break;
+                default:
+                    handleError('Unknown message verb: ' + message.verb);
+            }
         });
 
         resubscribe();
-
     });
 
     apiSocket.addEventListener('close', function () {
@@ -62,7 +74,7 @@ function authenticate() {
         gotoMenu();
     })
     .catch(function (err) {
-        window.alert('Failed to login: ' + err.message);
+        handleError('Failed to login: ' + err.message);
     });
 }
 
@@ -82,10 +94,10 @@ function hello() {
     var name = document.getElementById('name').value;
     greeting({name: name})
     .then(function (result) {
-        window.alert('Greeting: ' + result.message);
+        handleError('Greeting: ' + result.message);
     })
     .catch(function (err) {
-        window.alert('Failed to greet: ' + err.message);
+        handleError('Failed to greet: ' + err.message);
     });
 }
 
@@ -97,7 +109,7 @@ function gotoEntryList() {
         renderEntryList(result.entries);
     })
     .catch(function (err) {
-        window.alert('Failed to load entries: ' + err.message);
+        handleError('Failed to load entries: ' + err.message);
     });
 }
 
@@ -109,12 +121,12 @@ function renderEntryList(entries) {
         entryListContainer.innerHTML += instantiateHtml(entryListItemTemplate, entry);
     });
     var entryListItems = entryListContainer.getElementsByClassName('entryListItem');
+    // ToDo: subscribe to entry patch events from server
     // ToDo: use for(entryListItem of entryListItems) when supported by Chrome (v38?)
     for(var i = 0; i < entryListItems.length; ++i) {
         var entryListItem = entryListItems[i];
         entryListItem.addEventListener('click', openEntry);
     }
-    // ToDo: subscribe to entry patch events from server
     // ToDo ignore entry patch events if version is already satisfied
     // Note: open first entry for convenience
     openEntry.call(entryListItems[0]);
@@ -128,14 +140,11 @@ function openEntry() {
         path: path
     })
     .then(function (entry) {
-        // ToDo: refactor
         // ToDo: notifyNow: true (to avoid doing a GET)?
-        window.app.subscriptions.push(path);
-        subscribe(path);
-        renderEntry(entry);
+        renderEntry(path, entry);
     })
     .catch(function (err) {
-        window.alert('Failed to load entry: ' + err.message);
+        handleError('Failed to load entry: ' + err.message);
     });
 }
 
@@ -146,32 +155,50 @@ function resubscribe() {
     }
 }
 
-function subscribe(path) {
-    if(window.app.apiSocket) {
-        window.app.apiSocket.send(JSON.stringify({
-            verb: 'SUBSCRIBE',
-            auth: getAuthorizationHeader(),
-            path: path
-        }));
+function subscribe(path, patcher, element) {
+    if (!window.app.subscriptions[path]) {
+        if (window.app.apiSocket) {
+            window.app.apiSocket.send(JSON.stringify({
+                verb: 'SUBSCRIBE',
+                auth: getAuthorizationHeader(),
+                path: path
+            }));
+        }
+        window.app.subscriptions[path] = [];
     }
+    window.app.subscriptions[path].push({
+        patcher: patcher,
+        element: element
+    });
 }
 
-function renderEntry(entry) {
+function onSubscribed() {
+    // Nothing to do for now
+}
+
+function onPatched(message) {
+    window.app.subscriptions[message.path].forEach(function (subscription) {
+        subscription.patcher.call(subscription.element, message);
+    });
+}
+
+function renderEntry(path, entry) {
     var entryTemplate = document.getElementById('entryTemplate').innerHTML;
     var entryContainer = document.getElementById('entry');
     entryContainer.innerHTML = instantiateHtml(entryTemplate, entry);
+    entryElement = entryContainer.getElementsByClassName('entry')[0];
     var titleInput = entryContainer.getElementsByClassName('title')[0];
     titleInput.addEventListener('input', onTitleChanged);
+    subscribe(path, onTitlePatched, entryElement);
 }
 
-function patchEntry(message) {
-    var entryContainer = document.getElementById('entry');
-    var entryDiv = entryContainer.getElementsByClassName('entry')[0];
-    var currentVersion = entryDiv.dataset.version;
-    if(message.fromVersion === currentVersion) {
-        var titleInput = entryContainer.getElementsByClassName('title')[0];
+function onTitlePatched(message) {
+    if (message.fromVersion == this.dataset.version) {
+        var titleInput = this.getElementsByClassName('title')[0];
         titleInput.value = message.patch.title;
-        entryDiv.dataset.version = message.toVersion;
+        this.dataset.version = message.toVersion;
+    } else {
+        // console.log('Ignoring patch from version ' + message.fromVersion + ' as we have version ' + this.dataset.version);
     }
 }
 
@@ -193,6 +220,10 @@ function savingTitle(titleInput) {
         entryDiv.dataset.version = result.version;
     });
     // ToDo: reload on error
+}
+
+function handleError(message) {
+    window.alert(message);
 }
 
 function instantiateHtml(template, options) {

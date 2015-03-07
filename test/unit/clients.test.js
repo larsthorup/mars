@@ -100,11 +100,6 @@ describe('clients', function () {
                         type: 'PATCH',
                         path:'pathA'
                     }));
-                    //JSON.parse(connection.send.getCall(0).args[0]).should.deep.equal({
-                    //    verb: 'EVENT',
-                    //    type: 'PATCH',
-                    //    path:'pathA'
-                    //});
                 });
 
             });
