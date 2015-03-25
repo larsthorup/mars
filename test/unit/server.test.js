@@ -6,11 +6,15 @@ var server = require('../../src/server');
 var router = require('../../src/router');
 var clients = require('../../src/clients');
 var token = require('../../src/token');
+var sinon = require('sinon');
+var output = require('../../src/output');
 
 describe('server', function () {
+    var sandbox;
     var restifyServer;
 
     beforeEach(function () {
+        sandbox = sinon.sandbox.create();
         restifyServer = {
             name: 'serverName',
             url: 'serverUrl',
@@ -28,8 +32,12 @@ describe('server', function () {
         });
         sandbox.stub(router, 'map');
         sandbox.stub(token, 'requestParser', function () { return 'theAuthenticationHeaderParser'; });
-        sandbox.stub(console, 'log');
+        sandbox.stub(output, 'log');
         sandbox.stub(clients, 'Clients').returns({});
+    });
+
+    afterEach(function () {
+        sandbox.restore();
     });
 
     describe('starting', function () {
@@ -105,14 +113,14 @@ describe('server', function () {
             starting.isFulfilled().should.equal(false); // yet
             var listenCallback = restifyServer.listen.getCall(0).args[1];
             listenCallback();
-            console.log.should.have.been.calledWith('%s listening at %s', 'serverName', 'serverUrl');
+            output.log.should.have.been.calledWith('%s listening at %s', 'serverName', 'serverUrl');
             return starting.should.become(restifyServer);
         });
 
         it('tells when it shuts down', function () {
             restifyServer.on.getCall(2).args[0].should.equal('close');
             restifyServer.on.getCall(2).args[1]();
-            console.log.should.have.been.calledWith('%s closing down', 'serverName');
+            output.log.should.have.been.calledWith('%s closing down', 'serverName');
         });
 
         describe('CORS', function () {

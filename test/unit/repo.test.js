@@ -5,8 +5,19 @@ var fs = require('fs');
 var mkdirp = require('mkdirp');
 var repo = require('../../src/repo');
 var testdata = require('../../src/testdata');
+var output = require('../../src/output');
+var sinon = require('sinon');
 
 describe('repo', function () {
+    var sandbox;
+
+    beforeEach(function () {
+        sandbox = sinon.sandbox.create();
+    });
+
+    afterEach(function () {
+        sandbox.restore();
+    });
 
     describe('connecting', function () {
         var knex;
@@ -22,7 +33,7 @@ describe('repo', function () {
             sandbox.stub(fs, 'unlinkSync');
             sandbox.stub(mkdirp, 'sync');
             sandbox.stub(testdata, 'creating', function () { return Promise.resolve(); });
-            sandbox.stub(console, 'log');
+            sandbox.stub(output, 'log');
             return repo.connecting({
                 silent: false,
                 client: 'sqlite3',
@@ -37,7 +48,7 @@ describe('repo', function () {
 
         it('should remove the database', function () {
             fs.unlinkSync.should.have.been.calledWith('dbDir/dbFileName');
-            console.log.should.have.been.calledWith('database removed');
+            output.log.should.have.been.calledWith('database removed');
         });
 
         it('should create the parent directories', function () {
@@ -46,12 +57,12 @@ describe('repo', function () {
 
         it('should migrate', function () {
             knex.migrate.latest.should.have.been.calledWith();
-            console.log.should.have.been.calledWith('database migrated');
+            output.log.should.have.been.calledWith('database migrated');
         });
 
         it('should create test data', function () {
             testdata.creating.should.have.been.calledWith({knex: knex});
-            console.log.should.have.been.calledWith('testdata created');
+            output.log.should.have.been.calledWith('testdata created');
         });
 
     });

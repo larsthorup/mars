@@ -2,12 +2,19 @@ var greetController = require('../../../src/controller/greet');
 var repo = require('../../stub/repo.stub.js');
 var token = require('../../../src/token');
 var auth = require('../../../src/auth');
+var sinon = require('sinon');
 
 describe('controller/greet', function () {
+    var sandbox;
     var app;
 
     beforeEach(function () {
+        sandbox = sinon.sandbox.create();
         app = {};
+    });
+
+    afterEach(function () {
+        sandbox.restore();
     });
 
     describe('hello, 0.1.0', function () {
@@ -16,6 +23,7 @@ describe('controller/greet', function () {
         beforeEach(function () {
             hello = greetController.getMethod('/hello/:name', '=0.1.0', 'get');
             repo.stub({
+                sandbox: sandbox,
                 user: [
                     {name: 'lars'}
                 ]
@@ -42,6 +50,7 @@ describe('controller/greet', function () {
         beforeEach(function () {
             hello = greetController.getMethod('/hello/:name', '=0.1.5', 'get');
             repo.stub({
+                sandbox: sandbox,
                 user: [
                     {name: 'lars'}
                 ]

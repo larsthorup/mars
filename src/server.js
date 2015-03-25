@@ -6,6 +6,7 @@ var Promise = require('bluebird');
 
 var router = require('./router');
 var token = require('./token');
+var output = require('./output');
 
 function starting(app) {
     var options = app.options.server;
@@ -76,14 +77,14 @@ function starting(app) {
         // start listening
         server.listen(1719, function () {
             if(!app.options.app.silent) {
-                console.log('%s listening at %s', server.name, server.url);
+                output.log('%s listening at %s', server.name, server.url);
             }
             resolve(server);
         });
 
         server.on('close', function () {
             if(!app.options.app.silent) {
-                console.log('%s closing down', server.name);
+                output.log('%s closing down', server.name);
             }
         });
     });

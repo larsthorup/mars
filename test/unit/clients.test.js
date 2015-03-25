@@ -3,13 +3,16 @@ var ws = require('ws');
 var token = require('../../src/token');
 var auth = require('../../src/auth');
 var match = require('./match');
+var sinon = require('sinon');
 
 describe('clients', function () {
+    var sandbox;
     var clients;
     var webSocketServer;
     var connectionHandler;
 
     beforeEach(function () {
+        sandbox = sinon.sandbox.create();
         var server = {
             server: 'theServer'
         };
@@ -20,6 +23,10 @@ describe('clients', function () {
         sandbox.stub(token, 'authenticate').returns('aUser');
         clients = new Clients(server);
         connectionHandler = webSocketServer.on.getCall(0).args[1];
+    });
+
+    afterEach(function () {
+        sandbox.restore();
     });
 
     it('registers a connection handler', function () {

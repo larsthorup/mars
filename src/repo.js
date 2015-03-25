@@ -6,6 +6,7 @@ var _ = require('lodash');
 var testdata = require('./testdata');
 var path = require('path');
 var models = require('require-all')(path.resolve(__dirname, 'model/'));
+var output = require('./output');
 
 function connecting(options) {
     if(options.testdata.create) {
@@ -17,12 +18,12 @@ function connecting(options) {
     };
     return migratingLatest(repo).then(function () {
         if(!options.silent) {
-            console.log('database migrated');
+            output.log('database migrated');
         }
         if(options.testdata.create) {
             return testdata.creating(repo).then(function () {
                 if(!options.silent) {
-                    console.log('testdata created');
+                    output.log('testdata created');
                 }
             });
         }
@@ -41,7 +42,7 @@ function remove(options) {
     if(fs.existsSync(dbfile)) {
         fs.unlinkSync(dbfile);
         if(!options.silent) {
-            console.log('database removed');
+            output.log('database removed');
         }
     }
     mkdirp.sync(path.dirname(dbfile));

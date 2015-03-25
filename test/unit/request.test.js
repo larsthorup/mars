@@ -1,8 +1,18 @@
 var request = require('../../src/request');
 /* global -Promise */
 var Promise = require('bluebird');
+var sinon = require('sinon');
 
 describe('request', function () {
+    var sandbox;
+
+    beforeEach(function () {
+        sandbox = sinon.sandbox.create();
+    });
+
+    afterEach(function () {
+        sandbox.restore();
+    });
 
     describe('process', function () {
         var err;

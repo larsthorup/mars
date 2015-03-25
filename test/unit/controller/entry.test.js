@@ -6,16 +6,22 @@ var entryController = require('../../../src/controller/entry');
 var auth = require('../../../src/auth');
 var clients = require('../../../src/clients');
 var repo = require('../../../src/repo');
+var sinon = require('sinon');
 
 describe('controller/entry', function () {
+    var sandbox;
     var app;
 
     beforeEach(function () {
+        sandbox = sinon.sandbox.create();
         app = {
             repo: 'dummyRepo'
         };
     });
 
+    afterEach(function () {
+        sandbox.restore();
+    });
 
     describe('latest', function () {
         var latest;

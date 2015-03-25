@@ -1,6 +1,17 @@
 var token = require('../../src/token');
+var sinon = require('sinon');
 
 describe('token', function () {
+    var sandbox;
+
+    beforeEach(function () {
+        sandbox = sinon.sandbox.create();
+    });
+
+    afterEach(function () {
+        sandbox.restore();
+    });
+
     describe('create', function () {
         var sonnyToken;
 

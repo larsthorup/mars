@@ -5,14 +5,21 @@ var mkdirp = require('mkdirp');
 var booter = require('../../src/booter');
 var repo = require('../../src/repo');
 var server = require('../../src/server');
+var sinon = require('sinon');
 
 describe('booter', function () {
+    var sandbox;
 
     beforeEach(function () {
+        sandbox = sinon.sandbox.create();
         sandbox.stub(repo, 'connecting', Promise.method(function () { return 'dummyRepo'; }));
         sandbox.stub(server, 'starting', Promise.method(function () { return 'dummyServer'; }));
         sandbox.stub(bunyan, 'createLogger').returns('theBunyanLogger');
         sandbox.stub(mkdirp, 'sync');
+    });
+
+    afterEach(function () {
+        sandbox.restore();
     });
 
     describe('booting', function () {

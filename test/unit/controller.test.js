@@ -1,11 +1,14 @@
 var Controller = require('../../src/controller');
 var request = require('../../src/request');
 var semver = require('semver');
+var sinon = require('sinon');
 
 describe('Controller', function () {
+    var sandbox;
     var controller;
 
     beforeEach(function () {
+        sandbox = sinon.sandbox.create();
         controller = new Controller({
             '/some/path': {
                 '2.4.1': {
@@ -14,6 +17,10 @@ describe('Controller', function () {
             }
         });
 
+    });
+
+    afterEach(function () {
+        sandbox.restore();
     });
 
     it('getMethod', function () {

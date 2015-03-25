@@ -3,8 +3,18 @@ var repo = require('../../stub/repo.stub');
 var hasher = require('../../../src/hasher');
 var token = require('../../../src/token');
 var auth = require('../../../src/auth');
+var sinon = require('sinon');
 
 describe('controller/auth', function () {
+    var sandbox;
+
+    beforeEach(function () {
+        sandbox = sinon.sandbox.create();
+    });
+
+    afterEach(function () {
+        sandbox.restore();
+    });
 
     describe('authenticate', function () {
         var authenticate;
@@ -13,6 +23,7 @@ describe('controller/auth', function () {
         beforeEach(function () {
             authenticate = authController.getMethod('authenticate/:user', '0.1.0', 'post');
             repo.stub({
+                sandbox: sandbox,
                 user: [
                     {name: 'lars'}
                 ]

@@ -1,13 +1,20 @@
 var router = require('../../src/router');
 var path = require('path');
 var controllers = require('require-all')(path.resolve(__dirname, '../../src', 'controller'));
+var sinon = require('sinon');
 
 describe('router', function () {
+    var sandbox;
 
     beforeEach(function () {
+        sandbox = sinon.sandbox.create();
         Object.keys(controllers).forEach(function (name) {
             sandbox.stub(controllers[name], 'map');
         });
+    });
+
+    afterEach(function () {
+        sandbox.restore();
     });
 
     describe('map', function () {
