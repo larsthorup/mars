@@ -16,7 +16,7 @@
         "mkdirp": "^0.5.0",
         "password-hash": "^1.2.1",
         "require-all": "^1.0.0",
-        "restify": "^2.8.2",
+        "restify": "^3.0.1",
         "semver": "^4.0.0",
         "sqlite3": "^3.0.0",
         "ws": "^0.7.0"
@@ -25,7 +25,7 @@
         "chai": "^2.1.0",
         "chai-as-promised": "^4.1.1",
         "coveralls": "^2.11.1",
-        "http-server": "^0.7.5",
+        "http-server": "^0.8.0",
         "istanbul": "^0.3.0",
         "jshint": "^2.6.3",
         "jshint-stylish": "^1.0.0",
