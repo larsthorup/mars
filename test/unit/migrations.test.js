@@ -29,7 +29,7 @@ describe('migrations', function () {
             // When:
             return versions[currentVersion].migration.down(repo.knex);
         }).then(function () {
-            // ToDo: how to verify the version after migration?
+            // ToDo: how to verify the version after migration, since we are just running our own migration.down function, not using the Knex Migrator, so it actually doesn't know about it...
             // Then: column deleted
             return repo.knex.schema.hasColumn('entry', 'version').should.become(false);
         }).then(function () {

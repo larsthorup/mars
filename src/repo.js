@@ -12,7 +12,7 @@ function connecting(options) {
     if(options.testdata.create) {
         remove(options);
     }
-    var knex = Knex.initialize(options);
+    var knex = Knex(options);
     var repo = {
         knex: knex
     };
