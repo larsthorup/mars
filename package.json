@@ -23,12 +23,12 @@
     },
     "devDependencies": {
         "chai": "^2.1.0",
-        "chai-as-promised": "^4.1.1",
+        "chai-as-promised": "^5.0.0",
         "coveralls": "^2.11.1",
         "http-server": "^0.8.0",
         "istanbul": "^0.3.0",
         "jshint": "^2.6.3",
-        "jshint-stylish": "^1.0.0",
+        "jshint-stylish": "^2.0.0",
         "mocha": "^2.0.1",
         "mocha-phantomjs": "^3.5.3",
         "opener": "^1.4.0",
@@ -43,7 +43,7 @@
     },
     "scripts": {
         "-- fast feedback ": "--",
-        "lint": "jshint --verbose --reporter=node_modules/jshint-stylish/stylish.js src test demo",
+        "lint": "jshint --verbose --reporter=node_modules/jshint-stylish src test demo",
         "unittest": "mocha -R spec --require test/unit/setup --recursive test/unit",
         "cover": "istanbul cover node_modules/mocha/bin/_mocha -- -R dot --require test/unit/setup --recursive test/unit",
         "cover-report": "opener dist/coverage/lcov-report/index.html",
