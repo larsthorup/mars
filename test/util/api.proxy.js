@@ -91,7 +91,10 @@ function requesting(path, apiVersionRange, method, body, dataVersion, bearerToke
         if(proxy.trace) {
             console.dir(result.error);
         }
-        exchange.response = result;
+        exchange.response = {
+            statusCode: result.statusCode,
+            error: result.error
+        };
         var error = new Error(result.error.message);
         error.code = result.error.code;
         throw error;
