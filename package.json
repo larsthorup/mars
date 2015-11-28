@@ -7,11 +7,11 @@
     "url": "https://github.com/larsthorup/mars.git"
   },
   "dependencies": {
-    "bluebird": "^2.9.34",
+    "bluebird": "^3.0.5",
     "bunyan": "^1.0.1",
     "continuation-local-storage": "^3.1.4",
     "forever": "^0.15.1",
-    "knex": "^0.8.6",
+    "knex": "^0.9.0",
     "lodash": "^3.10.1",
     "meow": "^3.0.0",
     "mkdirp": "^0.5.0",
@@ -19,7 +19,7 @@
     "require-all": "^2.0.0",
     "restify": "^4.0.3",
     "semver": "^5.0.1",
-    "sqlite3": "^3.0.10",
+    "sqlite3": "^3.1.1",
     "ws": "^0.8.0"
   },
   "devDependencies": {
@@ -28,7 +28,7 @@
     "coveralls": "^2.11.3",
     "http-server": "^0.8.0",
     "istanbul": "^0.4.0",
-    "jshint": "^2.6.3",
+    "jshint": "^2.9.1-rc1",
     "jshint-stylish": "^2.0.0",
     "mocha": "^2.0.1",
     "mocha-phantomjs": "^4.0.1",
