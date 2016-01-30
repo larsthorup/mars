@@ -25,6 +25,7 @@
   "devDependencies": {
     "chai": "^3.2.0",
     "chai-as-promised": "^5.0.0",
+    "copyfiles": "^0.2.1",
     "coveralls": "^2.11.3",
     "http-server": "^0.8.0",
     "istanbul": "^0.4.0",
@@ -50,8 +51,8 @@
     "cover-report": "opener dist/coverage/lcov-report/index.html",
     "end2end": "mocha -R spec --require test/end2end/setup --recursive test/end2end",
     "demotest": "mocha-phantomjs -R dot demo/test/demo.test.html",
-    "test": "npm run lint && npm run cover && npm run end2end && npm run demotest",
-    "package": "npm shrinkwrap && rm -rf dist && mkdir dist && cp --recursive --target-directory=dist src demo package.json npm-shrinkwrap.json && rm -rf npm-shrinkwrap.json",
+    "test": "npm run lint && npm run cover && npm run end2end && npm run demotest && npm run package",
+    "package": "npm shrinkwrap && rimraf dist && mkdirp dist && copyfiles src/**/* demo/**/* package.json npm-shrinkwrap.json dist/package && rimraf npm-shrinkwrap.json",
     "dev": "npm install && npm run lint && npm run cover && npm run end2end",
     "-- run locally ": "--",
     "start": "node src/cli.js",
