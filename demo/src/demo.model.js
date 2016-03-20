@@ -2,6 +2,7 @@ function authenticating(options) {
     return requesting({
         method: 'POST',
         path: '/auth/authenticate/' + options.user,
+        versionRange: '0.1.0',
         body: JSON.stringify({
             pass: options.pass
         })

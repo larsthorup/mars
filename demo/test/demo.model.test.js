@@ -11,9 +11,9 @@ describe('model', function () {
                 method: 'GET',
                 uri: 'https://app.com/weather/',
                 version: '^0.9.4',
-                requestBody: JSON.stringify({}),
                 statusCode: 200,
-                headers: {},
+                headers: {
+                },
                 responseBody: JSON.stringify({text: 'dim'})
             });
         });
@@ -70,6 +70,10 @@ describe('model', function () {
         describe('greeting', function () {
             var greet;
 
+            beforeEach(function () {
+               window.app.token = '{"user":"Lars","hashed":true}';
+            });
+
             describe('when successful', function () {
 
                 beforeEach(function () {
@@ -104,6 +108,10 @@ describe('model', function () {
             var entry;
 
             beforeEach(function () {
+                window.app.token = '{"user":"Lars","hashed":true}';
+            });
+
+            beforeEach(function () {
                 entry = window.patchingEntry({
                     id: 1,
                     version: 1,
@@ -114,7 +122,7 @@ describe('model', function () {
             });
 
             it('should resolve with the new version number', function () {
-                entry.should.become({version: 2});
+                return entry.should.become({version: 2});
             });
         });
 

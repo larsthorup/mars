@@ -1,4 +1,5 @@
 /* globals -Promise, process */
+var mkdirp = require('mkdirp');
 var api = require('../util/api.proxy');
 // api.trace = true;
 
@@ -12,6 +13,7 @@ describe('scenario in process', function () {
 
     after(function () {
         return api.stopping().then(function () {
+            mkdirp('dist/test');
             api.saveTraffic('dist/test/api.sample.json');
         });
     });

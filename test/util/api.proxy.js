@@ -4,7 +4,7 @@ var path = require('path');
 var mkdirp = require('mkdirp');
 var WebSocket = require('ws');
 var Promise = require('bluebird');
-var request = require('request-promise');
+var request = require('request-har-capture');
 var _ = require('lodash');
 var booter = require('../../src/booter');
 var repo = require('../../src/repo');
@@ -20,12 +20,10 @@ options.database.testdata.create = true;
 options.app.silent = true;
 
 var booting;
-var traffic;
 var ws;
 var messageChannel;
 
 function starting() {
-    traffic = [];
     messageChannel = new Channel();
     booting = booter.booting(options);
     return booting.then(function () {
@@ -56,10 +54,10 @@ function requesting(path, apiVersionRange, method, body, dataVersion, bearerToke
     var options = {
         uri: 'https://localhost:1719' + path,
         method: method,
-        json: true,
         strictSSL: false,
-        body: body,
+        body: body ? JSON.stringify(body) : null,
         headers: {
+            'content-type': 'application/json'
         }
     };
     if(apiVersionRange) {
@@ -74,30 +72,18 @@ function requesting(path, apiVersionRange, method, body, dataVersion, bearerToke
     if(proxy.trace) {
         console.dir(options);
     }
-    var exchange = {
-        request: options
-    };
-    traffic.push(exchange);
-    return request(options).then(function (data) {
+    return request(options).then(function (response) {
+        var data = JSON.parse(response.body);
         if(proxy.trace) {
             console.dir(data);
         }
-        exchange.response = {
-            statusCode: 200,
-            body: data
-        };
-        return data;
-    }).catch(function (result) {
-        if(proxy.trace) {
-            console.dir(result.error);
+        if (response.statusCode === 200) {
+            return data;
+        } else {
+            var error = new Error(data.message);
+            error.code = data.code;
+            throw error;
         }
-        exchange.response = {
-            statusCode: result.statusCode,
-            error: result.error
-        };
-        var error = new Error(result.error.message);
-        error.code = result.error.code;
-        throw error;
     });
 }
 
@@ -123,9 +109,7 @@ function subscribe(path, token) {
 }
 
 function saveTraffic(jsonFilePath) {
-    var indent = 4;
-    mkdirp.sync(path.dirname(jsonFilePath));
-    fs.writeFileSync(jsonFilePath, JSON.stringify(traffic, null, indent));
+    request.saveHar(jsonFilePath);
 }
 
 var proxy = module.exports = {
