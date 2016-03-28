@@ -41,6 +41,7 @@ describe('repo', function () {
                 connection: {
                     filename: 'dbFileName'
                 },
+                useNullAsDefault: true,
                 migrations: {
                     directory: path.resolve(__dirname, '../../src/migrations')
                 },

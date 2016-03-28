@@ -29,6 +29,7 @@ config.database = {
     connection: {
         filename: 'dist/run/app.sqlite'
     },
+    useNullAsDefault: true,
     migrations: {
         directory: path.resolve(__dirname, '../migrations')
     },

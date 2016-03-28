@@ -5,6 +5,7 @@ var options = {
     connection: {
         filename: ':memory:'
     },
+    useNullAsDefault: true,
     migrations: {
         directory: path.resolve(__dirname, '../../src', 'migrations')
     },
