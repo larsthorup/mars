@@ -4,6 +4,7 @@ var restify = require('restify');
 /* globals -Promise */
 var Promise = require('bluebird');
 
+var corsWrapper = require('./cors');
 var router = require('./router');
 var token = require('./token');
 var output = require('./output');
@@ -23,46 +24,29 @@ function starting(app) {
         });
 
         // Note: Log requests
-        server.on('after', restify.auditLogger({
+        server.on('after', restify.plugins.auditLogger({
+            event: 'after',
             log: server.log
         }));
 
         // Note: Parse body of POST requests
-        server.use(restify.bodyParser());
+        server.use(restify.plugins.bodyParser());
 
         // Note: Parse Authentication header
         server.use(token.requestParser());
 
         // Note: Handle CORS
-        server.use(restify.CORS(options.cors));
-        server.on('MethodNotAllowed', function unknownMethodHandler(req, res) {
-            if (req.method.toLowerCase() === 'options') {
-                var allowHeaders = [
-                    'Accept',
-                    'Accept-Version',
-                    'Content-Type',
-                    'Api-Version',
-                    'Origin',
-                    'X-Requested-With',
-                    'Authorization',
-                    'If-Match'
-                ];
-
-                if (res.methods.indexOf('OPTIONS') === -1) {
-                    res.methods.push('OPTIONS');
-                }
-
-                res.header('Access-Control-Allow-Credentials', true);
-                res.header('Access-Control-Allow-Headers', allowHeaders.join(', '));
-                res.header('Access-Control-Allow-Methods', res.methods.join(', '));
-                res.header('Access-Control-Allow-Origin', req.headers.origin);
-
-                return res.send(200);
-            }
-            else {
-                return res.send(new restify.MethodNotAllowedError(req.method));
-            }
+        var cors = corsWrapper.middleware({
+            allowHeaders: [
+                'Authorization',
+                'If-Match'
+            ],
+            exposeHeaders: [],
+            origins: ['https://localhost:1718'],
+            preflightMaxAge: 5
         });
+        server.pre(cors.preflight);
+        server.use(cors.actual);
 
         // map routes
         server.use(function appExposer (req, res, next) {

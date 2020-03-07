@@ -3,7 +3,7 @@ var _ = require('lodash');
 var booter = require('./booter');
 
 var args = meow({
-    pkg: '../package.json',
+    pkg: require('../package.json'),
     help: [
         'Usage',
         '  node src/cli [options]',

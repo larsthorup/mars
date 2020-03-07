@@ -3,3 +3,4 @@
 node_modules
 app.sqlite
 api.sample.json
+dist

@@ -2,6 +2,7 @@ var Controller = require('../../src/controller');
 var request = require('../../src/request');
 var semver = require('semver');
 var sinon = require('sinon');
+var restify = require('restify');
 
 describe('Controller', function () {
     var sandbox;
@@ -39,12 +40,16 @@ describe('Controller', function () {
                 get: sandbox.spy()
             };
             sandbox.stub(request, 'process').returns('theProcessFunction');
+            sandbox.stub(restify.plugins, 'conditionalHandler').returns('theConditionalHandler');
             controller.map(server);
         });
 
         it('map all methods', function () {
             request.process.should.have.been.calledWith('someMethod');
-            server.get.should.have.been.calledWith({path: '/some/path', version: '2.4.1'}, 'theProcessFunction');
+            server.get.should.have.been.calledWith('/some/path', 'theConditionalHandler');
+            restify.plugins.conditionalHandler.should.have.been.calledWith([
+                {version: '2.4.1', handler: 'theProcessFunction'}
+            ]);
         });
     });
 

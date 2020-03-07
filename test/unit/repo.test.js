@@ -29,7 +29,7 @@ describe('repo', function () {
                     latest: sandbox.spy(function () { return Promise.resolve(); })
                 }
             };
-            sandbox.stub(Knex, 'initialize', function () { return knex; });
+            // sandbox.stub(Knex, 'initialize', function () { return knex; });
             sandbox.stub(fs, 'existsSync', function () { return true; });
             sandbox.stub(fs, 'unlinkSync');
             sandbox.stub(mkdirp, 'sync');

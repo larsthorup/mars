@@ -1,5 +1,5 @@
-function log(msg) {
-    console.log(msg);
+function log() {
+    console.log.apply(console, arguments);
 }
 
 module.exports = {

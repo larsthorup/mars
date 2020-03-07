@@ -8,6 +8,7 @@ var clients = require('../../src/clients');
 var token = require('../../src/token');
 var sinon = require('sinon');
 var output = require('../../src/output');
+var corsWrapper = require('../../src/cors');
 
 describe('server', function () {
     var sandbox;
@@ -20,12 +21,12 @@ describe('server', function () {
             url: 'serverUrl',
             listen: sandbox.spy(),
             use: sandbox.spy(),
-            on: sandbox.spy()
+            on: sandbox.spy(),
+            pre: sandbox.spy()
         };
         sandbox.stub(restify, 'createServer', function (options) { restifyServer.log = options.log; return restifyServer; });
-        sandbox.stub(restify, 'bodyParser', function () { return 'theBodyParser'; });
-        sandbox.stub(restify, 'CORS', function () { return 'theCorsHandler'; });
-        sandbox.stub(restify, 'auditLogger', function () { return 'theAuditLogger'; });
+        sandbox.stub(restify.plugins, 'bodyParser', function () { return 'theBodyParser'; });
+        sandbox.stub(restify.plugins, 'auditLogger', function () { return 'theAuditLogger'; });
         sandbox.stub(fs, 'readFileSync', function (filePath) {
             if(path.resolve(__dirname, '../../src/config/certs/someCertificate.cert') === filePath) { return 'theCert'; }
             if(path.resolve(__dirname, '../../src/config/certs/someCertificate.key') === filePath) { return 'theKey'; }
@@ -34,6 +35,10 @@ describe('server', function () {
         sandbox.stub(token, 'requestParser', function () { return 'theAuthenticationHeaderParser'; });
         sandbox.stub(output, 'log');
         sandbox.stub(clients, 'Clients').returns({});
+        sandbox.stub(corsWrapper, 'middleware').returns({
+            preflight: 'thePreflightCors',
+            actual: 'theActualCors'
+        });
     });
 
     afterEach(function () {
@@ -87,6 +92,11 @@ describe('server', function () {
             restifyServer.use.should.have.been.calledWith('theAuthenticationHeaderParser');
         });
 
+        it('handles CORS', function () {
+            restifyServer.pre.should.have.been.calledWith('thePreflightCors');
+            restifyServer.use.should.have.been.calledWith('theActualCors');
+        });
+
         it('passes app to controllers through req', function () {
             var appExposer = restifyServer.use.getCall(3).args[0];
             appExposer.name.should.equal('appExposer');
@@ -118,68 +128,9 @@ describe('server', function () {
         });
 
         it('tells when it shuts down', function () {
-            restifyServer.on.getCall(2).args[0].should.equal('close');
-            restifyServer.on.getCall(2).args[1]();
+            restifyServer.on.getCall(1).args[0].should.equal('close');
+            restifyServer.on.getCall(1).args[1]();
             output.log.should.have.been.calledWith('%s closing down', 'serverName');
-        });
-
-        describe('CORS', function () {
-
-            it('parses CORS headers', function () {
-                restifyServer.use.should.have.been.calledWith('theCorsHandler');
-            });
-
-            it('handles CORS', function () {
-                restify.CORS.getCall(0).args[0].should.equal('someCorsConfig');
-            });
-
-            it('handles OPTIONS requests', function () {
-                restifyServer.on.getCall(1).args[0].should.equal('MethodNotAllowed');
-            });
-
-            it('responds correctly to OPTIONS requests', function () {
-                // given
-                var unknownMethodHandler = restifyServer.on.getCall(1).args[1];
-                var req = {
-                    method: 'OPTIONS',
-                    headers: {
-                        origin: 'someOrigin'
-                    }
-                };
-                var res = {
-                    methods: [],
-                    header: sandbox.spy(),
-                    send: sandbox.spy()
-                };
-
-                // when
-                unknownMethodHandler(req, res);
-
-                // then
-                res.header.getCall(1).args[0].should.equal('Access-Control-Allow-Headers');
-                res.header.getCall(1).args[1].should.contain('Authorization');
-                res.header.getCall(1).args[1].should.contain('If-Match');
-                res.header.getCall(2).args.should.deep.equal(['Access-Control-Allow-Methods', 'OPTIONS']);
-                res.header.getCall(3).args.should.deep.equal(['Access-Control-Allow-Origin', 'someOrigin']);
-                res.send.should.have.been.calledWith(200);
-            });
-
-            it('fails on unrecognized verbs', function () {
-                var unknownMethodHandler = restifyServer.on.getCall(1).args[1];
-                var req = {
-                    method: 'unrecognized'
-                };
-                var res = {
-                    send: sandbox.spy()
-                };
-
-                // when
-                unknownMethodHandler(req, res);
-
-                // then
-                res.send.getCall(0).args[0].name.should.equal('MethodNotAllowedError');
-            });
-
         });
     });
 });
