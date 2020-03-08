@@ -10,7 +10,7 @@ Platform: NodeJS, Vagrant
 
 Libs: Restify, Knex, SQLite, Crypto
 
-Tools: Gulp, Mocha, Sinon, Istanbul, JSHint
+Tools: Mocha, Sinon, nyc, JSHint
 
 Quick start:
 

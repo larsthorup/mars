@@ -1,6 +1,6 @@
-var passwordHash = require('password-hash');
+var bcrypt = require('bcryptjs');
 
 module.exports = {
-    generate: passwordHash.generate,
-    verify: passwordHash.verify
+    generate: bcrypt.hashSync,
+    verify: bcrypt.compareSync
 };
