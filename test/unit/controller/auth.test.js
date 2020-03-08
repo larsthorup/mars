@@ -9,7 +9,7 @@ describe('controller/auth', function () {
     var sandbox;
 
     beforeEach(function () {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
     });
 
     afterEach(function () {
@@ -28,8 +28,8 @@ describe('controller/auth', function () {
                     {name: 'lars'}
                 ]
             });
-            sandbox.stub(hasher, 'verify', function (password) { return password === 'valid'; });
-            sandbox.stub(token, 'create', function (user) { return user.name + '.token'; });
+            sandbox.stub(hasher, 'verify').callsFake(function (password) { return password === 'valid'; });
+            sandbox.stub(token, 'create').callsFake(function (user) { return user.name + '.token'; });
             app = {};
         });
 

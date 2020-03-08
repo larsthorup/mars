@@ -33,7 +33,7 @@ describe('model/user', function () {
         });
 
         it('should return the correct row', function () {
-            return finding.should.eventually.have.deep.property('[0].name', 'Lars');
+            return finding.should.eventually.have.nested.property('[0].name', 'Lars');
         });
 
         it('should include a verifiable password hash', function () {

@@ -9,7 +9,7 @@ describe('controller/greet', function () {
     var app;
 
     beforeEach(function () {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         app = {};
     });
 
@@ -28,7 +28,7 @@ describe('controller/greet', function () {
                     {name: 'lars'}
                 ]
             });
-            sandbox.stub(token, 'authenticate', function () { return 'Lars'; });
+            sandbox.stub(token, 'authenticate').callsFake(function () { return 'Lars'; });
         });
 
         it('should allow user access', function () {
@@ -55,7 +55,7 @@ describe('controller/greet', function () {
                     {name: 'lars'}
                 ]
             });
-            sandbox.stub(token, 'authenticate', function () { return 'Lars'; });
+            sandbox.stub(token, 'authenticate').callsFake(function () { return 'Lars'; });
         });
 
         it('should allow user access', function () {

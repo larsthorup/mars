@@ -15,7 +15,7 @@ describe('server', function () {
     var restifyServer;
 
     beforeEach(function () {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         restifyServer = {
             name: 'serverName',
             url: 'serverUrl',
@@ -24,15 +24,15 @@ describe('server', function () {
             on: sandbox.spy(),
             pre: sandbox.spy()
         };
-        sandbox.stub(restify, 'createServer', function (options) { restifyServer.log = options.log; return restifyServer; });
-        sandbox.stub(restify.plugins, 'bodyParser', function () { return 'theBodyParser'; });
-        sandbox.stub(restify.plugins, 'auditLogger', function () { return 'theAuditLogger'; });
-        sandbox.stub(fs, 'readFileSync', function (filePath) {
+        sandbox.stub(restify, 'createServer').callsFake(function (options) { restifyServer.log = options.log; return restifyServer; });
+        sandbox.stub(restify.plugins, 'bodyParser').callsFake(function () { return 'theBodyParser'; });
+        sandbox.stub(restify.plugins, 'auditLogger').callsFake(function () { return 'theAuditLogger'; });
+        sandbox.stub(fs, 'readFileSync').callsFake(function (filePath) {
             if(path.resolve(__dirname, '../../src/config/certs/someCertificate.cert') === filePath) { return 'theCert'; }
             if(path.resolve(__dirname, '../../src/config/certs/someCertificate.key') === filePath) { return 'theKey'; }
         });
         sandbox.stub(router, 'map');
-        sandbox.stub(token, 'requestParser', function () { return 'theAuthenticationHeaderParser'; });
+        sandbox.stub(token, 'requestParser').callsFake(function () { return 'theAuthenticationHeaderParser'; });
         sandbox.stub(output, 'log');
         sandbox.stub(clients, 'Clients').returns({});
         sandbox.stub(corsWrapper, 'middleware').returns({

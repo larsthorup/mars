@@ -12,7 +12,7 @@ describe('clients', function () {
     var connectionHandler;
 
     beforeEach(function () {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         var server = {
             server: 'theServer'
         };

@@ -13,7 +13,7 @@ describe('controller/entry', function () {
     var app;
 
     beforeEach(function () {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         app = {
             repo: 'dummyRepo'
         };
@@ -28,7 +28,7 @@ describe('controller/entry', function () {
 
         beforeEach(function () {
             latest = entryController.getMethod('latest', '*', 'get');
-            sandbox.stub(repo.entry, 'findingLatest', function () { return Promise.resolve('someEntries'); });
+            sandbox.stub(repo.entry, 'findingLatest').callsFake(function () { return Promise.resolve('someEntries'); });
         });
 
         it('should allow user access', function () {
@@ -48,7 +48,7 @@ describe('controller/entry', function () {
 
         beforeEach(function () {
             get = entryController.getMethod(':id', '*', 'get');
-            sandbox.stub(repo.entry, 'findingById', function () { return Promise.resolve('someEntry'); });
+            sandbox.stub(repo.entry, 'findingById').callsFake(function () { return Promise.resolve('someEntry'); });
         });
 
         it('should allow user access', function () {
@@ -68,7 +68,7 @@ describe('controller/entry', function () {
 
         beforeEach(function () {
             patch = entryController.getMethod(':id', '*', 'patch');
-            sandbox.stub(repo.entry, 'patching', function () { return Promise.resolve({version: 3}); });
+            sandbox.stub(repo.entry, 'patching').callsFake(function () { return Promise.resolve({version: 3}); });
             app.clients = {
                 notifyPatch: sandbox.spy()
             };

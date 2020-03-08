@@ -13,7 +13,7 @@ describe('repo', function () {
     var sandbox;
 
     beforeEach(function () {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
     });
 
     afterEach(function () {
@@ -29,11 +29,11 @@ describe('repo', function () {
                     latest: sandbox.spy(function () { return Promise.resolve(); })
                 }
             };
-            // sandbox.stub(Knex, 'initialize', function () { return knex; });
-            sandbox.stub(fs, 'existsSync', function () { return true; });
+            sandbox.stub(repo, 'initializeKnex').callsFake(function () { return knex; });
+            sandbox.stub(fs, 'existsSync').callsFake(function () { return true; });
             sandbox.stub(fs, 'unlinkSync');
             sandbox.stub(mkdirp, 'sync');
-            sandbox.stub(testdata, 'creating', function () { return Promise.resolve(); });
+            sandbox.stub(testdata, 'creating').callsFake(function () { return Promise.resolve(); });
             sandbox.stub(output, 'log');
             return repo.connecting({
                 silent: false,

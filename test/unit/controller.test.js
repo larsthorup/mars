@@ -9,7 +9,7 @@ describe('Controller', function () {
     var controller;
 
     beforeEach(function () {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         controller = new Controller({
             '/some/path': {
                 '2.4.1': {

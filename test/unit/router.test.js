@@ -7,7 +7,7 @@ describe('router', function () {
     var sandbox;
 
     beforeEach(function () {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         Object.keys(controllers).forEach(function (name) {
             sandbox.stub(controllers[name], 'map');
         });

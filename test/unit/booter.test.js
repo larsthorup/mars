@@ -11,9 +11,9 @@ describe('booter', function () {
     var sandbox;
 
     beforeEach(function () {
-        sandbox = sinon.sandbox.create();
-        sandbox.stub(repo, 'connecting', Promise.method(function () { return 'dummyRepo'; }));
-        sandbox.stub(server, 'starting', Promise.method(function () { return 'dummyServer'; }));
+        sandbox = sinon.createSandbox();
+        sandbox.stub(repo, 'connecting').callsFake(Promise.method(function () { return 'dummyRepo'; }));
+        sandbox.stub(server, 'starting').callsFake(Promise.method(function () { return 'dummyServer'; }));
         sandbox.stub(bunyan, 'createLogger').returns('theBunyanLogger');
         sandbox.stub(mkdirp, 'sync');
     });

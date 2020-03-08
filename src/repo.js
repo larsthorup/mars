@@ -8,11 +8,15 @@ var path = require('path');
 var models = require('require-all')(path.resolve(__dirname, 'model/'));
 var output = require('./output');
 
+function initializeKnex(options) {
+    return Knex(options);
+}
+
 function connecting(options) {
     if(options.testdata.create) {
         remove(options);
     }
-    var knex = Knex(options);
+    var knex = repoModule.initializeKnex(options);
     var repo = {
         knex: knex
     };
@@ -52,7 +56,8 @@ function migratingLatest(repo) {
     return repo.knex.migrate.latest();
 }
 
-module.exports = _.merge(models, {
+var repoModule = module.exports = _.merge(models, {
     connecting: connecting,
-    disconnecting: disconnecting
+    disconnecting: disconnecting,
+    initializeKnex: initializeKnex // Note: to enable stubbing in test
 });
