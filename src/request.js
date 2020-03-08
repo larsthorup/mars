@@ -1,5 +1,4 @@
 var errors = require('restify-errors');
-var restify = require('restify');
 
 var process = function (controller) {
     return function (req, res, next) {
@@ -14,8 +13,7 @@ var process = function (controller) {
                 })
                 .catch(function (err) {
                     return next(new errors.InternalError(err.message));
-                })
-                .done();
+                });
             }
         } catch(ex) {
             next(new errors.InternalError(ex.message));
